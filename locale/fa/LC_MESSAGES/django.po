@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-01 13:57+0430\n"
+"POT-Creation-Date: 2020-06-02 12:47+0430\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,21 +18,89 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: .\ShenasaSolution\settings.py:117 .\templates\admin\base_site.html:18
-msgid "Fa"
-msgstr "فارسی"
-
 #: .\ShenasaSolution\settings.py:118 .\templates\admin\base_site.html:15
 msgid "En"
 msgstr "انگلیسی"
 
-#: .\ShenasaSolution\urls.py:22
-msgid "ShenasaSolution Administration Site"
+#: .\ShenasaSolution\settings.py:119 .\templates\admin\base_site.html:18
+msgid "Fa"
+msgstr "فارسی"
+
+#: .\ShenasaSolution\urls.py:24
+#, fuzzy
+#| msgid "ShenasaSolution Administration Site"
+msgid "Shenasa Administration Site"
 msgstr "سامانه شناسا"
 
-#: .\ShenasaSolution\urls.py:23
-msgid "Welcome to ShenasaSolution administration control panel"
+#: .\ShenasaSolution\urls.py:25
+#, fuzzy
+#| msgid "Welcome to ShenasaSolution administration control panel"
+msgid "Welcome to Shenasa administration control panel"
 msgstr "به پنل مدیریت شناسا خوش آمدید."
+
+#: .\Shenasa\apps.py:6
+msgid "Shenasa"
+msgstr "شناسا"
+
+#: .\Shenasa\models.py:8
+msgid "Name"
+msgstr "نام"
+
+#: .\Shenasa\models.py:9
+msgid "Active"
+msgstr "فعال"
+
+#: .\Shenasa\models.py:13
+msgid "Person"
+msgstr "شخص"
+
+#: .\Shenasa\models.py:14
+msgid "Persons"
+msgstr "اشخاص"
+
+#: .\Shenasa\models.py:25
+msgid "National ID"
+msgstr "کد ملی"
+
+#: .\Shenasa\models.py:28
+msgid ""
+"Phone number must be entered in the format: '+999999999'. Up to 15 digits "
+"allowed."
+msgstr ""
+
+#: .\Shenasa\models.py:29
+msgid "Mobile"
+msgstr "تلفن همراه"
+
+#: .\Shenasa\models.py:30
+#, fuzzy
+#| msgid "Person"
+msgid "Person Image"
+msgstr "تصویر شخص"
+
+#: .\Shenasa\models.py:38
+msgid "Image"
+msgstr "تصویر"
+
+#: .\Shenasa\models.py:41
+msgid "Natural Person"
+msgstr "شخص حقیقی"
+
+#: .\Shenasa\models.py:42
+msgid "Natural Persons"
+msgstr "اشخاص حقیقی"
+
+#: .\Shenasa\models.py:53
+msgid "CEO"
+msgstr "مدیر عامل"
+
+#: .\Shenasa\models.py:56
+msgid "Legal Person"
+msgstr "شخص حقوقی"
+
+#: .\Shenasa\models.py:57
+msgid "Legal Persons"
+msgstr "اشخاص حقوقی"
 
 #: .\templates\admin\base_site.html:24
 msgid "Documentation"
