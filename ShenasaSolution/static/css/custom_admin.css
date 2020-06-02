@@ -1,0 +1,13 @@
+.i18n_flag {
+    width: 26px;
+    vertical-align: text-top;
+}
+
+.form-row.field-url div.readonly {
+    direction: initial;
+    text-align: -webkit-match-parent;
+}
+
+.invisible-lang {
+    display: none;
+}
