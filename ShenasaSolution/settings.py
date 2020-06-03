@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'Shenasa',
+    'django_resized',
 ]
 
 MIDDLEWARE = [
@@ -133,3 +134,20 @@ STATICFILES_DIRS = [
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+
+# Image sizes
+MAX_SMALL_IMAGE_WIDTH = 150  # in pixel
+MAX_SMALL_IMAGE_HEIGHT = 150  # in pixel
+MAX_MEDIUM_IMAGE_WIDTH = 500  # in pixel
+MAX_MEDIUM_IMAGE_HEIGHT = 500  # in pixel
+MAX_LARGE_IMAGE_WIDTH = 1000  # in pixel
+MAX_LARGE_IMAGE_HEIGHT = 1000  # in pixel
+
+# Django-Resized
+DJANGORESIZED_DEFAULT_SIZE = [1920, 1080]
+DJANGORESIZED_DEFAULT_QUALITY = 75
+DJANGORESIZED_DEFAULT_KEEP_META = True
+DJANGORESIZED_DEFAULT_FORCE_FORMAT = 'JPEG'
+DJANGORESIZED_DEFAULT_FORMAT_EXTENSIONS = {'JPEG': ".jpg", 'JPEG': ".jpeg", 'GIF': ".gif", 'PNG': ".png"}
+DJANGORESIZED_DEFAULT_NORMALIZE_ROTATION = True

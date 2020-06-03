@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-03 15:09+0430\n"
+"POT-Creation-Date: 2020-06-03 16:09+0430\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,11 +18,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: .\ShenasaSolution\settings.py:118 .\templates\admin\base_site.html:15
+#: .\ShenasaSolution\settings.py:119 .\templates\admin\base_site.html:15
 msgid "En"
 msgstr "انگلیسی"
 
-#: .\ShenasaSolution\settings.py:119 .\templates\admin\base_site.html:18
+#: .\ShenasaSolution\settings.py:120 .\templates\admin\base_site.html:18
 msgid "Fa"
 msgstr "فارسی"
 
@@ -42,89 +42,89 @@ msgstr "به پنل مدیریت شناسا خوش آمدید."
 msgid "Shenasa"
 msgstr "شناسا"
 
-#: .\Shenasa\models.py:11 .\Shenasa\models.py:28
+#: .\Shenasa\models.py:12 .\Shenasa\models.py:29
 msgid "Name"
 msgstr "نام"
 
-#: .\Shenasa\models.py:12 .\Shenasa\models.py:29
+#: .\Shenasa\models.py:13 .\Shenasa\models.py:30
 msgid "Active"
 msgstr "فعال"
 
-#: .\Shenasa\models.py:16 .\Shenasa\models.py:107
+#: .\Shenasa\models.py:17 .\Shenasa\models.py:108
 msgid "Person"
 msgstr "شخص"
 
-#: .\Shenasa\models.py:17
+#: .\Shenasa\models.py:18
 msgid "Persons"
 msgstr "اشخاص"
 
-#: .\Shenasa\models.py:32 .\Shenasa\models.py:108
+#: .\Shenasa\models.py:33 .\Shenasa\models.py:109
 msgid "Role"
 msgstr "سمت"
 
-#: .\Shenasa\models.py:33
+#: .\Shenasa\models.py:34
 msgid "Roles"
 msgstr "سمتها"
 
-#: .\Shenasa\models.py:44
+#: .\Shenasa\models.py:45
 msgid "National ID"
 msgstr "کد ملی"
 
-#: .\Shenasa\models.py:47
+#: .\Shenasa\models.py:48
 msgid ""
 "Phone number must be entered in the format: '+999999999'. Up to 15 digits "
 "allowed."
 msgstr "شماره تلفن معتبر شامل مقدار عددی حداکثر 15 رقم باید باشد."
 
-#: .\Shenasa\models.py:48
+#: .\Shenasa\models.py:49
 msgid "Mobile"
 msgstr "تلفن همراه"
 
-#: .\Shenasa\models.py:49
+#: .\Shenasa\models.py:50
 #, fuzzy
 #| msgid "Person"
 msgid "Person Image"
 msgstr "تصویر شخص"
 
-#: .\Shenasa\models.py:57
+#: .\Shenasa\models.py:58
 msgid "Image"
 msgstr "تصویر"
 
-#: .\Shenasa\models.py:60
+#: .\Shenasa\models.py:61
 msgid "Natural Person"
 msgstr "شخص حقیقی"
 
-#: .\Shenasa\models.py:61
+#: .\Shenasa\models.py:62
 msgid "Natural Persons"
 msgstr "اشخاص حقیقی"
 
-#: .\Shenasa\models.py:112
+#: .\Shenasa\models.py:113
 #, fuzzy
 #| msgid "Person"
 msgid "Person Role"
 msgstr "سمت شخص"
 
-#: .\Shenasa\models.py:113
+#: .\Shenasa\models.py:114
 #, fuzzy
 #| msgid "Persons"
 msgid "Person Roles"
 msgstr "سمتهای اشخاص"
 
-#: .\Shenasa\models.py:124
+#: .\Shenasa\models.py:125
 #, fuzzy
 #| msgid "Person"
 msgid "Key Person"
 msgstr "شخص کلیدی"
 
-#: .\Shenasa\models.py:127
+#: .\Shenasa\models.py:128
 msgid "Legal Person"
 msgstr "شخص حقوقی"
 
-#: .\Shenasa\models.py:128
+#: .\Shenasa\models.py:129
 msgid "Legal Persons"
 msgstr "اشخاص حقوقی"
 
-#: .\Shenasa\models.py:139
+#: .\Shenasa\models.py:140
 #, fuzzy
 #| msgid "Legal Persons"
 msgid "Selected Legal Persons"
@@ -141,6 +141,3 @@ msgstr "تغییر کلمه عبور"
 #: .\templates\admin\base_site.html:30
 msgid "Log out"
 msgstr "خروج"
-
-#~ msgid "CEO"
-#~ msgstr "مدیر عامل"

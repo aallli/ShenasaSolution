@@ -5,6 +5,7 @@ from ShenasaSolution import settings
 from django.utils.html import mark_safe
 from django.core.validators import RegexValidator
 from django.utils.translation import ugettext_lazy as _
+from django_resized import ResizedImageField
 
 
 class Person(models.Model):
@@ -46,11 +47,11 @@ class NaturalPerson(Person):
         regex=r'^\d{9,15}$',
         message=_("Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed."))
     mobile = models.CharField(verbose_name=_('Mobile'), validators=[mobile_regex], max_length=17, blank=True)
-    image = models.ImageField(verbose_name=_('Person Image'), upload_to='media/', blank=True, null=True)
+    image = ResizedImageField(size=[settings.MAX_SMALL_IMAGE_WIDTH, settings.MAX_SMALL_IMAGE_HEIGHT], verbose_name=_('Person Image'), upload_to='media/', blank=True, null=True)
 
     def image_tag(self):
         if self.image:
-            return mark_safe('<img src="%s%s" width="150" height="150" />' % (settings.MEDIA_URL, self.image))
+            return mark_safe('<img src="%s%s"/>' % (settings.MEDIA_URL, self.image))
         else:
             return mark_safe('<img src="%simg/person-icon.jpg" width="150" height="150" />' % (settings.STATIC_URL))
 
