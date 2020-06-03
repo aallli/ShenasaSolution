@@ -24,6 +24,22 @@ class Person(models.Model):
         return self.name
 
 
+class Role(models.Model):
+    name = models.CharField(verbose_name=_('Name'), max_length=200, unique=True, null=False)
+    active = models.BooleanField(verbose_name=_('Active'), default=True)
+
+    class Meta:
+        verbose_name = _("Role")
+        verbose_name_plural = _("Roles")
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+    def __unicode__(self):
+        return self.name
+
+
 class NaturalPerson(Person):
     NID = models.CharField(verbose_name=_('National ID'), max_length=10, unique=True, null=True, blank=True)
     mobile_regex = RegexValidator(
@@ -87,8 +103,25 @@ def auto_delete_file_on_change(sender, instance, **kwargs):
         return False
 
 
+class PersonRole(models.Model):
+    person = models.ForeignKey(NaturalPerson, verbose_name=_('Person'), blank=True, null=True, on_delete=models.CASCADE)
+    role = models.ForeignKey(Role, verbose_name=_('Role'), blank=True, null=True, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ['person', 'role']
+        verbose_name = _("Person Role")
+        verbose_name_plural = _("Person Roles")
+        ordering = ['person', 'role']
+
+    def __str__(self):
+        return '%s (%s)' % (self.person, self.role)
+
+    def __unicode__(self):
+        return '%s (%s)' % (self.person, self.role)
+
+
 class LegalPerson(Person):
-    CEO = models.ForeignKey(NaturalPerson, verbose_name=_('CEO'), blank=True, null=True, on_delete=models.CASCADE)
+    person_role = models.ManyToManyField(PersonRole, verbose_name=_('Key Person'))
 
     class Meta:
         verbose_name = _("Legal Person")
@@ -96,7 +129,11 @@ class LegalPerson(Person):
         ordering = ['name']
 
     def __str__(self):
-        return '%s (%s)' % (self.name, self.CEO)
+        return '%s' % (self.name)
 
     def __unicode__(self):
-        return '%s (%s)' % (self.name, self.CEO)
+        return '%s' % (self.name)
+
+    def person_roles(self):
+        return ', '.join('{}: {}'.format(pr.role.name, pr.person.name)  for pr in self.person_role.all())
+    person_roles.short_description = _("Selected Legal Persons")
