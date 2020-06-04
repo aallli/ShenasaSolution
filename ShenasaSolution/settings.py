@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'Shenasa',
     'django_resized',
+    'django_summernote',
 ]
 
 MIDDLEWARE = [
@@ -144,10 +145,34 @@ MAX_MEDIUM_IMAGE_HEIGHT = 500  # in pixel
 MAX_LARGE_IMAGE_WIDTH = 1000  # in pixel
 MAX_LARGE_IMAGE_HEIGHT = 1000  # in pixel
 
-# Django-Resized
+# Django-Resized image resizing tool
 DJANGORESIZED_DEFAULT_SIZE = [1920, 1080]
 DJANGORESIZED_DEFAULT_QUALITY = 75
 DJANGORESIZED_DEFAULT_KEEP_META = True
 DJANGORESIZED_DEFAULT_FORCE_FORMAT = 'JPEG'
 DJANGORESIZED_DEFAULT_FORMAT_EXTENSIONS = {'JPEG': ".jpg", 'JPEG': ".jpeg", 'GIF': ".gif", 'PNG': ".png"}
 DJANGORESIZED_DEFAULT_NORMALIZE_ROTATION = True
+
+
+# Summernote richtext box
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+SUMMERNOTE_CONFIG = {
+    'summernote': {
+        # Change editor size
+        'width': '100%',
+
+        # Or, set editor language/locale forcely
+        'lang': 'fa-IR',
+    },
+    'toolbar': [
+        ['style', ['bold', 'italic', 'underline', 'clear']],
+        ['font', ['strikethrough', 'superscript', 'subscript']],
+        ['fontsize', ['fontsize']],
+        ['color', ['color']],
+        ['para', ['ul', 'ol', 'paragraph']],
+        ['height', ['height']],
+        ['insert', ['table', 'link', 'hr']],
+        ['misc', ['fullscreen', 'undo', 'redo']],
+    ],
+}
+

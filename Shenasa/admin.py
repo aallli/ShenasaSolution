@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib import messages
-from Shenasa.models import LegalPerson, NaturalPerson, Role, PersonRole
+from django_summernote.admin import SummernoteModelAdmin
+from Shenasa.models import LegalPerson, NaturalPerson, Role, PersonRole, News
 
 
 @admin.register(Role)
@@ -27,6 +28,25 @@ class PersonRoleAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         try:
             super(PersonRoleAdmin, self).save_model(request, obj, form, change)
+        except Exception as e:
+            messages.set_level(request, messages.ERROR)
+            messages.error(request, e)
+
+@admin.register(News)
+class NewsAdmin(SummernoteModelAdmin):
+    summernote_fields = ('description',)
+    fields = ['description', 'link', 'date', ]
+    list_display = ['title', 'date', ]
+    readonly_fields = ['date']
+    model = News
+
+    class Media:
+        css = {'all': ('css/custom_admin.css',)}
+        js = ('js/custom_admin.js',)
+
+    def save_model(self, request, obj, form, change):
+        try:
+            super(NewsAdmin, self).save_model(request, obj, form, change)
         except Exception as e:
             messages.set_level(request, messages.ERROR)
             messages.error(request, e)

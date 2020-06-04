@@ -1,11 +1,12 @@
 import os
 from django.db import models
+from django.utils import timezone
 from django.dispatch import receiver
 from ShenasaSolution import settings
 from django.utils.html import mark_safe
+from django_resized import ResizedImageField
 from django.core.validators import RegexValidator
 from django.utils.translation import ugettext_lazy as _
-from django_resized import ResizedImageField
 
 
 class Person(models.Model):
@@ -41,13 +42,39 @@ class Role(models.Model):
         return self.name
 
 
+class News(models.Model):
+    description = models.TextField(verbose_name=_('Description'), max_length=1000, blank=True, null=True)
+    link = models.TextField(verbose_name=_('Link'), max_length=200, blank=True, null=True)
+    date = models.DateTimeField(verbose_name=_('Creation Date'), null=True, blank=True)
+
+    class Meta:
+        verbose_name = _("News")
+        verbose_name_plural = _("News")
+        ordering = ['date']
+
+    def __str__(self):
+        return self.description[:50]
+
+    def __unicode__(self):
+        return self.description[:50]
+
+    def save(self, *args, **kwargs):
+        self.date = timezone.now()
+        super(News, self).save(*args, **kwargs)
+
+    @property
+    def title(self):
+        return mark_safe(self.description)
+
+
 class NaturalPerson(Person):
     NID = models.CharField(verbose_name=_('National ID'), max_length=10, unique=True, null=True, blank=True)
     mobile_regex = RegexValidator(
         regex=r'^\d{9,15}$',
         message=_("Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed."))
     mobile = models.CharField(verbose_name=_('Mobile'), validators=[mobile_regex], max_length=17, blank=True)
-    image = ResizedImageField(size=[settings.MAX_SMALL_IMAGE_WIDTH, settings.MAX_SMALL_IMAGE_HEIGHT], verbose_name=_('Person Image'), upload_to='media/', blank=True, null=True)
+    image = ResizedImageField(size=[settings.MAX_SMALL_IMAGE_WIDTH, settings.MAX_SMALL_IMAGE_HEIGHT],
+                              verbose_name=_('Person Image'), upload_to='media/', blank=True, null=True)
 
     def image_tag(self):
         if self.image:
@@ -136,5 +163,6 @@ class LegalPerson(Person):
         return '%s' % (self.name)
 
     def person_roles(self):
-        return ', '.join('{}: {}'.format(pr.role.name, pr.person.name)  for pr in self.person_role.all())
+        return ', '.join('{}: {}'.format(pr.role.name, pr.person.name) for pr in self.person_role.all())
+
     person_roles.short_description = _("Selected Legal Persons")
