@@ -50,7 +50,7 @@ class News(models.Model):
     class Meta:
         verbose_name = _("News")
         verbose_name_plural = _("News")
-        ordering = ['date']
+        ordering = ['-date']
 
     def __str__(self):
         return self.description[:50]
@@ -59,7 +59,8 @@ class News(models.Model):
         return self.description[:50]
 
     def save(self, *args, **kwargs):
-        self.date = timezone.now()
+        if not self.date:
+            self.date = timezone.now()
         super(News, self).save(*args, **kwargs)
 
     @property

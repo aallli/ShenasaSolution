@@ -3,3 +3,4 @@ psycopg2==2.8.5
 Pillow==7.1.2
 django-resized==0.3.11
 django-summernote==0.8.11.6
+django-jalali-date==0.3.1

@@ -1,7 +1,10 @@
 from django.contrib import admin
 from django.contrib import messages
+from jalali_date import datetime2jalali
+from django.utils.translation import ugettext_lazy as _
 from django_summernote.admin import SummernoteModelAdmin
 from Shenasa.models import LegalPerson, NaturalPerson, Role, PersonRole, News
+from jalali_date.admin import ModelAdminJalaliMixin, StackedInlineJalaliMixin, TabularInlineJalaliMixin
 
 
 @admin.register(Role)
@@ -19,6 +22,7 @@ class RoleAdmin(admin.ModelAdmin):
             messages.set_level(request, messages.ERROR)
             messages.error(request, e)
 
+
 @admin.register(PersonRole)
 class PersonRoleAdmin(admin.ModelAdmin):
     fields = ['person', 'role', ]
@@ -32,12 +36,12 @@ class PersonRoleAdmin(admin.ModelAdmin):
             messages.set_level(request, messages.ERROR)
             messages.error(request, e)
 
+
 @admin.register(News)
-class NewsAdmin(SummernoteModelAdmin):
+class NewsAdmin(ModelAdminJalaliMixin, SummernoteModelAdmin):
     summernote_fields = ('description',)
     fields = ['description', 'link', 'date', ]
-    list_display = ['title', 'date', ]
-    readonly_fields = ['date']
+    list_display = ['title', 'get_created_jalali']
     model = News
 
     class Media:
@@ -50,6 +54,12 @@ class NewsAdmin(SummernoteModelAdmin):
         except Exception as e:
             messages.set_level(request, messages.ERROR)
             messages.error(request, e)
+
+    def get_created_jalali(self, obj):
+        return datetime2jalali(obj.date).strftime('%y/%m/%d _ %H:%M:%S')
+
+    get_created_jalali.short_description = _('Creation Date')
+    get_created_jalali.admin_order_field = 'date'
 
 
 @admin.register(NaturalPerson)
