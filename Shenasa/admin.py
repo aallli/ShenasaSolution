@@ -19,6 +19,12 @@ class LegalPersonNewsInline(admin.TabularInline):
     verbose_name_plural = _("Legal Person News")
 
 
+class NaturalPersonNewsInline(admin.TabularInline):
+    model = NaturalPerson.news.through
+    verbose_name = _("Natural Person News")
+    verbose_name_plural = _("Natural Person News")
+
+
 @admin.register(PersonRole)
 class PersonRoleAdmin(admin.ModelAdmin):
     fields = [('person', 'role'), ]
@@ -73,12 +79,15 @@ class NewsAdmin(ModelAdminJalaliMixin, SummernoteModelAdmin):
 
 @admin.register(NaturalPerson)
 class NaturalPersonAdmin(admin.ModelAdmin):
-    fields = ['name', 'NID', 'mobile', ('image', 'image_tag'), 'active', ]
+    fields = ['name', 'NID', 'mobile', 'active', ('image', 'image_tag'), 'news_tabular']
     list_display = ['name', 'NID', 'mobile', 'active', ]
     model = NaturalPerson
     list_filter = ['active']
     search_fields = ['name', 'NID']
-    readonly_fields = ['image_tag']
+    readonly_fields = ['image_tag', 'news_tabular']
+    inlines = [
+        NaturalPersonNewsInline,
+    ]
 
     def save_model(self, request, obj, form, change):
         try:

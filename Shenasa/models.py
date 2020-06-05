@@ -75,6 +75,7 @@ class NaturalPerson(Person):
     mobile = models.CharField(verbose_name=_('Mobile'), validators=[mobile_regex], max_length=17, blank=True)
     image = ResizedImageField(size=[settings.MAX_SMALL_IMAGE_WIDTH, settings.MAX_SMALL_IMAGE_HEIGHT],
                               verbose_name=_('Person Image'), upload_to='media/', blank=True, null=True)
+    news = models.ManyToManyField(News, verbose_name=_('News'), related_name='natural_person_news')
 
     def image_tag(self):
         if self.image:
@@ -100,6 +101,17 @@ class NaturalPerson(Person):
             return '%s (%s)' % (self.name, self.NID)
         else:
             return self.name
+
+    def news_tabular(self):
+        return mark_safe(
+            '<table><thead><tr><th>#</th><th>%s</th><th>%s</th><th>%s</th></tr></thead><tbody>%s</tbody></table>' %
+            (_('Creation Date'), _('Description'), _('Link'), ''.join(
+                '<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
+                    index % 2 + 1, index + 1, to_jalali_full(n.date), n.description, n.link)
+                for index, n in enumerate(self.news.all())))
+            )
+
+    news_tabular.short_description = _('News')
 
 
 @receiver(models.signals.post_delete, sender=NaturalPerson)
