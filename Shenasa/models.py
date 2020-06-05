@@ -9,30 +9,29 @@ from django.core.validators import RegexValidator
 from django.utils.translation import ugettext_lazy as _
 
 
+class Role(models.TextChoices):
+    STACKHOLDER = 'ST', _('Stackholder')
+    FOUNDER = 'FN', _('Founder')
+    CO_FOUNDER = 'CF', _('Co Founder')
+    INVESTOR = 'IN', _('Investor')
+    INVESTOR_ANGEL = 'IA', _('Angel Investor')
+    INVESTOR_VC = 'IV', _('Venture Capital')
+    OWNER = 'OW', _('Owner')
+    CEO = 'CE', _('Chief Executive Officer')
+    CTO = 'CT', _('Chief Technical Officer')
+    CCO = 'CC', _('Chief Communication Officer')
+    CMO = 'CM', _('Chief Marketing Officer')
+    CHAIRMAN = 'CH', _('Chairman')
+
+
 class Person(models.Model):
     name = models.CharField(verbose_name=_('Name'), max_length=200, unique=True, null=False)
     active = models.BooleanField(verbose_name=_('Active'), default=True)
 
     class Meta:
         abstract = True
-        verbose_name = _("Person")
-        verbose_name_plural = _("Persons")
-        ordering = ['name']
-
-    def __str__(self):
-        return self.name
-
-    def __unicode__(self):
-        return self.name
-
-
-class Role(models.Model):
-    name = models.CharField(verbose_name=_('Name'), max_length=200, unique=True, null=False)
-    active = models.BooleanField(verbose_name=_('Active'), default=True)
-
-    class Meta:
-        verbose_name = _("Role")
-        verbose_name_plural = _("Roles")
+        verbose_name = _('Person')
+        verbose_name_plural = _('Persons')
         ordering = ['name']
 
     def __str__(self):
@@ -48,8 +47,8 @@ class News(models.Model):
     date = models.DateTimeField(verbose_name=_('Creation Date'), null=True, blank=True)
 
     class Meta:
-        verbose_name = _("News")
-        verbose_name_plural = _("News")
+        verbose_name = _('News')
+        verbose_name_plural = _('News')
         ordering = ['-date']
 
     def __str__(self):
@@ -86,15 +85,21 @@ class NaturalPerson(Person):
     image_tag.short_description = _('Image')
 
     class Meta:
-        verbose_name = _("Natural Person")
-        verbose_name_plural = _("Natural Persons")
+        verbose_name = _('Natural Person')
+        verbose_name_plural = _('Natural Persons')
         ordering = ['name']
 
     def __str__(self):
-        return '%s (%s)' % (self.name, self.NID)
+        if self.NID:
+            return '%s (%s)' % (self.name, self.NID)
+        else:
+            return self.name
 
     def __unicode__(self):
-        return '%s (%s)' % (self.name, self.NID)
+        if self.NID:
+            return '%s (%s)' % (self.name, self.NID)
+        else:
+            return self.name
 
 
 @receiver(models.signals.post_delete, sender=NaturalPerson)
@@ -134,36 +139,46 @@ def auto_delete_file_on_change(sender, instance, **kwargs):
 
 class PersonRole(models.Model):
     person = models.ForeignKey(NaturalPerson, verbose_name=_('Person'), blank=True, null=True, on_delete=models.CASCADE)
-    role = models.ForeignKey(Role, verbose_name=_('Role'), blank=True, null=True, on_delete=models.CASCADE)
+    role = models.CharField(verbose_name=_('Role'), max_length=10, choices=Role.choices, default=Role.STACKHOLDER)
 
     class Meta:
         unique_together = ['person', 'role']
-        verbose_name = _("Person Role")
-        verbose_name_plural = _("Person Roles")
+        verbose_name = _('Person Role')
+        verbose_name_plural = _('Person Roles')
         ordering = ['person', 'role']
 
     def __str__(self):
-        return '%s (%s)' % (self.person, self.role)
+        return '%s (%s)' % (self.person, Role(self.role).label)
 
     def __unicode__(self):
-        return '%s (%s)' % (self.person, self.role)
+        return '%s (%s)' % (self.person, Role(self.role).label)
 
 
 class LegalPerson(Person):
-    person_role = models.ManyToManyField(PersonRole, verbose_name=_('Key Person'))
+    person_role = models.ManyToManyField(PersonRole, verbose_name=_('Key Person'), related_name='person_role')
 
     class Meta:
-        verbose_name = _("Legal Person")
-        verbose_name_plural = _("Legal Persons")
+        verbose_name = _('Legal Person')
+        verbose_name_plural = _('Legal Persons')
         ordering = ['name']
 
     def __str__(self):
-        return '%s' % (self.name)
+        return self.name
 
     def __unicode__(self):
-        return '%s' % (self.name)
+        return self.name
+
+    def person_roles_tabular(self):
+        return mark_safe('<table><thead><tr><th>#</th><th>%s</th><th>%s</th></tr></thead><tbody>%s</tbody></table>' %
+                         (_('Name'), _('Role'), ''.join(
+                             '<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td></tr>'.format(index % 2 + 1, index + 1,
+                                                                                               pr.person.name,
+                                                                                               Role(pr.role).label) for
+                             index, pr in enumerate(self.person_role.all())))
+                         )
+    person_roles_tabular.short_description = _('Selected Legal Persons')
 
     def person_roles(self):
-        return ', '.join('{}: {}'.format(pr.role.name, pr.person.name) for pr in self.person_role.all())
+        return ' - '.join('{}: {}'.format(Role(pr.role).label, pr.person.name) for index, pr in enumerate(self.person_role.all()))
 
-    person_roles.short_description = _("Selected Legal Persons")
+    person_roles.short_description = _('Selected Legal Persons')
