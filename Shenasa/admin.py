@@ -54,6 +54,7 @@ class NewsAdmin(ModelAdminJalaliMixin, SummernoteModelAdmin):
     class Media:
         css = {'all': ('css/custom_admin.css',)}
         js = ('js/custom_admin.js',)
+
     #
     # def get_form(self, request, obj=None, **kwargs):
     #     self.fields = ['description', 'link', 'date', ]
@@ -85,9 +86,18 @@ class NaturalPersonAdmin(admin.ModelAdmin):
     list_filter = ['active']
     search_fields = ['name', 'NID']
     readonly_fields = ['image_tag', 'news_tabular']
-    inlines = [
-        NaturalPersonNewsInline,
-    ]
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(NaturalPersonAdmin, self).get_form(request, obj=obj, **kwargs)
+        self.inlines = [
+            NaturalPersonNewsInline,
+        ]
+        permissions = request.user.get_all_permissions()
+        if not ('Shenasa.add_naturalperson' in permissions or
+                        'Shenasa.change_naturalperson' in permissions or
+                        'Shenasa.delete_naturalperson' in permissions):
+            self.inlines = []
+        return form
 
     def save_model(self, request, obj, form, change):
         try:
@@ -109,6 +119,19 @@ class LegalPersonAdmin(admin.ModelAdmin):
         LegalPersonInline,
         LegalPersonNewsInline,
     ]
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(LegalPersonAdmin, self).get_form(request, obj=obj, **kwargs)
+        self.inlines = [
+            LegalPersonInline,
+            LegalPersonNewsInline,
+        ]
+        permissions = request.user.get_all_permissions()
+        if not ('Shenasa.add_legalperson' in permissions or
+                        'Shenasa.change_legalperson' in permissions or
+                        'Shenasa.delete_legalperson' in permissions):
+            self.inlines = []
+        return form
 
     def save_model(self, request, obj, form, change):
         try:
