@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-05 17:11+0430\n"
+"POT-Creation-Date: 2020-06-05 19:39+0430\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -50,7 +50,13 @@ msgstr "سمت شخص"
 msgid "Person Roles"
 msgstr "سمتهای اشخاص"
 
-#: .\Shenasa\admin.py:64 .\Shenasa\models.py:47
+#: .\Shenasa\admin.py:18 .\Shenasa\admin.py:19
+#, fuzzy
+#| msgid "Legal Persons"
+msgid "Legal Person News"
+msgstr "اخبار اشخاص حقوقی"
+
+#: .\Shenasa\admin.py:70 .\Shenasa\models.py:47 .\Shenasa\models.py:192
 msgid "Creation Date"
 msgstr "تاریخ ایجاد"
 
@@ -106,7 +112,7 @@ msgstr "مدیر بازاریابی"
 msgid "Chairman"
 msgstr "رییس هیات مدیره"
 
-#: .\Shenasa\models.py:28 .\Shenasa\models.py:173
+#: .\Shenasa\models.py:28 .\Shenasa\models.py:174
 msgid "Name"
 msgstr "نام"
 
@@ -122,15 +128,16 @@ msgstr "شخص"
 msgid "Persons"
 msgstr "اشخاص"
 
-#: .\Shenasa\models.py:45
+#: .\Shenasa\models.py:45 .\Shenasa\models.py:192
 msgid "Description"
 msgstr "شرح"
 
-#: .\Shenasa\models.py:46
+#: .\Shenasa\models.py:46 .\Shenasa\models.py:192
 msgid "Link"
 msgstr "منبع"
 
-#: .\Shenasa\models.py:50 .\Shenasa\models.py:51
+#: .\Shenasa\models.py:50 .\Shenasa\models.py:51 .\Shenasa\models.py:159
+#: .\Shenasa\models.py:198
 msgid "News"
 msgstr "اخبار"
 
@@ -166,7 +173,7 @@ msgstr "شخص حقیقی"
 msgid "Natural Persons"
 msgstr "اشخاص حقیقی"
 
-#: .\Shenasa\models.py:142 .\Shenasa\models.py:173
+#: .\Shenasa\models.py:142 .\Shenasa\models.py:174
 msgid "Role"
 msgstr "سمت"
 
@@ -176,15 +183,15 @@ msgstr "سمت"
 msgid "Key Person"
 msgstr "شخص کلیدی"
 
-#: .\Shenasa\models.py:161
+#: .\Shenasa\models.py:162
 msgid "Legal Person"
 msgstr "شخص حقوقی"
 
-#: .\Shenasa\models.py:162
+#: .\Shenasa\models.py:163
 msgid "Legal Persons"
 msgstr "اشخاص حقوقی"
 
-#: .\Shenasa\models.py:179 .\Shenasa\models.py:184
+#: .\Shenasa\models.py:181 .\Shenasa\models.py:187
 #, fuzzy
 #| msgid "Legal Persons"
 msgid "Selected Legal Persons"

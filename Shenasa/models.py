@@ -7,7 +7,7 @@ from django.utils.html import mark_safe
 from django_resized import ResizedImageField
 from django.core.validators import RegexValidator
 from django.utils.translation import ugettext_lazy as _
-
+from Shenasa.utils import to_jalali_full
 
 class Role(models.TextChoices):
     STACKHOLDER = 'ST', _('Stackholder')
@@ -52,10 +52,10 @@ class News(models.Model):
         ordering = ['-date']
 
     def __str__(self):
-        return self.description[:50]
+        return '%s : %s' % (to_jalali_full(self.date), self.description[:50])
 
     def __unicode__(self):
-        return self.description[:50]
+        return '%s : %s' % (to_jalali_full(self.date), self.description[:50])
 
     def save(self, *args, **kwargs):
         if not self.date:
@@ -156,6 +156,7 @@ class PersonRole(models.Model):
 
 class LegalPerson(Person):
     person_role = models.ManyToManyField(PersonRole, verbose_name=_('Key Person'), related_name='person_role')
+    news = models.ManyToManyField(News, verbose_name=_('News'), related_name='legal_person_news')
 
     class Meta:
         verbose_name = _('Legal Person')
@@ -176,9 +177,22 @@ class LegalPerson(Person):
                                                                                                Role(pr.role).label) for
                              index, pr in enumerate(self.person_role.all())))
                          )
+
     person_roles_tabular.short_description = _('Selected Legal Persons')
 
     def person_roles(self):
-        return ' - '.join('{}: {}'.format(Role(pr.role).label, pr.person.name) for index, pr in enumerate(self.person_role.all()))
+        return ' - '.join(
+            '{}: {}'.format(Role(pr.role).label, pr.person.name) for index, pr in enumerate(self.person_role.all()))
 
     person_roles.short_description = _('Selected Legal Persons')
+
+    def news_tabular(self):
+        return mark_safe(
+            '<table><thead><tr><th>#</th><th>%s</th><th>%s</th><th>%s</th></tr></thead><tbody>%s</tbody></table>' %
+            (_('Creation Date'), _('Description'), _('Link'), ''.join(
+                '<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
+                    index % 2 + 1, index + 1, to_jalali_full(n.date), n.description, n.link)
+                for index, n in enumerate(self.news.all())))
+            )
+
+    news_tabular.short_description = _('News')

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib import messages
-from jalali_date import datetime2jalali
+from Shenasa.utils import to_jalali_full
 from django.utils.translation import ugettext_lazy as _
 from django_summernote.admin import SummernoteModelAdmin
 from Shenasa.models import LegalPerson, NaturalPerson, PersonRole, News
@@ -13,6 +13,12 @@ class LegalPersonInline(admin.TabularInline):
     verbose_name_plural = _("Person Roles")
 
 
+class LegalPersonNewsInline(admin.TabularInline):
+    model = LegalPerson.news.through
+    verbose_name = _("Legal Person News")
+    verbose_name_plural = _("Legal Person News")
+
+
 @admin.register(PersonRole)
 class PersonRoleAdmin(admin.ModelAdmin):
     fields = [('person', 'role'), ]
@@ -20,9 +26,6 @@ class PersonRoleAdmin(admin.ModelAdmin):
     model = PersonRole
     search_fields = ['person__name']
     list_filter = ['role']
-    inlines = [
-        LegalPersonInline,
-    ]
 
     def save_model(self, request, obj, form, change):
         try:
@@ -38,6 +41,9 @@ class NewsAdmin(ModelAdminJalaliMixin, SummernoteModelAdmin):
     list_display = ['title', 'get_created_jalali']
     search_fields = ['description', 'link']
     model = News
+    inlines = [
+        LegalPersonNewsInline,
+    ]
 
     class Media:
         css = {'all': ('css/custom_admin.css',)}
@@ -59,7 +65,7 @@ class NewsAdmin(ModelAdminJalaliMixin, SummernoteModelAdmin):
             messages.error(request, e)
 
     def get_created_jalali(self, obj):
-        return datetime2jalali(obj.date).strftime('%y/%m/%d _ %H:%M:%S')
+        return to_jalali_full(obj.date)
 
     get_created_jalali.short_description = _('Creation Date')
     get_created_jalali.admin_order_field = 'date'
@@ -84,16 +90,16 @@ class NaturalPersonAdmin(admin.ModelAdmin):
 
 @admin.register(LegalPerson)
 class LegalPersonAdmin(admin.ModelAdmin):
-    fields = [('name', 'active'), 'person_roles_tabular']
+    fields = [('name', 'active'), 'person_roles_tabular', 'news_tabular']
     list_display = ['name', 'person_roles', 'active']
     model = LegalPerson
     list_filter = ['active', 'person_role__role']
     search_fields = ['name', 'person_role__person__name']
-    readonly_fields = ['person_roles', 'person_roles_tabular']
+    readonly_fields = ['person_roles', 'person_roles_tabular', 'news_tabular']
     inlines = [
         LegalPersonInline,
+        LegalPersonNewsInline,
     ]
-    exclude = ('person_role',)
 
     def save_model(self, request, obj, form, change):
         try:
