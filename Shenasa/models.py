@@ -62,9 +62,9 @@ class News(models.Model):
             self.date = timezone.now()
         super(News, self).save(*args, **kwargs)
 
-    @property
     def title(self):
         return mark_safe(self.description)
+    title.short_description = _('Description')
 
 
 class NaturalPerson(Person):
