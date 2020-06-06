@@ -10,18 +10,20 @@ from django.utils.translation import ugettext_lazy as _
 from Shenasa.utils import to_jalali_full
 
 class Role(models.TextChoices):
-    STACKHOLDER = 'ST', _('Stackholder')
     FOUNDER = 'FN', _('Founder')
-    CO_FOUNDER = 'CF', _('Co Founder')
+    CHAIRMAN = 'CH', _('Chairman')
     INVESTOR = 'IN', _('Investor')
-    INVESTOR_ANGEL = 'IA', _('Angel Investor')
+    INVESTOR_FOREIGN = 'IF', _('Foreign Investor')
     INVESTOR_VC = 'IV', _('Venture Capital')
+    INVESTOR_ANGEL = 'IA', _('Angel Investor')
+    STACKHOLDER = 'ST', _('Stackholder')
+    ACCELERATOR = 'AC', _('Accelerator')
     OWNER = 'OW', _('Owner')
+    CMO = 'CM', _('Chief Marketing Officer')
+    CCO = 'CC', _('Chief Communication Officer')
     CEO = 'CE', _('Chief Executive Officer')
     CTO = 'CT', _('Chief Technical Officer')
-    CCO = 'CC', _('Chief Communication Officer')
-    CMO = 'CM', _('Chief Marketing Officer')
-    CHAIRMAN = 'CH', _('Chairman')
+    CO_FOUNDER = 'CF', _('Co Founder')
 
 
 class Person(models.Model):
