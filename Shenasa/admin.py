@@ -48,6 +48,7 @@ class NewsAdmin(ModelAdminJalaliMixin, SummernoteModelAdmin):
     search_fields = ['description', 'link']
     model = News
     inlines = [
+        NaturalPersonNewsInline,
         LegalPersonNewsInline,
     ]
 
