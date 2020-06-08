@@ -5,6 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 from django_summernote.admin import SummernoteModelAdmin
 from Shenasa.models import LegalPerson, NaturalPerson, PersonRole, News, LegalRole
 from jalali_date.admin import ModelAdminJalaliMixin, StackedInlineJalaliMixin, TabularInlineJalaliMixin
+from Shenasa.forms import PersonRoleForm
 
 
 class PersonRoleInline(admin.TabularInline):
@@ -30,14 +31,20 @@ class NaturalPersonNewsInline(admin.TabularInline):
     verbose_name = _("Natural Person News")
     verbose_name_plural = _("Natural Person News")
 
+from django.db import models
+from django.forms import TextInput, Textarea
 
 @admin.register(PersonRole)
 class PersonRoleAdmin(admin.ModelAdmin):
-    fields = [('person', 'role'), ]
-    list_display = ['person', 'role', ]
+    fields = [('person', 'role', 'number_of_shares', 'amount_of_investment'), ]
+    list_display = ['person', 'role']
     model = PersonRole
     search_fields = ['person__name']
     list_filter = ['role']
+    form = PersonRoleForm
+    formfield_overrides = {
+        models.IntegerField: {'widget': TextInput(attrs={'size':'20'})},
+    }
 
     def save_model(self, request, obj, form, change):
         try:
@@ -75,17 +82,7 @@ class NewsAdmin(ModelAdminJalaliMixin, SummernoteModelAdmin):
     ]
 
     class Media:
-        css = {'all': ('css/custom_admin.css',)}
         js = ('js/custom_admin.js',)
-
-    #
-    # def get_form(self, request, obj=None, **kwargs):
-    #     self.fields = ['description', 'link', 'date', ]
-    #     form = super(NewsAdmin, self).get_form(request, obj, **kwargs)
-    #     if obj.description == '<p>cccccccccccccccccccccccccccccc</p>':
-    #         self.fields.remove("link")
-    #
-    #     return form
 
     def save_model(self, request, obj, form, change):
         try:

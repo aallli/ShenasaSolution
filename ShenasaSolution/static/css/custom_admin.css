@@ -40,3 +40,7 @@
 .invisible-lang {
     display: none;
 }
+
+.fieldBox.field-person_roles_tabular {
+    white-space: nowrap;
+}
