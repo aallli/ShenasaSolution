@@ -56,11 +56,15 @@ class PersonRoleAdmin(admin.ModelAdmin):
 
 @admin.register(LegalRole)
 class LegalRoleAdmin(admin.ModelAdmin):
-    fields = [('person', 'role'), ]
+    fields = [('person', 'role', 'number_of_shares', 'amount_of_investment'), ]
     list_display = ['person', 'role', ]
     model = LegalRole
     search_fields = ['person__name']
     list_filter = ['role']
+    form = PersonRoleForm
+    formfield_overrides = {
+        models.IntegerField: {'widget': TextInput(attrs={'size':'20'})},
+    }
 
     def save_model(self, request, obj, form, change):
         try:

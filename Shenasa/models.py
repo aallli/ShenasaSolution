@@ -202,7 +202,8 @@ class LegalPerson(Person):
                 '<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(index % 2 + 1, index + 1,
                                                                                              pr.person.name,
                                                                                              Role(pr.role).label,
-                                                                                             LegalPerson.generate_comment(pr))
+                                                                                             LegalPerson.generate_comment(
+                                                                                                 pr))
                 for
                 index, pr in enumerate(self.person_role.all())))
         )
@@ -210,13 +211,17 @@ class LegalPerson(Person):
     person_roles_tabular.short_description = _('Selected Natural Key Persons')
 
     def legal_roles_tabular(self):
-        return mark_safe('<table><thead><tr><th>#</th><th>%s</th><th>%s</th></tr></thead><tbody>%s</tbody></table>' %
-                         (_('Name'), _('Role'), ''.join(
-                             '<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td></tr>'.format(index % 2 + 1, index + 1,
-                                                                                               pr.person.name,
-                                                                                               Role(pr.role).label) for
-                             index, pr in enumerate(self.legal_role.all())))
-                         )
+        return mark_safe(
+            '<table><thead><tr><th>#</th><th>%s</th><th>%s</th><th>%s</th></tr></thead><tbody>%s</tbody></table>' %
+            (_('Name'), _('Role'), _('Comment'), ''.join(
+                '<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(index % 2 + 1, index + 1,
+                                                                                             pr.person.name,
+                                                                                             Role(pr.role).label,
+                                                                                             LegalPerson.generate_comment(
+                                                                                                 pr))
+                for
+                index, pr in enumerate(self.legal_role.all())))
+        )
 
     legal_roles_tabular.short_description = _('Selected Legal Key Persons')
 
@@ -248,6 +253,8 @@ class LegalRole(models.Model):
     person = models.ForeignKey(LegalPerson, verbose_name=_('Legal Person'), blank=True, null=True,
                                on_delete=models.CASCADE)
     role = models.CharField(verbose_name=_('Role'), max_length=10, choices=Role.choices, default=Role.STACKHOLDER)
+    number_of_shares = models.IntegerField(verbose_name=_('Number of Shares'), default=0, max_length=10)
+    amount_of_investment = models.IntegerField(verbose_name=_('Amount of Investment (M rls)'), default=0, max_length=10)
 
     class Meta:
         unique_together = ['person', 'role']

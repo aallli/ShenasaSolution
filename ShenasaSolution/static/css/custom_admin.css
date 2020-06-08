@@ -41,6 +41,6 @@
     display: none;
 }
 
-.fieldBox.field-person_roles_tabular {
+.fieldBox.field-person_roles_tabular, .fieldBox.field-legal_roles_tabular {
     white-space: nowrap;
 }
