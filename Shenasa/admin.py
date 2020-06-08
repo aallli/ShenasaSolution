@@ -3,14 +3,20 @@ from django.contrib import messages
 from Shenasa.utils import to_jalali_full
 from django.utils.translation import ugettext_lazy as _
 from django_summernote.admin import SummernoteModelAdmin
-from Shenasa.models import LegalPerson, NaturalPerson, PersonRole, News
+from Shenasa.models import LegalPerson, NaturalPerson, PersonRole, News, LegalRole
 from jalali_date.admin import ModelAdminJalaliMixin, StackedInlineJalaliMixin, TabularInlineJalaliMixin
 
 
-class LegalPersonInline(admin.TabularInline):
+class PersonRoleInline(admin.TabularInline):
     model = LegalPerson.person_role.through
     verbose_name = _("Person Role")
     verbose_name_plural = _("Person Roles")
+
+
+class LegalRoleInline(admin.TabularInline):
+    model = LegalPerson.legal_role.through
+    verbose_name = _("Legal Role")
+    verbose_name_plural = _("Legal Roles")
 
 
 class LegalPersonNewsInline(admin.TabularInline):
@@ -36,6 +42,22 @@ class PersonRoleAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         try:
             super(PersonRoleAdmin, self).save_model(request, obj, form, change)
+        except Exception as e:
+            messages.set_level(request, messages.ERROR)
+            messages.error(request, e)
+
+
+@admin.register(LegalRole)
+class LegalRoleAdmin(admin.ModelAdmin):
+    fields = [('person', 'role'), ]
+    list_display = ['person', 'role', ]
+    model = LegalRole
+    search_fields = ['person__name']
+    list_filter = ['role']
+
+    def save_model(self, request, obj, form, change):
+        try:
+            super(LegalRoleAdmin, self).save_model(request, obj, form, change)
         except Exception as e:
             messages.set_level(request, messages.ERROR)
             messages.error(request, e)
@@ -110,21 +132,18 @@ class NaturalPersonAdmin(admin.ModelAdmin):
 
 @admin.register(LegalPerson)
 class LegalPersonAdmin(admin.ModelAdmin):
-    fields = [('name', 'active'), 'person_roles_tabular', 'news_tabular']
-    list_display = ['name', 'person_roles', 'active']
+    fields = [('name', 'active'), ('person_roles_tabular', 'legal_roles_tabular'), 'news_tabular']
+    list_display = ['name', 'person_roles', 'legal_roles', 'active']
     model = LegalPerson
     list_filter = ['active', 'person_role__role']
     search_fields = ['name', 'person_role__person__name']
-    readonly_fields = ['person_roles', 'person_roles_tabular', 'news_tabular']
-    inlines = [
-        LegalPersonInline,
-        LegalPersonNewsInline,
-    ]
+    readonly_fields = ['person_roles', 'person_roles_tabular', 'legal_roles_tabular', 'news_tabular']
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(LegalPersonAdmin, self).get_form(request, obj=obj, **kwargs)
         self.inlines = [
-            LegalPersonInline,
+            PersonRoleInline,
+            LegalRoleInline,
             LegalPersonNewsInline,
         ]
         permissions = request.user.get_all_permissions()

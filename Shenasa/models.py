@@ -9,6 +9,7 @@ from django.core.validators import RegexValidator
 from django.utils.translation import ugettext_lazy as _
 from Shenasa.utils import to_jalali_full
 
+
 class Role(models.TextChoices):
     FOUNDER = 'FN', _('Founder')
     CHAIRMAN = 'CH', _('Chairman')
@@ -66,6 +67,7 @@ class News(models.Model):
 
     def title(self):
         return mark_safe(self.description)
+
     title.short_description = _('Description')
 
 
@@ -111,7 +113,7 @@ class NaturalPerson(Person):
                 '<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
                     index % 2 + 1, index + 1, to_jalali_full(n.date), n.description, n.link)
                 for index, n in enumerate(self.news.all())))
-            )
+        )
 
     news_tabular.short_description = _('News')
 
@@ -169,7 +171,8 @@ class PersonRole(models.Model):
 
 
 class LegalPerson(Person):
-    person_role = models.ManyToManyField(PersonRole, verbose_name=_('Key Person'), related_name='person_role')
+    person_role = models.ManyToManyField(PersonRole, verbose_name=_('Natural Key Person'), related_name='person_role')
+    legal_role = models.ManyToManyField('LegalRole', verbose_name=_('Legal Key Person'), related_name='legal_role')
     news = models.ManyToManyField(News, verbose_name=_('News'), related_name='legal_person_news')
 
     class Meta:
@@ -192,13 +195,30 @@ class LegalPerson(Person):
                              index, pr in enumerate(self.person_role.all())))
                          )
 
-    person_roles_tabular.short_description = _('Selected Legal Persons')
+    person_roles_tabular.short_description = _('Selected Natural Key Persons')
+
+    def legal_roles_tabular(self):
+        return mark_safe('<table><thead><tr><th>#</th><th>%s</th><th>%s</th></tr></thead><tbody>%s</tbody></table>' %
+                         (_('Name'), _('Role'), ''.join(
+                             '<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td></tr>'.format(index % 2 + 1, index + 1,
+                                                                                               pr.person.name,
+                                                                                               Role(pr.role).label) for
+                             index, pr in enumerate(self.legal_role.all())))
+                         )
+
+    legal_roles_tabular.short_description = _('Selected Legal Key Persons')
 
     def person_roles(self):
         return ' - '.join(
             '{}: {}'.format(Role(pr.role).label, pr.person.name) for index, pr in enumerate(self.person_role.all()))
 
-    person_roles.short_description = _('Selected Legal Persons')
+    person_roles.short_description = _('Selected Natural Key Persons')
+
+    def legal_roles(self):
+        return ' - '.join(
+            '{}: {}'.format(Role(pr.role).label, pr.person.name) for index, pr in enumerate(self.legal_role.all()))
+
+    legal_roles.short_description = _('Selected Legal Key Persons')
 
     def news_tabular(self):
         return mark_safe(
@@ -207,6 +227,24 @@ class LegalPerson(Person):
                 '<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
                     index % 2 + 1, index + 1, to_jalali_full(n.date), n.description, n.link)
                 for index, n in enumerate(self.news.all())))
-            )
+        )
 
     news_tabular.short_description = _('News')
+
+
+class LegalRole(models.Model):
+    person = models.ForeignKey(LegalPerson, verbose_name=_('Legal Person'), blank=True, null=True,
+                               on_delete=models.CASCADE)
+    role = models.CharField(verbose_name=_('Role'), max_length=10, choices=Role.choices, default=Role.STACKHOLDER)
+
+    class Meta:
+        unique_together = ['person', 'role']
+        verbose_name = _('Legal Role')
+        verbose_name_plural = _('Legal Roles')
+        ordering = ['person', 'role']
+
+    def __str__(self):
+        return '%s (%s)' % (self.person, Role(self.role).label)
+
+    def __unicode__(self):
+        return '%s (%s)' % (self.person, Role(self.role).label)
