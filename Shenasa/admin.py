@@ -107,7 +107,7 @@ class NaturalPersonAdmin(admin.ModelAdmin):
     list_display = ['name', 'NID', 'mobile', 'active', ]
     model = NaturalPerson
     list_filter = ['active']
-    search_fields = ['name', 'NID']
+    search_fields = ['name', 'NID', 'mobile']
     readonly_fields = ['image_tag', 'news_tabular']
 
     def get_form(self, request, obj=None, **kwargs):
