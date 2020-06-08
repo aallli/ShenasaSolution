@@ -25,7 +25,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY", default="az^xo9e_mq0xw#f@x%tvt)bi!o54f
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = int(os.environ.get("DEBUG", default=1))
 
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", default="localhost").split(" ")
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", default="localhost").split(" ")
 
 # Application definition
 
