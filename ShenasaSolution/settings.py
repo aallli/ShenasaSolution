@@ -134,14 +134,14 @@ LOCALE_PATHS = (os.path.join(BASE_DIR, "locale"),)
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'ShenasaSolution/static'),
-    #MEDIA_ROOT,
-]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'ShenasaSolution/static'),
+    MEDIA_ROOT,
+]
 
 # Image sizes
 MAX_SMALL_IMAGE_WIDTH = 150  # in pixel
