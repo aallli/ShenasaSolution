@@ -156,8 +156,8 @@ def auto_delete_file_on_change(sender, instance, **kwargs):
 class PersonRole(models.Model):
     person = models.ForeignKey(NaturalPerson, verbose_name=_('Person'), blank=True, null=True, on_delete=models.CASCADE)
     role = models.CharField(verbose_name=_('Role'), max_length=10, choices=Role.choices, default=Role.STACKHOLDER)
-    number_of_shares = models.IntegerField(verbose_name=_('Number of Shares'), default=0, max_length=10)
-    amount_of_investment = models.IntegerField(verbose_name=_('Amount of Investment (M rls)'), default=0, max_length=10)
+    number_of_shares = models.IntegerField(verbose_name=_('Number of Shares'), default=0)
+    amount_of_investment = models.IntegerField(verbose_name=_('Amount of Investment (M rls)'), default=0)
 
     class Meta:
         unique_together = ['person', 'role']
@@ -253,8 +253,8 @@ class LegalRole(models.Model):
     person = models.ForeignKey(LegalPerson, verbose_name=_('Legal Person'), blank=True, null=True,
                                on_delete=models.CASCADE)
     role = models.CharField(verbose_name=_('Role'), max_length=10, choices=Role.choices, default=Role.STACKHOLDER)
-    number_of_shares = models.IntegerField(verbose_name=_('Number of Shares'), default=0, max_length=10)
-    amount_of_investment = models.IntegerField(verbose_name=_('Amount of Investment (M rls)'), default=0, max_length=10)
+    number_of_shares = models.IntegerField(verbose_name=_('Number of Shares'), default=0)
+    amount_of_investment = models.IntegerField(verbose_name=_('Amount of Investment (M rls)'), default=0)
 
     class Meta:
         unique_together = ['person', 'role']
@@ -267,3 +267,28 @@ class LegalRole(models.Model):
 
     def __unicode__(self):
         return '%s (%s)' % (self.person, Role(self.role).label)
+
+
+class Brand(LegalPerson):
+    logo = ResizedImageField(size=[settings.MAX_SMALL_IMAGE_WIDTH, settings.MAX_SMALL_IMAGE_HEIGHT],
+                             verbose_name=_('Logo'), upload_to='media/', blank=True, null=True)
+
+    class Meta:
+        verbose_name = _('Brand')
+        verbose_name_plural = _('Brands')
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+    def __unicode__(self):
+        return self.name
+
+    def logo_tag(self):
+        if self.logo:
+            return mark_safe('<a href="%s%s" target="_blank"><img src="%s%s" title="%s" alt="%s"/></a>' % (
+            settings.MEDIA_URL, self.logo, settings.MEDIA_URL, self.logo, self.name, self.name))
+        else:
+            return mark_safe('<img src="%simg/person-icon.jpg" width="150" height="150" title="%s" alt="%s"/>' % (settings.STATIC_URL, self.name, self.name))
+
+    logo_tag.short_description = _('Image')
