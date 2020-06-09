@@ -297,3 +297,39 @@ class Brand(LegalPerson):
             settings.STATIC_URL, self.name, self.name))
 
     logo_tag.short_description = _('Image')
+
+
+
+@receiver(models.signals.post_delete, sender=Brand)
+def auto_delete_file_on_delete(sender, instance, **kwargs):
+    """
+    Deletes logo from filesystem
+    when corresponding `Brand` object is deleted.
+    """
+    if instance.logo:
+        if os.path.isfile(instance.logo.path):
+            os.remove(instance.logo.path)
+
+
+@receiver(models.signals.pre_save, sender=Brand)
+def auto_delete_file_on_change(sender, instance, **kwargs):
+    """
+    Deletes old logo from filesystem
+    when corresponding `Brand` object is updated
+    with new file.
+    """
+    if not instance.pk:
+        return False
+
+    try:
+        old_logo = Brand.objects.get(pk=instance.pk).logo
+    except Brand.DoesNotExist:
+        return False
+
+    new_logo = instance.logo
+    try:
+        if not old_logo == new_logo:
+            if os.path.isfile(old_logo.path):
+                os.remove(old_logo.path)
+    except:
+        return False
