@@ -77,15 +77,19 @@ class NaturalPerson(Person):
         regex=r'^\d{9,15}$',
         message=_("Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed."))
     mobile = models.CharField(verbose_name=_('Mobile'), validators=[mobile_regex], max_length=17, blank=True)
-    image = ResizedImageField(size=[settings.MAX_SMALL_IMAGE_WIDTH, settings.MAX_SMALL_IMAGE_HEIGHT],
+    image = ResizedImageField(size=[settings.MAX_MEDIUM_IMAGE_WIDTH, settings.MAX_MEDIUM_IMAGE_HEIGHT],
                               verbose_name=_('Person Image'), upload_to='media/', blank=True, null=True)
     news = models.ManyToManyField(News, verbose_name=_('News'), related_name='natural_person_news')
 
     def image_tag(self):
         if self.image:
-            return mark_safe('<img src="%s%s"/>' % (settings.MEDIA_URL, self.image))
+            return mark_safe(
+                '<a href="%s%s" target="_blank"><img src="%s%s" title="%s" alt="%s" style="max-width:%spx;max-height:%spx;"/></a>' % (
+                    settings.MEDIA_URL, self.image, settings.MEDIA_URL, self.image, self.name, self.name,
+                    settings.MAX_SMALL_IMAGE_WIDTH, settings.MAX_SMALL_IMAGE_HEIGHT))
         else:
-            return mark_safe('<img src="%simg/person-icon.jpg" width="150" height="150" />' % (settings.STATIC_URL))
+            return mark_safe('<img src="%simg/person-icon.jpg" width="150" height="150" title="%s" alt="%s"/>' % (
+            settings.STATIC_URL, self.name, self.name))
 
     image_tag.short_description = _('Image')
 
@@ -287,8 +291,9 @@ class Brand(LegalPerson):
     def logo_tag(self):
         if self.logo:
             return mark_safe('<a href="%s%s" target="_blank"><img src="%s%s" title="%s" alt="%s"/></a>' % (
-            settings.MEDIA_URL, self.logo, settings.MEDIA_URL, self.logo, self.name, self.name))
+                settings.MEDIA_URL, self.logo, settings.MEDIA_URL, self.logo, self.name, self.name))
         else:
-            return mark_safe('<img src="%simg/person-icon.jpg" width="150" height="150" title="%s" alt="%s"/>' % (settings.STATIC_URL, self.name, self.name))
+            return mark_safe('<img src="%simg/person-icon.jpg" width="150" height="150" title="%s" alt="%s"/>' % (
+            settings.STATIC_URL, self.name, self.name))
 
     logo_tag.short_description = _('Image')
