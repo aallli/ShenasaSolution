@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-10 13:54+0430\n"
+"POT-Creation-Date: 2020-06-10 14:16+0430\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -38,43 +38,43 @@ msgstr "سامانه شناسا"
 msgid "Welcome to Shenasa administration control panel"
 msgstr "به پنل مدیریت شناسا خوش آمدید."
 
-#: .\Shenasa\admin.py:13 .\Shenasa\models.py:176
+#: .\Shenasa\admin.py:23 .\Shenasa\admin.py:182 .\Shenasa\models.py:176
 #, fuzzy
 #| msgid "Person"
 msgid "Person Role"
 msgstr "سمت حقیقی"
 
-#: .\Shenasa\admin.py:14 .\Shenasa\models.py:177
+#: .\Shenasa\admin.py:24 .\Shenasa\models.py:177
 #, fuzzy
 #| msgid "Persons"
 msgid "Person Roles"
 msgstr "سمتهای حقیقی"
 
-#: .\Shenasa\admin.py:19 .\Shenasa\models.py:273
+#: .\Shenasa\admin.py:29 .\Shenasa\admin.py:183 .\Shenasa\models.py:273
 #, fuzzy
 #| msgid "Legal Person"
 msgid "Legal Role"
 msgstr "سمت حقوقی"
 
-#: .\Shenasa\admin.py:20 .\Shenasa\models.py:274
+#: .\Shenasa\admin.py:30 .\Shenasa\models.py:274
 #, fuzzy
 #| msgid "Legal Person"
 msgid "Legal Roles"
 msgstr "سمتهای حقوقی"
 
-#: .\Shenasa\admin.py:25 .\Shenasa\admin.py:26
+#: .\Shenasa\admin.py:35 .\Shenasa\admin.py:36
 #, fuzzy
 #| msgid "Legal Persons"
 msgid "Legal Person News"
 msgstr "اخبار اشخاص حقوقی"
 
-#: .\Shenasa\admin.py:31 .\Shenasa\admin.py:32
+#: .\Shenasa\admin.py:41 .\Shenasa\admin.py:42
 #, fuzzy
 #| msgid "Natural Persons"
 msgid "Natural Person News"
 msgstr "اخبار اشخاص حقیقی"
 
-#: .\Shenasa\admin.py:101 .\Shenasa\models.py:50 .\Shenasa\models.py:116
+#: .\Shenasa\admin.py:113 .\Shenasa\models.py:50 .\Shenasa\models.py:116
 #: .\Shenasa\models.py:255
 msgid "Creation Date"
 msgstr "تاریخ ایجاد"

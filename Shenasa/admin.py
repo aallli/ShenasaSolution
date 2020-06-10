@@ -1,4 +1,6 @@
+from django.db import models
 from django.contrib import admin
+from django.forms import TextInput
 from django.contrib import messages
 from Shenasa.utils import to_jalali_full
 from Shenasa.forms import PersonRoleForm
@@ -6,6 +8,16 @@ from django.utils.translation import ugettext_lazy as _
 from django_summernote.admin import SummernoteModelAdmin
 from Shenasa.models import LegalPerson, NaturalPerson, PersonRole, News, LegalRole, Brand
 from jalali_date.admin import ModelAdminJalaliMixin, StackedInlineJalaliMixin, TabularInlineJalaliMixin
+
+
+def custom_titled_filter(title):
+    class Wrapper(admin.FieldListFilter):
+        def __new__(cls, *args, **kwargs):
+            instance = admin.FieldListFilter.create(*args, **kwargs)
+            instance.title = title
+            return instance
+
+    return Wrapper
 
 
 class PersonRoleInline(admin.TabularInline):
@@ -31,8 +43,6 @@ class NaturalPersonNewsInline(admin.TabularInline):
     verbose_name = _("Natural Person News")
     verbose_name_plural = _("Natural Person News")
 
-from django.db import models
-from django.forms import TextInput, Textarea
 
 @admin.register(PersonRole)
 class PersonRoleAdmin(admin.ModelAdmin):
@@ -43,7 +53,7 @@ class PersonRoleAdmin(admin.ModelAdmin):
     list_filter = ['role']
     form = PersonRoleForm
     formfield_overrides = {
-        models.IntegerField: {'widget': TextInput(attrs={'size':'20'})},
+        models.IntegerField: {'widget': TextInput(attrs={'size': '20'})},
     }
 
     def save_model(self, request, obj, form, change):
@@ -63,7 +73,7 @@ class LegalRoleAdmin(admin.ModelAdmin):
     list_filter = ['role']
     form = PersonRoleForm
     formfield_overrides = {
-        models.IntegerField: {'widget': TextInput(attrs={'size':'20'})},
+        models.IntegerField: {'widget': TextInput(attrs={'size': '20'})},
     }
 
     def save_model(self, request, obj, form, change):
@@ -167,7 +177,8 @@ class BrandAdmin(admin.ModelAdmin):
     fields = [('name', 'active'), ('logo', 'logo_tag'), ('person_roles_tabular', 'legal_roles_tabular'), 'news_tabular']
     list_display = ['name', 'person_roles', 'legal_roles', 'active']
     model = Brand
-    list_filter = ['active', 'person_role__role', 'legal_role__role']
+    list_filter = ['active', ('person_role__role', custom_titled_filter(_('Person Role'))),
+                   ('legal_role__role', custom_titled_filter(_('Legal Role')))]
     search_fields = ['name', 'person_role__person__name']
     readonly_fields = ['person_roles_tabular', 'legal_roles_tabular', 'news_tabular', 'logo_tag']
 
