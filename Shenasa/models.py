@@ -123,18 +123,21 @@ class NaturalPerson(Person):
 
 
 @receiver(models.signals.post_delete, sender=NaturalPerson)
-def auto_delete_file_on_delete(sender, instance, **kwargs):
+def auto_delete_natural_person_file_on_delete(sender, instance, **kwargs):
     """
     Deletes image from filesystem
     when corresponding `NaturalPerson` object is deleted.
     """
-    if instance.image:
-        if os.path.isfile(instance.image.path):
-            os.remove(instance.image.path)
+    if instance.image.name:
+        try:
+            if os.path.isfile(instance.image.path):
+                os.remove(instance.image.path)
+        except Exception as e:
+            print('Delete error: %s' % e.args[0])
 
 
 @receiver(models.signals.pre_save, sender=NaturalPerson)
-def auto_delete_file_on_change(sender, instance, **kwargs):
+def auto_delete_natural_person_file_on_change(sender, instance, **kwargs):
     """
     Deletes old image from filesystem
     when corresponding `NaturalPerson` object is updated
@@ -148,12 +151,17 @@ def auto_delete_file_on_change(sender, instance, **kwargs):
     except NaturalPerson.DoesNotExist:
         return False
 
+    if not old_image.name:
+        return False
+
     new_image = instance.image
+
     try:
         if not old_image == new_image:
             if os.path.isfile(old_image.path):
                 os.remove(old_image.path)
-    except:
+    except Exception as e:
+        print('Delete error: %s' % e.args[0])
         return False
 
 
@@ -301,18 +309,21 @@ class Brand(LegalPerson):
 
 
 @receiver(models.signals.post_delete, sender=Brand)
-def auto_delete_file_on_delete(sender, instance, **kwargs):
+def auto_delete_brand_logo_on_delete(sender, instance, **kwargs):
     """
     Deletes logo from filesystem
     when corresponding `Brand` object is deleted.
     """
-    if instance.logo:
-        if os.path.isfile(instance.logo.path):
-            os.remove(instance.logo.path)
+    if instance.logo.name:
+        try:
+            if os.path.isfile(instance.logo.path):
+                os.remove(instance.logo.path)
+        except Exception as e:
+            print('Delete error: %s' % e.args[0])
 
 
 @receiver(models.signals.pre_save, sender=Brand)
-def auto_delete_file_on_change(sender, instance, **kwargs):
+def auto_delete_brand_logo_on_change(sender, instance, **kwargs):
     """
     Deletes old logo from filesystem
     when corresponding `Brand` object is updated
@@ -326,10 +337,14 @@ def auto_delete_file_on_change(sender, instance, **kwargs):
     except Brand.DoesNotExist:
         return False
 
+    if not old_logo.name:
+        return False
+
     new_logo = instance.logo
     try:
         if not old_logo == new_logo:
             if os.path.isfile(old_logo.path):
                 os.remove(old_logo.path)
-    except:
+    except Exception as e:
+        print('Delete error: %s' % e.args[0])
         return False
