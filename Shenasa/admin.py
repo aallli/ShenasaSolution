@@ -167,9 +167,9 @@ class BrandAdmin(admin.ModelAdmin):
     fields = [('name', 'active'), ('logo', 'logo_tag'), ('person_roles_tabular', 'legal_roles_tabular'), 'news_tabular']
     list_display = ['name', 'person_roles', 'legal_roles', 'active']
     model = Brand
-    list_filter = ['active', 'person_role__role']
+    list_filter = ['active', 'person_role__role', 'legal_role__role']
     search_fields = ['name', 'person_role__person__name']
-    readonly_fields = ['person_roles', 'person_roles_tabular', 'legal_roles_tabular', 'news_tabular', 'logo_tag']
+    readonly_fields = ['person_roles_tabular', 'legal_roles_tabular', 'news_tabular', 'logo_tag']
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(BrandAdmin, self).get_form(request, obj=obj, **kwargs)
