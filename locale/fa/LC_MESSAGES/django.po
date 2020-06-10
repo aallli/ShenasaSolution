@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-09 09:19+0430\n"
+"POT-Creation-Date: 2020-06-10 13:54+0430\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -38,25 +38,25 @@ msgstr "سامانه شناسا"
 msgid "Welcome to Shenasa administration control panel"
 msgstr "به پنل مدیریت شناسا خوش آمدید."
 
-#: .\Shenasa\admin.py:13 .\Shenasa\models.py:164
+#: .\Shenasa\admin.py:13 .\Shenasa\models.py:176
 #, fuzzy
 #| msgid "Person"
 msgid "Person Role"
 msgstr "سمت حقیقی"
 
-#: .\Shenasa\admin.py:14 .\Shenasa\models.py:165
+#: .\Shenasa\admin.py:14 .\Shenasa\models.py:177
 #, fuzzy
 #| msgid "Persons"
 msgid "Person Roles"
 msgstr "سمتهای حقیقی"
 
-#: .\Shenasa\admin.py:19 .\Shenasa\models.py:261
+#: .\Shenasa\admin.py:19 .\Shenasa\models.py:273
 #, fuzzy
 #| msgid "Legal Person"
 msgid "Legal Role"
 msgstr "سمت حقوقی"
 
-#: .\Shenasa\admin.py:20 .\Shenasa\models.py:262
+#: .\Shenasa\admin.py:20 .\Shenasa\models.py:274
 #, fuzzy
 #| msgid "Legal Person"
 msgid "Legal Roles"
@@ -74,8 +74,8 @@ msgstr "اخبار اشخاص حقوقی"
 msgid "Natural Person News"
 msgstr "اخبار اشخاص حقیقی"
 
-#: .\Shenasa\admin.py:101 .\Shenasa\models.py:50 .\Shenasa\models.py:112
-#: .\Shenasa\models.py:243
+#: .\Shenasa\admin.py:101 .\Shenasa\models.py:50 .\Shenasa\models.py:116
+#: .\Shenasa\models.py:255
 msgid "Creation Date"
 msgstr "تاریخ ایجاد"
 
@@ -141,7 +141,7 @@ msgstr "مدیر فنی"
 msgid "Co Founder"
 msgstr "هم بنیانگذار"
 
-#: .\Shenasa\models.py:31 .\Shenasa\models.py:201 .\Shenasa\models.py:216
+#: .\Shenasa\models.py:31 .\Shenasa\models.py:213 .\Shenasa\models.py:228
 msgid "Name"
 msgstr "نام"
 
@@ -149,7 +149,7 @@ msgstr "نام"
 msgid "Active"
 msgstr "فعال"
 
-#: .\Shenasa\models.py:36 .\Shenasa\models.py:157
+#: .\Shenasa\models.py:36 .\Shenasa\models.py:169
 msgid "Person"
 msgstr "شخص"
 
@@ -157,17 +157,17 @@ msgstr "شخص"
 msgid "Persons"
 msgstr "اشخاص"
 
-#: .\Shenasa\models.py:48 .\Shenasa\models.py:71 .\Shenasa\models.py:112
-#: .\Shenasa\models.py:243
+#: .\Shenasa\models.py:48 .\Shenasa\models.py:71 .\Shenasa\models.py:116
+#: .\Shenasa\models.py:255
 msgid "Description"
 msgstr "شرح"
 
-#: .\Shenasa\models.py:49 .\Shenasa\models.py:112 .\Shenasa\models.py:243
+#: .\Shenasa\models.py:49 .\Shenasa\models.py:116 .\Shenasa\models.py:255
 msgid "Link"
 msgstr "منبع"
 
 #: .\Shenasa\models.py:53 .\Shenasa\models.py:54 .\Shenasa\models.py:82
-#: .\Shenasa\models.py:118 .\Shenasa\models.py:178 .\Shenasa\models.py:249
+#: .\Shenasa\models.py:122 .\Shenasa\models.py:190 .\Shenasa\models.py:261
 msgid "News"
 msgstr "اخبار"
 
@@ -191,74 +191,78 @@ msgstr "تلفن همراه"
 msgid "Person Image"
 msgstr "تصویر شخص"
 
-#: .\Shenasa\models.py:90
+#: .\Shenasa\models.py:94 .\Shenasa\models.py:307
 msgid "Image"
 msgstr "تصویر"
 
-#: .\Shenasa\models.py:93
+#: .\Shenasa\models.py:97
 msgid "Natural Person"
 msgstr "شخص حقیقی"
 
-#: .\Shenasa\models.py:94
+#: .\Shenasa\models.py:98
 msgid "Natural Persons"
 msgstr "اشخاص حقیقی"
 
-#: .\Shenasa\models.py:158 .\Shenasa\models.py:201 .\Shenasa\models.py:216
-#: .\Shenasa\models.py:255
+#: .\Shenasa\models.py:170 .\Shenasa\models.py:213 .\Shenasa\models.py:228
+#: .\Shenasa\models.py:267
 msgid "Role"
 msgstr "سمت"
 
-#: .\Shenasa\models.py:159 .\Shenasa\models.py:194 .\Shenasa\models.py:256
+#: .\Shenasa\models.py:171 .\Shenasa\models.py:206 .\Shenasa\models.py:268
 msgid "Number of Shares"
 msgstr "تعداد سهم"
 
-#: .\Shenasa\models.py:160 .\Shenasa\models.py:196 .\Shenasa\models.py:257
+#: .\Shenasa\models.py:172 .\Shenasa\models.py:208 .\Shenasa\models.py:269
 #, fuzzy
 #| msgid "Amount of Investment"
 msgid "Amount of Investment (M rls)"
 msgstr "میزان سرمایه گذاری (میلیون ریال)"
 
-#: .\Shenasa\models.py:176
+#: .\Shenasa\models.py:188
 #, fuzzy
 #| msgid "Natural Person"
 msgid "Natural Key Person"
 msgstr "سمتهای حقیقی"
 
-#: .\Shenasa\models.py:177
+#: .\Shenasa\models.py:189
 #, fuzzy
 #| msgid "Legal Person"
 msgid "Legal Key Person"
 msgstr "سمتهای حقوقی"
 
-#: .\Shenasa\models.py:181 .\Shenasa\models.py:253
+#: .\Shenasa\models.py:193 .\Shenasa\models.py:265
 msgid "Legal Person"
 msgstr "شخص حقوقی"
 
-#: .\Shenasa\models.py:182
+#: .\Shenasa\models.py:194
 msgid "Legal Persons"
 msgstr "اشخاص حقوقی"
 
-#: .\Shenasa\models.py:201 .\Shenasa\models.py:216
+#: .\Shenasa\models.py:213 .\Shenasa\models.py:228
 msgid "Comment"
 msgstr "توضیحات"
 
-#: .\Shenasa\models.py:211 .\Shenasa\models.py:232
+#: .\Shenasa\models.py:223 .\Shenasa\models.py:244
 #, fuzzy
 #| msgid "Legal Persons"
 msgid "Selected Natural Key Persons"
 msgstr "سمتهای حقیقی منتخب"
 
-#: .\Shenasa\models.py:226 .\Shenasa\models.py:238
+#: .\Shenasa\models.py:238 .\Shenasa\models.py:250
 #, fuzzy
 #| msgid "Legal Persons"
 msgid "Selected Legal Key Persons"
 msgstr "سمتهای حقوقی منتخب"
 
-#: .\Shenasa\models.py:275
+#: .\Shenasa\models.py:286
+msgid "Logo"
+msgstr "لوگو"
+
+#: .\Shenasa\models.py:289
 msgid "Brand"
 msgstr "نمانام رسانه ای"
 
-#: .\Shenasa\models.py:276
+#: .\Shenasa\models.py:290
 msgid "Brands"
 msgstr "نمانام های رسانه ای"
 

@@ -1,11 +1,11 @@
 from django.contrib import admin
 from django.contrib import messages
 from Shenasa.utils import to_jalali_full
+from Shenasa.forms import PersonRoleForm
 from django.utils.translation import ugettext_lazy as _
 from django_summernote.admin import SummernoteModelAdmin
 from Shenasa.models import LegalPerson, NaturalPerson, PersonRole, News, LegalRole, Brand
 from jalali_date.admin import ModelAdminJalaliMixin, StackedInlineJalaliMixin, TabularInlineJalaliMixin
-from Shenasa.forms import PersonRoleForm
 
 
 class PersonRoleInline(admin.TabularInline):
