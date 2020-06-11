@@ -31,6 +31,8 @@ ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", default="localhost").split(" ")
 
 INSTALLED_APPS = [
     # django apps
+    'admin_interface',
+    'colorfield',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
