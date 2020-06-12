@@ -44,3 +44,7 @@
 .fieldBox.field-person_roles_tabular, .fieldBox.field-legal_roles_tabular {
     white-space: nowrap;
 }
+
+.fieldBox.field-logo_tag label {
+    display: none;
+}
