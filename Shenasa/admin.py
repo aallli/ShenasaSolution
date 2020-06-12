@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib import admin
+from django.db.transaction import atomic
 from django.forms import TextInput
 from django.contrib import messages
 from Shenasa.utils import to_jalali_full
@@ -178,6 +179,21 @@ class LegalPersonAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         try:
             super(LegalPersonAdmin, self).save_model(request, obj, form, change)
+        except Exception as e:
+            messages.set_level(request, messages.ERROR)
+            messages.error(request, e)
+
+    @atomic()
+    def save_formset(self, request, form, formset, change):
+        try:
+            instances = formset.save(commit=False)
+            if formset.prefix == 'LegalPerson_legal_role':
+                for lp in formset.cleaned_data:
+                    if 'id' in lp and not lp['id'] and lp['legalrole'].person.pk == formset.instance.pk:
+                       raise Exception(_('Self relation from "%(legalrole)s" to "%(legalrole)s" is not valid.') % {
+                                    'legalrole': formset.instance.name})
+            formset.save_m2m()
+            super(LegalPersonAdmin, self).save_formset(request, form, formset, change)
         except Exception as e:
             messages.set_level(request, messages.ERROR)
             messages.error(request, e)
