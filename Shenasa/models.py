@@ -1,4 +1,5 @@
 import os
+from functools import reduce
 from django.db import models
 from django.utils import timezone
 from django.dispatch import receiver
@@ -28,11 +29,11 @@ class Role(models.TextChoices):
 
 
 class Bias(models.TextChoices):
-    MOST_RIGHT = '#39E749', _('Most Right')
-    RIGHT = '#3390E7', _('Partly Right')
-    NEUTRAL = '#E7E7E7', _('Neutral')
-    LEFT = '#E4E736', _('Partly Left')
-    MOST_LEFT = '#E74C3C', _('Most Left')
+    MOST_RIGHT = 2, _('Most Right')
+    RIGHT = 1, _('Partly Right')
+    NEUTRAL = 0, _('Neutral')
+    LEFT = -1, _('Partly Left')
+    MOST_LEFT = -2, _('Most Left')
 
 
 class Person(models.Model):
@@ -80,9 +81,8 @@ class News(models.Model):
     title.short_description = _('Description')
 
     def bias_tag(self):
-        return mark_safe('<div id="news_bias" '
-                         'style="background-color:%s; width:20px; height:20px; border: solid 1px #b3b3b3; border-radius:10px;"'
-                         'alt="%s" title="%s"></div>' % (self.bias, Bias(self.bias).label, Bias(self.bias).label))
+        return mark_safe('<div id="news_bias" class="bias bias%s" alt="%s" title="%s"></div>' %
+                         (self.bias, Bias(self.bias).label, Bias(self.bias).label))
 
     bias_tag.short_description = _('Bias')
 
@@ -105,7 +105,7 @@ class NaturalPerson(Person):
                     settings.MAX_SMALL_IMAGE_WIDTH, settings.MAX_SMALL_IMAGE_HEIGHT))
         else:
             return mark_safe('<img src="%simg/person-icon.jpg" width="150" height="150" title="%s" alt="%s"/>' % (
-            settings.STATIC_URL, self.name, self.name))
+                settings.STATIC_URL, self.name, self.name))
 
     image_tag.short_description = _('Image')
 
@@ -136,6 +136,24 @@ class NaturalPerson(Person):
         )
 
     news_tabular.short_description = _('News')
+
+    def bias_tag(self):
+        news_count = self.news.all().count()
+        if news_count == 0:
+            bias = 0
+        else:
+            bias = round(reduce(lambda bias, news: bias + int(news.bias), self.news.all(), 0) / news_count)
+
+        def get_bias_label(_bias):
+            for b in Bias:
+                if int(b.value) == _bias:
+                    return b.label
+
+        label = get_bias_label(bias)
+        return mark_safe('<div id="person_bias" class="bias bias%s" alt="%s" title="%s"></div>' %
+                         (bias, label, label))
+
+    bias_tag.short_description = _('Bias')
 
 
 @receiver(models.signals.post_delete, sender=NaturalPerson)
@@ -318,7 +336,7 @@ class Brand(LegalPerson):
                 settings.MEDIA_URL, self.logo, settings.MEDIA_URL, self.logo, self.name, self.name))
         else:
             return mark_safe('<img src="%simg/person-icon.jpg" width="150" height="150" title="%s" alt="%s"/>' % (
-            settings.STATIC_URL, self.name, self.name))
+                settings.STATIC_URL, self.name, self.name))
 
     logo_tag.short_description = _('Image')
 

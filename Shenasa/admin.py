@@ -121,13 +121,13 @@ class NewsAdmin(ModelAdminJalaliMixin, SummernoteModelAdmin):
 
 @admin.register(NaturalPerson)
 class NaturalPersonAdmin(admin.ModelAdmin):
-    fields = ['name', 'NID', 'mobile', 'active', ('image', 'image_tag'), 'news_tabular']
-    list_display = ['name', 'NID', 'mobile', 'active', ]
+    fields = [('name', 'bias_tag'), 'NID', 'mobile', 'active', ('image', 'image_tag'), 'news_tabular']
+    list_display = ['bias_tag', 'name', 'NID', 'mobile', 'active', ]
     list_display_links = ['name', 'NID', 'mobile', 'active', ]
     model = NaturalPerson
     list_filter = ['active']
     search_fields = ['name', 'NID', 'mobile']
-    readonly_fields = ['image_tag', 'news_tabular']
+    readonly_fields = ['image_tag', 'news_tabular', 'bias_tag']
     save_on_top = True
 
     def get_form(self, request, obj=None, **kwargs):

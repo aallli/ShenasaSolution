@@ -1,21 +1,13 @@
 @font-face {
     font-family: 'iransans';
     src: url('../fonts/iransans-bold.eot?#') format('eot'); /* IE9 Compat Modes */
-    src:
-            url('../fonts/iransans-bold.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-            url('../fonts/iransans-bold.woff2') format('woff2'), /* Super Modern Browsers */
-            url('../fonts/iransans-bold.woff') format('woff'), /* Pretty Modern Browsers */
-            url('../fonts/iransans.ttf') format('truetype'); /* Safari, Android, iOS */
+    src: url('../fonts/iransans-bold.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('../fonts/iransans-bold.woff2') format('woff2'), /* Super Modern Browsers */ url('../fonts/iransans-bold.woff') format('woff'), /* Pretty Modern Browsers */ url('../fonts/iransans.ttf') format('truetype'); /* Safari, Android, iOS */
     font-weight: bold;
 }
 
 @font-face {
     src: url('../fonts/iransans-light.eot?#') format('eot'); /* IE9 Compat Modes */
-    src:
-            url('../fonts/iransans-light.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-            url('../fonts/iransans-light.woff2') format('woff2'), /* Super Modern Browsers */
-            url('../fonts/iransans-light.woff') format('woff'), /* Pretty Modern Browsers */
-            url('../fonts/iransans.ttf') format('truetype'); /* Safari, Android, iOS */
+    src: url('../fonts/iransans-light.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('../fonts/iransans-light.woff2') format('woff2'), /* Super Modern Browsers */ url('../fonts/iransans-light.woff') format('woff'), /* Pretty Modern Browsers */ url('../fonts/iransans.ttf') format('truetype'); /* Safari, Android, iOS */
     font-weight: 400;
 }
 
@@ -24,7 +16,7 @@
 }
 
 :lang(en) {
-    font-family: "Roboto","Lucida Grande","DejaVu Sans","Bitstream Vera Sans",Verdana,Arial,sans-serif !important;
+    font-family: "Roboto", "Lucida Grande", "DejaVu Sans", "Bitstream Vera Sans", Verdana, Arial, sans-serif !important;
 }
 
 .i18n_flag {
@@ -49,4 +41,35 @@
 .fieldBox.field-image_tag label,
 .fieldBox.field-box.field-bias_tag label {
     display: none;
+}
+
+.bias {
+    width: 20px;
+    height: 20px;
+    border: solid 1px #b3b3b3;
+    border-radius: 10px
+}
+
+.bias2 {
+    background-color: #39E749;
+}
+
+.bias1 {
+    background-color: #3390E7;
+}
+
+.bias0 {
+    background-color: #E7E7E7;
+}
+
+.bias-1 {
+    background-color: #E4E736;
+}
+
+.bias-2 {
+    background-color: #E74C3C;
+}
+
+.fieldBox.field-bias_tag div {
+    float: left;
 }

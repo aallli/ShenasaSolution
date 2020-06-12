@@ -26,7 +26,7 @@ function bind_selector() {
     }
 
     bias_field.onchange = function () {
-        document.getElementById('news_bias').style.backgroundColor = this.value;
+        document.getElementById('news_bias').className = 'bias bias' + this.value;
     }
 }
 
