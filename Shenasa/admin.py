@@ -152,13 +152,13 @@ class NaturalPersonAdmin(admin.ModelAdmin):
 
 @admin.register(LegalPerson)
 class LegalPersonAdmin(admin.ModelAdmin):
-    fields = [('name', 'active'), ('person_roles_tabular', 'legal_roles_tabular'), 'news_tabular']
-    list_display = ['name', 'person_roles', 'legal_roles', 'active']
+    fields = [('name', 'active', 'bias_tag'), ('person_roles_tabular', 'legal_roles_tabular'), 'news_tabular']
+    list_display = ['bias_tag', 'name', 'person_roles', 'legal_roles', 'active']
     list_display_links = ['name', 'person_roles', 'legal_roles', 'active']
     model = LegalPerson
     list_filter = ['active', 'person_role__person', 'person_role__role']
     search_fields = ['name', 'person_role__person__name']
-    readonly_fields = ['person_roles', 'person_roles_tabular', 'legal_roles_tabular', 'news_tabular']
+    readonly_fields = ['person_roles', 'person_roles_tabular', 'legal_roles_tabular', 'news_tabular', 'bias_tag']
     save_on_top = True
 
     def get_form(self, request, obj=None, **kwargs):

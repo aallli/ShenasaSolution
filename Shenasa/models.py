@@ -294,6 +294,26 @@ class LegalPerson(Person):
 
     news_tabular.short_description = _('News')
 
+    def bias_tag(self):
+        news = reduce(lambda N, n: N | n.person.news.all(), self.legal_role.all(),
+                      reduce(lambda N, n: N | n.person.news.all(), self.person_role.all(), self.news.all())).distinct()
+        news_count = news.count()
+        if news_count == 0:
+            bias = 0
+        else:
+            bias = round(reduce(lambda bias, news: bias + int(news.bias), news.all(), 0) / news_count)
+
+        def get_bias_label(_bias):
+            for b in Bias:
+                if int(b.value) == _bias:
+                    return b.label
+
+        label = get_bias_label(bias)
+        return mark_safe('<div id="person_bias" class="bias bias%s" alt="%s" title="%s"></div>' %
+                         (bias, label, label))
+
+    bias_tag.short_description = _('Bias')
+
 
 class LegalRole(models.Model):
     person = models.ForeignKey(LegalPerson, verbose_name=_('Legal Person'), blank=True, null=True,
