@@ -45,6 +45,7 @@
     white-space: nowrap;
 }
 
-.fieldBox.field-logo_tag label {
+.fieldBox.field-logo_tag label,
+.fieldBox.field-image_tag label {
     display: none;
 }
