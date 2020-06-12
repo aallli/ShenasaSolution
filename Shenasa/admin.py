@@ -48,6 +48,7 @@ class NaturalPersonNewsInline(admin.TabularInline):
 class PersonRoleAdmin(admin.ModelAdmin):
     fields = [('person', 'role', 'number_of_shares', 'amount_of_investment'), ]
     list_display = ['person', 'role']
+    list_display_links = ['person', 'role']
     model = PersonRole
     search_fields = ['person__name']
     list_filter = ['person', 'role']
@@ -68,6 +69,7 @@ class PersonRoleAdmin(admin.ModelAdmin):
 class LegalRoleAdmin(admin.ModelAdmin):
     fields = [('person', 'role', 'number_of_shares', 'amount_of_investment'), ]
     list_display = ['person', 'role', ]
+    list_display_links = ['person', 'role', ]
     model = LegalRole
     search_fields = ['person__name']
     list_filter = ['person', 'role']
@@ -88,6 +90,7 @@ class LegalRoleAdmin(admin.ModelAdmin):
 class NewsAdmin(ModelAdminJalaliMixin, SummernoteModelAdmin):
     summernote_fields = ('description',)
     list_display = ['title', 'get_created_jalali']
+    list_display_links = ['title', 'get_created_jalali']
     search_fields = ['description', 'link']
     model = News
     inlines = [
@@ -118,6 +121,7 @@ class NewsAdmin(ModelAdminJalaliMixin, SummernoteModelAdmin):
 class NaturalPersonAdmin(admin.ModelAdmin):
     fields = ['name', 'NID', 'mobile', 'active', ('image', 'image_tag'), 'news_tabular']
     list_display = ['name', 'NID', 'mobile', 'active', ]
+    list_display_links = ['name', 'NID', 'mobile', 'active', ]
     model = NaturalPerson
     list_filter = ['active']
     search_fields = ['name', 'NID', 'mobile']
@@ -148,6 +152,7 @@ class NaturalPersonAdmin(admin.ModelAdmin):
 class LegalPersonAdmin(admin.ModelAdmin):
     fields = [('name', 'active'), ('person_roles_tabular', 'legal_roles_tabular'), 'news_tabular']
     list_display = ['name', 'person_roles', 'legal_roles', 'active']
+    list_display_links = ['name', 'person_roles', 'legal_roles', 'active']
     model = LegalPerson
     list_filter = ['active', 'person_role__person', 'person_role__role']
     search_fields = ['name', 'person_role__person__name']
@@ -180,6 +185,7 @@ class LegalPersonAdmin(admin.ModelAdmin):
 class BrandAdmin(admin.ModelAdmin):
     fields = [('name', 'active'), ('logo', 'logo_tag'), ('person_roles_tabular', 'legal_roles_tabular'), 'news_tabular']
     list_display = ['name', 'person_roles', 'legal_roles', 'active']
+    list_display_links = ['name', 'person_roles', 'legal_roles', 'active']
     model = Brand
     list_filter = ['active', ('person_role__person', custom_titled_filter(_('Person Role'))),
                    ('legal_role__person', custom_titled_filter(_('Legal Role')))]
