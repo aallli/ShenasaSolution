@@ -12,22 +12,6 @@ function setDirection() {
 
 setDirection();
 
-function truncateNews(counter) {
-    if (document.getElementsByClassName("field-title").length == 0) {
-        if (counter < 10)
-            setTimeout(function () {
-                truncateNews(counter + 1);
-            }, 500);
-        return;
-    }
-
-    for (let item of document.getElementsByClassName("field-title")) {
-        item.innerHTML = truncateHTML(item.innerHTML, max_news_title_length);
-    }
-}
-
-truncateNews(0);
-
 function truncateHTML(text, length) {
     var truncated = text.substring(0, length);
     // Remove line breaks and surrounding whitespace

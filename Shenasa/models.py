@@ -27,6 +27,14 @@ class Role(models.TextChoices):
     CO_FOUNDER = 'CF', _('Co Founder')
 
 
+class Bias(models.TextChoices):
+    MOST_RIGHT = '#39E749', _('Most Right')
+    RIGHT = '#3390E7', _('Partly Right')
+    NEUTRAL = '#E7E7E7', _('Neutral')
+    LEFT = '#E4E736', _('Partly Left')
+    MOST_LEFT = '#E74C3C', _('Most Left')
+
+
 class Person(models.Model):
     name = models.CharField(verbose_name=_('Name'), max_length=200, unique=True, null=False)
     active = models.BooleanField(verbose_name=_('Active'), default=True)
@@ -48,6 +56,7 @@ class News(models.Model):
     description = models.TextField(verbose_name=_('Description'), max_length=1000, blank=True, null=True)
     link = models.TextField(verbose_name=_('Link'), max_length=200, blank=True, null=True)
     date = models.DateTimeField(verbose_name=_('Creation Date'), null=True, blank=True)
+    bias = models.CharField(verbose_name=_('Bias'), max_length=10, choices=Bias.choices, default=Bias.NEUTRAL)
 
     class Meta:
         verbose_name = _('News')
@@ -69,6 +78,13 @@ class News(models.Model):
         return mark_safe(self.description)
 
     title.short_description = _('Description')
+
+    def bias_tag(self):
+        return mark_safe('<div id="news_bias" '
+                         'style="background-color:%s; width:20px; height:20px; border: solid 1px #b3b3b3; border-radius:10px;"'
+                         'alt="%s" title="%s"></div>' % (self.bias, Bias(self.bias).label, Bias(self.bias).label))
+
+    bias_tag.short_description = _('Bias')
 
 
 class NaturalPerson(Person):

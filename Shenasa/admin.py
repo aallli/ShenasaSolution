@@ -89,9 +89,11 @@ class LegalRoleAdmin(admin.ModelAdmin):
 @admin.register(News)
 class NewsAdmin(ModelAdminJalaliMixin, SummernoteModelAdmin):
     summernote_fields = ('description',)
-    list_display = ['title', 'get_created_jalali']
+    fields = [('date', 'bias', 'bias_tag', ), 'description', 'link', ]
+    list_display = ['bias_tag', 'title', 'get_created_jalali']
     list_display_links = ['title', 'get_created_jalali']
     search_fields = ['description', 'link']
+    readonly_fields = ['bias_tag']
     model = News
     inlines = [
         NaturalPersonNewsInline,
@@ -101,7 +103,7 @@ class NewsAdmin(ModelAdminJalaliMixin, SummernoteModelAdmin):
     save_on_top = True
 
     class Media:
-        js = ('js/custom_admin.js',)
+        js = ('js/custom_admin.js', 'js/news_admin.js')
 
     def save_model(self, request, obj, form, change):
         try:

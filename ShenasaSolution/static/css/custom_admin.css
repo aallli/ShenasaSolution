@@ -46,6 +46,7 @@
 }
 
 .fieldBox.field-logo_tag label,
-.fieldBox.field-image_tag label {
+.fieldBox.field-image_tag label,
+.fieldBox.field-box.field-bias_tag label {
     display: none;
 }
