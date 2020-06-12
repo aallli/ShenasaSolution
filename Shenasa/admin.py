@@ -50,7 +50,7 @@ class PersonRoleAdmin(admin.ModelAdmin):
     list_display = ['person', 'role']
     model = PersonRole
     search_fields = ['person__name']
-    list_filter = ['role']
+    list_filter = ['person', 'role']
     form = PersonRoleForm
     formfield_overrides = {
         models.IntegerField: {'widget': TextInput(attrs={'size': '20'})},
@@ -70,7 +70,7 @@ class LegalRoleAdmin(admin.ModelAdmin):
     list_display = ['person', 'role', ]
     model = LegalRole
     search_fields = ['person__name']
-    list_filter = ['role']
+    list_filter = ['person', 'role']
     form = PersonRoleForm
     formfield_overrides = {
         models.IntegerField: {'widget': TextInput(attrs={'size': '20'})},
@@ -94,6 +94,7 @@ class NewsAdmin(ModelAdminJalaliMixin, SummernoteModelAdmin):
         NaturalPersonNewsInline,
         LegalPersonNewsInline,
     ]
+    list_filter = ['date']
     save_on_top = True
 
     class Media:
@@ -148,7 +149,7 @@ class LegalPersonAdmin(admin.ModelAdmin):
     fields = [('name', 'active'), ('person_roles_tabular', 'legal_roles_tabular'), 'news_tabular']
     list_display = ['name', 'person_roles', 'legal_roles', 'active']
     model = LegalPerson
-    list_filter = ['active', 'person_role__role']
+    list_filter = ['active', 'person_role__person', 'person_role__role']
     search_fields = ['name', 'person_role__person__name']
     readonly_fields = ['person_roles', 'person_roles_tabular', 'legal_roles_tabular', 'news_tabular']
     save_on_top = True
@@ -180,8 +181,8 @@ class BrandAdmin(admin.ModelAdmin):
     fields = [('name', 'active'), ('logo', 'logo_tag'), ('person_roles_tabular', 'legal_roles_tabular'), 'news_tabular']
     list_display = ['name', 'person_roles', 'legal_roles', 'active']
     model = Brand
-    list_filter = ['active', ('person_role__role', custom_titled_filter(_('Person Role'))),
-                   ('legal_role__role', custom_titled_filter(_('Legal Role')))]
+    list_filter = ['active', ('person_role__person', custom_titled_filter(_('Person Role'))),
+                   ('legal_role__person', custom_titled_filter(_('Legal Role')))]
     search_fields = ['name', 'person_role__person__name']
     readonly_fields = ['person_roles_tabular', 'legal_roles_tabular', 'news_tabular', 'logo_tag']
     save_on_top = True
