@@ -185,14 +185,14 @@ class LegalPersonAdmin(admin.ModelAdmin):
 
 @admin.register(Brand)
 class BrandAdmin(admin.ModelAdmin):
-    fields = [('name', 'active'), ('logo', 'logo_tag'), ('person_roles_tabular', 'legal_roles_tabular'), 'news_tabular']
-    list_display = ['name', 'person_roles', 'legal_roles', 'active']
+    fields = [('name', 'active', 'bias_tag'), ('logo', 'logo_tag'), ('person_roles_tabular', 'legal_roles_tabular'), 'news_tabular']
+    list_display = ['bias_tag', 'name', 'person_roles', 'legal_roles', 'active']
     list_display_links = ['name', 'person_roles', 'legal_roles', 'active']
     model = Brand
     list_filter = ['active', ('person_role__person', custom_titled_filter(_('Person Role'))),
                    ('legal_role__person', custom_titled_filter(_('Legal Role')))]
     search_fields = ['name', 'person_role__person__name']
-    readonly_fields = ['person_roles_tabular', 'legal_roles_tabular', 'news_tabular', 'logo_tag']
+    readonly_fields = ['person_roles_tabular', 'legal_roles_tabular', 'news_tabular', 'logo_tag', 'bias_tag']
     save_on_top = True
 
     def get_form(self, request, obj=None, **kwargs):

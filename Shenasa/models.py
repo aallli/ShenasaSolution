@@ -294,9 +294,15 @@ class LegalPerson(Person):
 
     news_tabular.short_description = _('News')
 
+    @property
+    def total_news(self):
+        n= reduce(lambda N, n: N | n.person.total_news.all(), self.legal_role.all(),
+                      reduce(lambda N, n: N | n.person.news.all(), self.person_role.all(),
+                             self.news.all()).distinct()).distinct()
+        return n
+
     def bias_tag(self):
-        news = reduce(lambda N, n: N | n.person.news.all(), self.legal_role.all(),
-                      reduce(lambda N, n: N | n.person.news.all(), self.person_role.all(), self.news.all())).distinct()
+        news = self.total_news
         news_count = news.count()
         if news_count == 0:
             bias = 0
