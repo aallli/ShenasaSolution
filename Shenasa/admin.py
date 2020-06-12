@@ -94,6 +94,7 @@ class NewsAdmin(ModelAdminJalaliMixin, SummernoteModelAdmin):
         NaturalPersonNewsInline,
         LegalPersonNewsInline,
     ]
+    save_on_top = True
 
     class Media:
         js = ('js/custom_admin.js',)
@@ -120,6 +121,7 @@ class NaturalPersonAdmin(admin.ModelAdmin):
     list_filter = ['active']
     search_fields = ['name', 'NID', 'mobile']
     readonly_fields = ['image_tag', 'news_tabular']
+    save_on_top = True
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(NaturalPersonAdmin, self).get_form(request, obj=obj, **kwargs)
@@ -149,6 +151,7 @@ class LegalPersonAdmin(admin.ModelAdmin):
     list_filter = ['active', 'person_role__role']
     search_fields = ['name', 'person_role__person__name']
     readonly_fields = ['person_roles', 'person_roles_tabular', 'legal_roles_tabular', 'news_tabular']
+    save_on_top = True
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(LegalPersonAdmin, self).get_form(request, obj=obj, **kwargs)
@@ -181,6 +184,7 @@ class BrandAdmin(admin.ModelAdmin):
                    ('legal_role__role', custom_titled_filter(_('Legal Role')))]
     search_fields = ['name', 'person_role__person__name']
     readonly_fields = ['person_roles_tabular', 'legal_roles_tabular', 'news_tabular', 'logo_tag']
+    save_on_top = True
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(BrandAdmin, self).get_form(request, obj=obj, **kwargs)
