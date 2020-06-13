@@ -162,6 +162,9 @@ class LegalPersonAdmin(admin.ModelAdmin):
     readonly_fields = ['person_roles', 'person_roles_tabular', 'legal_roles_tabular', 'news_tabular', 'bias_tag']
     save_on_top = True
 
+    def get_queryset(self, request):
+        return LegalPerson.objects.all().exclude(id__in=Brand.objects.all().values('pk'))
+
     def get_form(self, request, obj=None, **kwargs):
         form = super(LegalPersonAdmin, self).get_form(request, obj=obj, **kwargs)
         self.inlines = [
