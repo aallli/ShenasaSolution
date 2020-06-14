@@ -124,29 +124,56 @@ Configure Nginx:
     nano /etc/nginx/conf.d/shenasa.conf
 
 38- Add:
-
+    
     server {
         listen       80;
-        server_name  shenasa.irib.ir 91.225.54.48;
+        server_name  shenasa.irib.ir;
     
-        location   / {
-            return 301 http://91.225.54.48:8000;
+        error_page 404 /404.html;
+        location /404.html {
+            root /home/admin1/shenasa/ShenasaSolution/static/errors;
+            internal;
         }
     
-        # redirect server error pages to the static page /50x.html
-        #
-        error_page   500 502 503 504  /50x.html;
-        location = /50x.html {
-            root   html;
+        location /static/ {
+            if ($request_method = 'GET') {
+                add_header 'Access-Control-Allow-Origin' 'http://shenasa.irib.ir:8000';
+                add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+                add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range';
+                add_header 'Access-Control-Expose-Headers' 'Content-Length,Content-Range';
+            }
+    
+            root /home/admin1/shenasa/ShenasaSolution;
+        }
+    
+        location   / {
+            return 301 http://shenasa.irib.ir:8000;
         }
     }
     
     server {
         listen 8000;
-        server_name  shenasa.irib.ir 91.225.54.48;
+        server_name  shenasa.irib.ir;
     
         location = /favicon.ico { access_log off; log_not_found off; }
+    
+        error_page 502 /502.html;
+        location /502.html {
+            root /home/admin1/shenasa/ShenasaSolution/static/errors;
+            internal;
+        }
+    
+        error_page 503 504 507 508 /50x.html;
+        location /50x.html {
+            root /home/admin1/shenasa/ShenasaSolution/static/errors;
+            internal;
+        }
+    
         location /static/ {
+            root /home/admin1/shenasa/ShenasaSolution;
+        }
+    
+        location /media/ {
             root /home/admin1/shenasa/ShenasaSolution;
         }
     
