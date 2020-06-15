@@ -73,6 +73,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                "ShenasaSolution.context_processors.admin_tel",
+                "ShenasaSolution.context_processors.admin_email",
             ],
         },
     },
@@ -162,7 +164,6 @@ DJANGORESIZED_DEFAULT_FORCE_FORMAT = 'JPEG'
 DJANGORESIZED_DEFAULT_FORMAT_EXTENSIONS = {'JPEG': ".jpg", 'JPEG': ".jpeg", 'GIF': ".gif", 'PNG': ".png"}
 DJANGORESIZED_DEFAULT_NORMALIZE_ROTATION = True
 
-
 # Summernote richtext box
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 SUMMERNOTE_CONFIG = {
@@ -209,3 +210,7 @@ JALALI_DATE_DEFAULTS = {
         }
     },
 }
+
+# admin info
+ADMIN_TEL = os.environ.get('ADMIN_TEL', default='+98 21 2915 5130')
+ADMIN_EMAIL = os.environ.get('ADMIN_EMAIL', default='shenasa@irib.ir')

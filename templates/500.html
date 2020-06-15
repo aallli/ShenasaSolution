@@ -7,7 +7,7 @@
 {% load i18n_switcher %}
 {% get_current_language as LANGUAGE_CODE %}
 {% block extrahead %}
-    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}" />
+    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/custom_admin.css' %}"/>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -16,13 +16,21 @@
 
 {% block content %}
     <div class="full-screen" {% if LANGUAGE_CODE == 'fa' %}style="direction:rtl;"{% endif %}>
-        <div class="container" {% if LANGUAGE_CODE == 'fa' %}style="direction:ltr;"{% endif %}>
-            <span class="error-num">5</span>
-            <div class='eye'></div>
-            <div class='eye'></div>
+        <div class="container">
+            <div {% if LANGUAGE_CODE == 'fa' %}style="direction:ltr;"{% endif %}>
+                <span class="error-num">5</span>
 
-        <p class="sub-text">{% trans "Oh eyeballs! Something went wrong. We're looking to see what happened." %}</p>
-            <a href="javascript: goBack();">{% trans 'Go back' %}</a>
+                <div class='eye'></div>
+                <div class='eye'></div>
+            </div>
+        <p class="sub-text">اوف! گند زدیم!! لطفا مدیر سیستم را خبر کنید...</p>
+
+        <p class="sub-text">
+            <a style="cursor: auto" href="javascript: void(0)">تلفن: <span style="direction: ltr; display: inline-block;"> +98 21 2915 5120</span></a>
+        </p>
+        <p class="sub-text"><a style="cursor: auto" href="javascript: void(0)">پست الکترونیک:</a><a
+                href="mailto:shenasa@irib.ir"> shenasa@irib.ir</a></p>
+        <a href="javascript: goBack();"> بازگشت</a>
         </div>
     </div>
     <script type="text/javascript">

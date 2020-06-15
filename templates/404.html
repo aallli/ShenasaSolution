@@ -12,10 +12,28 @@
     <div class="full-screen" {% if LANGUAGE_CODE == 'fa' %}style="direction:rtl;"{% endif %}>
         <div class='container'>
             <span class="error-num">4</span>
+
             <div class='eye'></div>
             <span class="error-num">4</span>
 
             <p class="sub-text">{% trans "Oh eyeballs! Not found!." %}</p>
+
+            <p class="sub-text">
+                <a style="cursor: auto" href="javascript: void(0)">{% trans "Tel" %}:
+                    {% if LANGUAGE_CODE == 'fa' %}
+                        <span style="direction: ltr; display: inline-block;;">
+                    {% endif %}
+                    {{ ADMIN_TEL }}
+                    {% if LANGUAGE_CODE == 'fa' %}
+                        </span>
+                    {% endif %}
+                </a>
+            </p>
+
+            <p class="sub-text">
+                <a style="cursor: auto" href="javascript: void(0)">{% trans "Email" %}: </a>
+                <a href="mailto:{{ ADMIN_EMAIL }}"> {{ ADMIN_EMAIL }}</a>
+            </p>
             <a href="javascript: goBack();">{% trans 'Go back' %}</a>
         </div>
     </div>

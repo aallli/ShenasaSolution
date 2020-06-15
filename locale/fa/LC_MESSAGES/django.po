@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-13 19:23+0430\n"
+"POT-Creation-Date: 2020-06-15 11:52+0430\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,11 +18,13 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: .\ShenasaSolution\settings.py:128 .\templates\admin\base_site.html:17
+#: .\ShenasaSolution\settings.py:130 .\static\admin\base_site.html:17
+#: .\templates\admin\base_site.html:17
 msgid "En"
 msgstr "انگلیسی"
 
-#: .\ShenasaSolution\settings.py:129 .\templates\admin\base_site.html:23
+#: .\ShenasaSolution\settings.py:131 .\static\admin\base_site.html:23
+#: .\templates\admin\base_site.html:23
 msgid "Fa"
 msgstr "فارسی"
 
@@ -302,34 +304,35 @@ msgstr "نمانام رسانه ای"
 msgid "Brands"
 msgstr "نمانام های رسانه ای"
 
-#: .\templates\400.html:16
-#, fuzzy
-#| msgid ""
-#| "Oh eyeballs! Something went wrong. We're looking to see what happened."
-msgid "Oh eyeballs! Something went wrong. Bad request..."
-msgstr "متاسفم...تقاضای شما قابل فهم نیست..."
-
-#: .\templates\400.html:17 .\templates\404.html:20 .\templates\500.html:26
-#: .\templates\502.html:17
-msgid "Go back"
-msgstr "بازگشت"
-
-#: .\templates\404.html:19
+#: .\static\404.html:18 .\templates\404.html:19
 msgid "Oh eyeballs! Not found!."
 msgstr "با عرض پوزش پیداش نکردم...ببخشید!"
 
-#: .\templates\500.html:25 .\templates\502.html:16
-msgid "Oh eyeballs! Something went wrong. We're looking to see what happened."
-msgstr "اوف! گند زدیم!! لطفا با مدیر سیستم تماس بگیرید..."
+#: .\static\404.html:19 .\static\500.html:25 .\templates\404.html:27
+#: .\templates\500.html:25
+msgid "Go back"
+msgstr "بازگشت"
 
-#: .\templates\admin\base_site.html:31
+#: .\static\500.html:24 .\templates\500.html:24
+msgid "Oh eyeballs! Something went wrong. We're looking to see what happened."
+msgstr "اوف! گند زدیم!! لطفا مدیر سیستم را خبر کنید..."
+
+#: .\static\admin\base_site.html:31 .\templates\admin\base_site.html:31
 msgid "Documentation"
 msgstr "مستندات"
 
-#: .\templates\admin\base_site.html:35
+#: .\static\admin\base_site.html:35 .\templates\admin\base_site.html:35
 msgid "Change password"
 msgstr "تغییر کلمه عبور"
 
-#: .\templates\admin\base_site.html:37
+#: .\static\admin\base_site.html:37 .\templates\admin\base_site.html:37
 msgid "Log out"
 msgstr "خروج"
+
+#: .\templates\404.html:21
+msgid "Tel"
+msgstr "شماره تماس"
+
+#: .\templates\404.html:24
+msgid "Email"
+msgstr "پست الکترونیک"
