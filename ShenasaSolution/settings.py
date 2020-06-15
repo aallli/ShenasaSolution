@@ -212,5 +212,5 @@ JALALI_DATE_DEFAULTS = {
 }
 
 # admin info
-ADMIN_TEL = os.environ.get('ADMIN_TEL', default='+98 21 2915 5130')
+ADMIN_TEL = os.environ.get('ADMIN_TEL', default='+98 21 2915 5120')
 ADMIN_EMAIL = os.environ.get('ADMIN_EMAIL', default='shenasa@irib.ir')
