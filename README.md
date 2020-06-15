@@ -66,6 +66,9 @@ Configure Gunicorn:
     DEPLOY=1
     DATABASES_PASSWORD='[database password]'
     ALLOWED_HOSTS='[server ip]'
+    ADMIN_TEL='[admin tel]'
+    ADMIN_EMAIL='[admin email]'
+    LIST_PER_PAGE=[list per page in admin pages]
     
 24- systemctl start gunicorn-shenasa
 25- systemctl enable gunicorn-shenasa

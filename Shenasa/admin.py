@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from django.contrib import admin
 from django.db.transaction import atomic
@@ -19,6 +20,10 @@ def custom_titled_filter(title):
             return instance
 
     return Wrapper
+
+
+class BaseModelAdmin(admin.ModelAdmin):
+    list_per_page = settings.LIST_PER_PAGE
 
 
 class PersonRoleInline(admin.TabularInline):
@@ -46,7 +51,7 @@ class NaturalPersonNewsInline(admin.TabularInline):
 
 
 @admin.register(PersonRole)
-class PersonRoleAdmin(admin.ModelAdmin):
+class PersonRoleAdmin(BaseModelAdmin):
     fields = [('person', 'role', 'number_of_shares', 'amount_of_investment'), ]
     list_display = ['person', 'role']
     list_display_links = ['person', 'role']
@@ -67,7 +72,7 @@ class PersonRoleAdmin(admin.ModelAdmin):
 
 
 @admin.register(LegalRole)
-class LegalRoleAdmin(admin.ModelAdmin):
+class LegalRoleAdmin(BaseModelAdmin):
     fields = [('person', 'role', 'number_of_shares', 'amount_of_investment'), ]
     list_display = ['person', 'role', ]
     list_display_links = ['person', 'role', ]
@@ -88,7 +93,7 @@ class LegalRoleAdmin(admin.ModelAdmin):
 
 
 @admin.register(News)
-class NewsAdmin(ModelAdminJalaliMixin, SummernoteModelAdmin):
+class NewsAdmin(ModelAdminJalaliMixin, SummernoteModelAdmin, BaseModelAdmin):
     summernote_fields = ('description',)
     fields = [('date', 'bias', 'bias_tag', ), 'description', 'link', ]
     list_display = ['bias_tag', 'title', 'get_created_jalali']
@@ -121,7 +126,7 @@ class NewsAdmin(ModelAdminJalaliMixin, SummernoteModelAdmin):
 
 
 @admin.register(NaturalPerson)
-class NaturalPersonAdmin(admin.ModelAdmin):
+class NaturalPersonAdmin(BaseModelAdmin):
     fields = [('name', 'bias_tag'), 'NID', 'mobile', 'active', ('image', 'image_tag'), 'news_tabular']
     list_display = ['bias_tag', 'name', 'NID', 'mobile', 'active', ]
     list_display_links = ['name', 'NID', 'mobile', 'active', ]
@@ -152,7 +157,7 @@ class NaturalPersonAdmin(admin.ModelAdmin):
 
 
 @admin.register(LegalPerson)
-class LegalPersonAdmin(admin.ModelAdmin):
+class LegalPersonAdmin(BaseModelAdmin):
     fields = [('name', 'active', 'bias_tag'), ('person_roles_tabular', 'legal_roles_tabular'), 'news_tabular']
     list_display = ['bias_tag', 'name', 'person_roles', 'legal_roles', 'active']
     list_display_links = ['name', 'person_roles', 'legal_roles', 'active']
@@ -200,7 +205,7 @@ class LegalPersonAdmin(admin.ModelAdmin):
 
 
 @admin.register(Brand)
-class BrandAdmin(admin.ModelAdmin):
+class BrandAdmin(BaseModelAdmin):
     fields = [('name', 'active', 'bias_tag'), ('logo', 'logo_tag'), ('person_roles_tabular', 'legal_roles_tabular'), 'news_tabular']
     list_display = ['bias_tag', 'name', 'person_roles', 'legal_roles', 'active']
     list_display_links = ['name', 'person_roles', 'legal_roles', 'active']

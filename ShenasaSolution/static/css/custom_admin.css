@@ -52,3 +52,13 @@
 .fieldBox.field-bias_tag div {
     float: left;
 }
+
+:lang(fa) .admin-interface .paginator .this-page + a:not(.showall) {
+    margin-right: -25px;
+    margin-left: 25px;
+}
+
+:lang(fa) .admin-interface .paginator .this-page, .admin-interface .paginator a.end {
+    margin-right: 0;
+    margin-left: 25px;
+}
