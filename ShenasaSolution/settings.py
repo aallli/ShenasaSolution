@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 from django.utils.translation import ugettext_lazy as _
 
-VERSION = '0.44.0'
+VERSION = '0.44.1'
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -218,4 +218,4 @@ JALALI_DATE_DEFAULTS = {
 ADMIN_TEL = os.environ.get('ADMIN_TEL', default='+98 21 2915 5120')
 ADMIN_EMAIL = os.environ.get('ADMIN_EMAIL', default='shenasa@irib.ir')
 
-LIST_PER_PAGE = os.environ.get('LIST_PER_PAGE', default=2)
+LIST_PER_PAGE = int(os.environ.get('LIST_PER_PAGE', default=50))
