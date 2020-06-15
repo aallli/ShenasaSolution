@@ -1,15 +1,40 @@
 {% extends "admin/base_site.html" %}
 
 {% load static %}
-{% load i18n %}
+{% load i18n static admin_interface_tags %}
 
 <!-- custom filter module -->
 {% load i18n_switcher %}
 {% get_current_language as LANGUAGE_CODE %}
 {% block extrahead %}
-    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}" />
+    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/custom_admin.css' %}"/>
+{% endblock %}
+
+{% block branding %}
+    {% get_admin_interface_theme as theme %}
+    <h1 id="site-name">
+        {% if theme.logo_visible %}
+            {% if theme.logo %}
+                <img class="logo" style="display:none;" src="{{ theme.logo.url }}"
+                     {% if theme.logo.width %}width="{{ theme.logo.width }}"{% endif %}
+                     {% if theme.logo.height %}height="{{ theme.logo.height }}"{% endif %}>
+            {% else %}
+                <img class="logo default" style="display:none;"
+                     src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" width="104"
+                     height="36">
+            {% endif %}
+        {% endif %}
+        <span class="blocking-logo">
+            {% if theme.title_visible %}
+                <div>{% if theme.title %}{% trans theme.title %}{% else %}
+                    {{ site_header|default:_('Django administration') }}{% endif %}
+                </div>
+                <div class="blocking-version">{% trans 'Version' %}: {{ VERSION }}</div>
+            {% endif %}
+        </span>
+    </h1>
 {% endblock %}
 
 {% block userlinks %}

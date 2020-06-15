@@ -1,6 +1,10 @@
 from django.conf import settings
 
 
+def version(request):
+    return {'VERSION': settings.VERSION}
+
+
 def admin_tel(request):
     return {'ADMIN_TEL': settings.ADMIN_TEL}
 
