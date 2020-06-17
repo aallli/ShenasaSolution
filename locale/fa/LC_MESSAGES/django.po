@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-15 16:27+0430\n"
+"POT-Creation-Date: 2020-06-18 00:54+0430\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,13 +18,13 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: .\ShenasaSolution\settings.py:133 .\static\admin\base_site.html:17
-#: .\templates\admin\base_site.html:39
+#: .\ShenasaSolution\settings.py:133 .\static\admin\base_site.html:42
+#: .\templates\admin\base_site.html:42
 msgid "En"
 msgstr "انگلیسی"
 
-#: .\ShenasaSolution\settings.py:134 .\static\admin\base_site.html:23
-#: .\templates\admin\base_site.html:45
+#: .\ShenasaSolution\settings.py:134 .\static\admin\base_site.html:48
+#: .\templates\admin\base_site.html:48
 msgid "Fa"
 msgstr "فارسی"
 
@@ -40,48 +40,56 @@ msgstr "سامانه شناسا"
 msgid "Welcome to Shenasa administration control panel"
 msgstr "به پنل مدیریت شناسا خوش آمدید."
 
-#: .\Shenasa\admin.py:26 .\Shenasa\admin.py:208 .\Shenasa\models.py:210
+#: .\Shenasa\admin.py:31 .\Shenasa\admin.py:49 .\Shenasa\admin.py:77
+#: .\Shenasa\models.py:210
 #, fuzzy
 #| msgid "Person"
 msgid "Person Role"
 msgstr "سمت حقیقی"
 
-#: .\Shenasa\admin.py:27 .\Shenasa\models.py:211
+#: .\Shenasa\admin.py:32 .\Shenasa\admin.py:50 .\Shenasa\models.py:211
 #, fuzzy
 #| msgid "Persons"
 msgid "Person Roles"
 msgstr "سمتهای حقیقی"
 
-#: .\Shenasa\admin.py:32 .\Shenasa\admin.py:209 .\Shenasa\models.py:347
+#: .\Shenasa\admin.py:37 .\Shenasa\admin.py:55 .\Shenasa\admin.py:78
+#: .\Shenasa\models.py:356
 #, fuzzy
 #| msgid "Legal Person"
 msgid "Legal Role"
 msgstr "سمت حقوقی"
 
-#: .\Shenasa\admin.py:33 .\Shenasa\models.py:348
+#: .\Shenasa\admin.py:38 .\Shenasa\admin.py:56 .\Shenasa\models.py:357
 #, fuzzy
 #| msgid "Legal Person"
 msgid "Legal Roles"
 msgstr "سمتهای حقوقی"
 
-#: .\Shenasa\admin.py:38 .\Shenasa\admin.py:39
+#: .\Shenasa\admin.py:43 .\Shenasa\admin.py:44
 #, fuzzy
 #| msgid "Legal Persons"
 msgid "Legal Person News"
 msgstr "اخبار اشخاص حقوقی"
 
-#: .\Shenasa\admin.py:44 .\Shenasa\admin.py:45
+#: .\Shenasa\admin.py:61 .\Shenasa\admin.py:62
+#, fuzzy
+#| msgid "Brands"
+msgid "Brand News"
+msgstr "اخبار نمانام"
+
+#: .\Shenasa\admin.py:67 .\Shenasa\admin.py:68
 #, fuzzy
 #| msgid "Natural Persons"
 msgid "Natural Person News"
 msgstr "اخبار اشخاص حقیقی"
 
-#: .\Shenasa\admin.py:119 .\Shenasa\models.py:59 .\Shenasa\models.py:132
-#: .\Shenasa\models.py:303
+#: .\Shenasa\admin.py:177 .\Shenasa\models.py:59 .\Shenasa\models.py:132
+#: .\Shenasa\models.py:300
 msgid "Creation Date"
 msgstr "تاریخ ایجاد"
 
-#: .\Shenasa\admin.py:193
+#: .\Shenasa\admin.py:251
 #, fuzzy, python-format
 #| msgid "Self legal role from %(legalrole) to %(legalrole) is not valid."
 msgid "Self relation from \"%(legalrole)s\" to \"%(legalrole)s\" is not valid."
@@ -174,7 +182,7 @@ msgstr "نسبتا مخالف"
 msgid "Most Left"
 msgstr "کاملا مخالف"
 
-#: .\Shenasa\models.py:40 .\Shenasa\models.py:261 .\Shenasa\models.py:276
+#: .\Shenasa\models.py:40 .\Shenasa\models.py:258 .\Shenasa\models.py:273
 msgid "Name"
 msgstr "نام"
 
@@ -191,21 +199,21 @@ msgid "Persons"
 msgstr "اشخاص"
 
 #: .\Shenasa\models.py:57 .\Shenasa\models.py:81 .\Shenasa\models.py:132
-#: .\Shenasa\models.py:303
+#: .\Shenasa\models.py:300
 msgid "Description"
 msgstr "شرح"
 
-#: .\Shenasa\models.py:58 .\Shenasa\models.py:132 .\Shenasa\models.py:303
+#: .\Shenasa\models.py:58 .\Shenasa\models.py:132 .\Shenasa\models.py:300
 msgid "Link"
 msgstr "منبع"
 
 #: .\Shenasa\models.py:60 .\Shenasa\models.py:87 .\Shenasa\models.py:156
-#: .\Shenasa\models.py:335
+#: .\Shenasa\models.py:332
 msgid "Bias"
-msgstr "سوگیری"
+msgstr "گرایش"
 
 #: .\Shenasa\models.py:63 .\Shenasa\models.py:64 .\Shenasa\models.py:98
-#: .\Shenasa\models.py:138 .\Shenasa\models.py:237 .\Shenasa\models.py:309
+#: .\Shenasa\models.py:138 .\Shenasa\models.py:237 .\Shenasa\models.py:306
 msgid "News"
 msgstr "اخبار"
 
@@ -229,7 +237,7 @@ msgstr "تلفن همراه"
 msgid "Person Image"
 msgstr "تصویر شخص"
 
-#: .\Shenasa\models.py:110 .\Shenasa\models.py:381
+#: .\Shenasa\models.py:110 .\Shenasa\models.py:389
 msgid "Image"
 msgstr "تصویر"
 
@@ -241,16 +249,16 @@ msgstr "شخص حقیقی"
 msgid "Natural Persons"
 msgstr "اشخاص حقیقی"
 
-#: .\Shenasa\models.py:204 .\Shenasa\models.py:261 .\Shenasa\models.py:276
-#: .\Shenasa\models.py:341
+#: .\Shenasa\models.py:204 .\Shenasa\models.py:258 .\Shenasa\models.py:273
+#: .\Shenasa\models.py:350
 msgid "Role"
 msgstr "سمت"
 
-#: .\Shenasa\models.py:205 .\Shenasa\models.py:254 .\Shenasa\models.py:342
+#: .\Shenasa\models.py:205 .\Shenasa\models.py:251 .\Shenasa\models.py:351
 msgid "Number of Shares"
 msgstr "تعداد سهم"
 
-#: .\Shenasa\models.py:206 .\Shenasa\models.py:256 .\Shenasa\models.py:343
+#: .\Shenasa\models.py:206 .\Shenasa\models.py:253 .\Shenasa\models.py:352
 #, fuzzy
 #| msgid "Amount of Investment"
 msgid "Amount of Investment (M rls)"
@@ -268,39 +276,40 @@ msgstr "سمتهای حقیقی"
 msgid "Legal Key Person"
 msgstr "سمتهای حقوقی"
 
-#: .\Shenasa\models.py:241 .\Shenasa\models.py:339
-msgid "Legal Person"
-msgstr "شخص حقوقی"
-
-#: .\Shenasa\models.py:242
-msgid "Legal Persons"
-msgstr "اشخاص حقوقی"
-
-#: .\Shenasa\models.py:261 .\Shenasa\models.py:276
+#: .\Shenasa\models.py:258 .\Shenasa\models.py:273
 msgid "Comment"
 msgstr "توضیحات"
 
-#: .\Shenasa\models.py:271 .\Shenasa\models.py:292
+#: .\Shenasa\models.py:268 .\Shenasa\models.py:289
 #, fuzzy
 #| msgid "Legal Persons"
 msgid "Selected Natural Key Persons"
 msgstr "سمتهای حقیقی منتخب"
 
-#: .\Shenasa\models.py:286 .\Shenasa\models.py:298
+#: .\Shenasa\models.py:283 .\Shenasa\models.py:295
 #, fuzzy
 #| msgid "Legal Persons"
 msgid "Selected Legal Key Persons"
 msgstr "سمتهای حقوقی منتخب"
 
-#: .\Shenasa\models.py:360
+#: .\Shenasa\models.py:337 .\Shenasa\models.py:341 .\Shenasa\models.py:344
+#: .\Shenasa\models.py:348
+msgid "Legal Person"
+msgstr "شخص حقوقی"
+
+#: .\Shenasa\models.py:338
+msgid "Legal Persons"
+msgstr "اشخاص حقوقی"
+
+#: .\Shenasa\models.py:369
 msgid "Logo"
 msgstr "لوگو"
 
-#: .\Shenasa\models.py:363
+#: .\Shenasa\models.py:372 .\Shenasa\models.py:376 .\Shenasa\models.py:379
 msgid "Brand"
 msgstr "نمانام رسانه ای"
 
-#: .\Shenasa\models.py:364
+#: .\Shenasa\models.py:373
 msgid "Brands"
 msgstr "نمانام های رسانه ای"
 
@@ -308,40 +317,36 @@ msgstr "نمانام های رسانه ای"
 msgid "Oh eyeballs! Not found!."
 msgstr "با عرض پوزش پیداش نکردم...ببخشید!"
 
-#: .\static\404.html:22 .\static\500.html:30 .\templates\404.html:22
+#: .\static\404.html:22 .\templates\404.html:22
 msgid "Tel"
 msgstr "شماره تماس"
 
-#: .\static\404.html:34 .\static\500.html:42 .\templates\404.html:34
+#: .\static\404.html:34 .\templates\404.html:34
 msgid "Email"
 msgstr "پست الکترونیک"
 
-#: .\static\404.html:37 .\static\500.html:46 .\templates\404.html:37
+#: .\static\404.html:37 .\templates\404.html:37
 msgid "Go back"
 msgstr "بازگشت"
 
-#: .\static\500.html:27
-msgid "Oh eyeballs! Something went wrong. We're looking to see what happened."
-msgstr "اوف! گند زدیم!! لطفا مدیر سیستم را خبر کنید..."
-
-#: .\static\admin\base_site.html:31 .\templates\admin\base_site.html:53
-msgid "Documentation"
-msgstr "مستندات"
-
-#: .\static\admin\base_site.html:35 .\templates\admin\base_site.html:57
-msgid "Change password"
-msgstr "تغییر کلمه عبور"
-
-#: .\static\admin\base_site.html:37 .\templates\admin\base_site.html:59
-msgid "Log out"
-msgstr "خروج"
-
-#: .\templates\admin\base_site.html:31
+#: .\static\admin\base_site.html:32 .\templates\admin\base_site.html:32
 #, fuzzy
 #| msgid "ShenasaSolution Administration Site"
 msgid "Django administration"
 msgstr "سامانه شناسا"
 
-#: .\templates\admin\base_site.html:32
+#: .\static\admin\base_site.html:34 .\templates\admin\base_site.html:34
 msgid "Version"
 msgstr "ویرایش"
+
+#: .\static\admin\base_site.html:56 .\templates\admin\base_site.html:56
+msgid "Documentation"
+msgstr "مستندات"
+
+#: .\static\admin\base_site.html:60 .\templates\admin\base_site.html:60
+msgid "Change password"
+msgstr "تغییر کلمه عبور"
+
+#: .\static\admin\base_site.html:62 .\templates\admin\base_site.html:62
+msgid "Log out"
+msgstr "خروج"
