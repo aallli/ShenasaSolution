@@ -1,15 +1,15 @@
-from django.conf import settings
 from django.db import models
 from django.contrib import admin
-from django.db.transaction import atomic
+from django.conf import settings
 from django.forms import TextInput
 from django.contrib import messages
 from Shenasa.utils import to_jalali_full
 from Shenasa.forms import PersonRoleForm
+from django.db.transaction import atomic
+from jalali_date.admin import ModelAdminJalaliMixin
 from django.utils.translation import ugettext_lazy as _
 from django_summernote.admin import SummernoteModelAdmin
-from Shenasa.models import LegalPerson, NaturalPerson, PersonRole, News, LegalRole, Brand1
-from jalali_date.admin import ModelAdminJalaliMixin, StackedInlineJalaliMixin, TabularInlineJalaliMixin
+from Shenasa.models import LegalPerson, NaturalPerson, PersonRole, News, LegalRole, Brand
 
 
 def custom_titled_filter(title):
@@ -45,19 +45,19 @@ class LegalPersonNewsInline(admin.TabularInline):
 
 
 class BrandPersonRoleInline(admin.TabularInline):
-    model = Brand1.person_role.through
+    model = Brand.person_role.through
     verbose_name = _("Person Role")
     verbose_name_plural = _("Person Roles")
 
 
 class BrandRoleInline(admin.TabularInline):
-    model = Brand1.legal_role.through
+    model = Brand.legal_role.through
     verbose_name = _("Legal Role")
     verbose_name_plural = _("Legal Roles")
 
 
 class BrandNewsInline(admin.TabularInline):
-    model = Brand1.news.through
+    model = Brand.news.through
     verbose_name = _("Brand News")
     verbose_name_plural = _("Brand News")
 
@@ -68,12 +68,12 @@ class NaturalPersonNewsInline(admin.TabularInline):
     verbose_name_plural = _("Natural Person News")
 
 
-@admin.register(Brand1)
+@admin.register(Brand)
 class Brand1Admin(BaseModelAdmin):
     fields = [('name', 'active', 'bias_tag'), ('logo', 'logo_tag'), ('person_roles_tabular', 'legal_roles_tabular'), 'news_tabular']
     list_display = ['bias_tag', 'name', 'person_roles', 'legal_roles', 'active']
     list_display_links = ['name', 'person_roles', 'legal_roles', 'active']
-    model = Brand1
+    model = Brand
     list_filter = ['active', ('person_role__person', custom_titled_filter(_('Person Role'))),
                    ('legal_role__person', custom_titled_filter(_('Legal Role')))]
     search_fields = ['name', 'person_role__person__name']

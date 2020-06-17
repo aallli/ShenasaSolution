@@ -364,7 +364,7 @@ class LegalRole(models.Model):
         return '%s (%s)' % (self.person, Role(self.role).label)
 
 
-class Brand1(LegalPersonBase):
+class Brand(LegalPersonBase):
     logo = ResizedImageField(size=[settings.MAX_SMALL_IMAGE_WIDTH, settings.MAX_SMALL_IMAGE_HEIGHT],
                              verbose_name=_('Logo'), upload_to='media/', blank=True, null=True)
 
@@ -389,7 +389,7 @@ class Brand1(LegalPersonBase):
     logo_tag.short_description = _('Image')
 
 
-@receiver(models.signals.post_delete, sender=Brand1)
+@receiver(models.signals.post_delete, sender=Brand)
 def auto_delete_brand_logo_on_delete(sender, instance, **kwargs):
     """
     Deletes logo from filesystem
@@ -403,7 +403,7 @@ def auto_delete_brand_logo_on_delete(sender, instance, **kwargs):
             print('Delete error: %s' % e.args[0])
 
 
-@receiver(models.signals.pre_save, sender=Brand1)
+@receiver(models.signals.pre_save, sender=Brand)
 def auto_delete_brand_logo_on_change(sender, instance, **kwargs):
     """
     Deletes old logo from filesystem
@@ -414,8 +414,8 @@ def auto_delete_brand_logo_on_change(sender, instance, **kwargs):
         return False
 
     try:
-        old_logo = Brand1.objects.get(pk=instance.pk).logo
-    except Brand1.DoesNotExist:
+        old_logo = Brand.objects.get(pk=instance.pk).logo
+    except Brand.DoesNotExist:
         return False
 
     if not old_logo.name:
