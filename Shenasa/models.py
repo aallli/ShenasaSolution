@@ -364,32 +364,6 @@ class LegalRole(models.Model):
         return '%s (%s)' % (self.person, Role(self.role).label)
 
 
-class Brand(LegalPerson):
-    logo = ResizedImageField(size=[settings.MAX_SMALL_IMAGE_WIDTH, settings.MAX_SMALL_IMAGE_HEIGHT],
-                             verbose_name=_('Logo'), upload_to='media/', blank=True, null=True)
-
-    class Meta:
-        verbose_name = _('Brand')
-        verbose_name_plural = _('Brands')
-        ordering = ['name']
-
-    def __str__(self):
-        return self.name
-
-    def __unicode__(self):
-        return self.name
-
-    def logo_tag(self):
-        if self.logo:
-            return mark_safe('<a href="%s%s" target="_blank"><img src="%s%s" title="%s" alt="%s"/></a>' % (
-                settings.MEDIA_URL, self.logo, settings.MEDIA_URL, self.logo, self.name, self.name))
-        else:
-            return mark_safe('<img src="%simg/person-icon.jpg" width="150" height="150" title="%s" alt="%s"/>' % (
-                settings.STATIC_URL, self.name, self.name))
-
-    logo_tag.short_description = _('Image')
-
-
 class Brand1(LegalPersonBase):
     logo = ResizedImageField(size=[settings.MAX_SMALL_IMAGE_WIDTH, settings.MAX_SMALL_IMAGE_HEIGHT],
                              verbose_name=_('Logo'), upload_to='media/', blank=True, null=True)
@@ -415,7 +389,7 @@ class Brand1(LegalPersonBase):
     logo_tag.short_description = _('Image')
 
 
-@receiver(models.signals.post_delete, sender=Brand)
+@receiver(models.signals.post_delete, sender=Brand1)
 def auto_delete_brand_logo_on_delete(sender, instance, **kwargs):
     """
     Deletes logo from filesystem
@@ -429,7 +403,7 @@ def auto_delete_brand_logo_on_delete(sender, instance, **kwargs):
             print('Delete error: %s' % e.args[0])
 
 
-@receiver(models.signals.pre_save, sender=Brand)
+@receiver(models.signals.pre_save, sender=Brand1)
 def auto_delete_brand_logo_on_change(sender, instance, **kwargs):
     """
     Deletes old logo from filesystem
@@ -440,8 +414,8 @@ def auto_delete_brand_logo_on_change(sender, instance, **kwargs):
         return False
 
     try:
-        old_logo = Brand.objects.get(pk=instance.pk).logo
-    except Brand.DoesNotExist:
+        old_logo = Brand1.objects.get(pk=instance.pk).logo
+    except Brand1.DoesNotExist:
         return False
 
     if not old_logo.name:
