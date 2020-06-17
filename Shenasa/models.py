@@ -231,15 +231,13 @@ class CustomManager(models.Manager):
             return super().get_queryset().exclude(id__in=Brand.objects.all().values('pk'))
 
 
-class LegalPerson(Person):
-    person_role = models.ManyToManyField(PersonRole, verbose_name=_('Natural Key Person'), related_name='person_role')
-    legal_role = models.ManyToManyField('LegalRole', verbose_name=_('Legal Key Person'), related_name='legal_role')
-    news = models.ManyToManyField(News, verbose_name=_('News'), related_name='legal_person_news')
-    objects = CustomManager()
+class LegalPersonBase(Person):
+    person_role = models.ManyToManyField(PersonRole, verbose_name=_('Natural Key Person'), related_name='%(class)s_person_role')
+    legal_role = models.ManyToManyField('LegalRole', verbose_name=_('Legal Key Person'), related_name='%(class)s_legal_role')
+    news = models.ManyToManyField(News, verbose_name=_('News'), related_name='%(class)s_news')
 
     class Meta:
-        verbose_name = _('Legal Person')
-        verbose_name_plural = _('Legal Persons')
+        abstract = True
         ordering = ['name']
 
     def __str__(self):
@@ -248,12 +246,11 @@ class LegalPerson(Person):
     def __unicode__(self):
         return self.name
 
-    @staticmethod
-    def generate_comment(person_role):
-        if person_role.role == 'ST':
-            return '%s = %s' % (_('Number of Shares'), person_role.number_of_shares)
-        if person_role.role in ('IN', 'IF', 'IV', 'IA'):
-            return '%s = %s' % (_('Amount of Investment (M rls)'), person_role.amount_of_investment)
+    def generate_comment(self, pr):
+        if pr.role == 'ST':
+            return '%s = %s' % (_('Number of Shares'), pr.number_of_shares)
+        if pr.role in ('IN', 'IF', 'IV', 'IA'):
+            return '%s = %s' % (_('Amount of Investment (M rls)'), pr.amount_of_investment)
 
     def person_roles_tabular(self):
         return mark_safe(
@@ -262,7 +259,7 @@ class LegalPerson(Person):
                 '<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(index % 2 + 1, index + 1,
                                                                                              pr.person.name,
                                                                                              Role(pr.role).label,
-                                                                                             LegalPerson.generate_comment(
+                                                                                             self.generate_comment(
                                                                                                  pr))
                 for
                 index, pr in enumerate(self.person_role.all())))
@@ -275,12 +272,12 @@ class LegalPerson(Person):
             '<table><thead><tr><th>#</th><th>%s</th><th>%s</th><th>%s</th></tr></thead><tbody>%s</tbody></table>' %
             (_('Name'), _('Role'), _('Comment'), ''.join(
                 '<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(index % 2 + 1, index + 1,
-                                                                                             pr.person.name,
-                                                                                             Role(pr.role).label,
-                                                                                             LegalPerson.generate_comment(
-                                                                                                 pr))
+                                                                                             lr.person.name,
+                                                                                             Role(lr.role).label,
+                                                                                             self.generate_comment(
+                                                                                                 lr))
                 for
-                index, pr in enumerate(self.legal_role.all())))
+                index, lr in enumerate(self.legal_role.all())))
         )
 
     legal_roles_tabular.short_description = _('Selected Legal Key Persons')
@@ -335,6 +332,18 @@ class LegalPerson(Person):
     bias_tag.short_description = _('Bias')
 
 
+class LegalPerson(LegalPersonBase):
+    class Meta:
+        verbose_name = _('Legal Person')
+        verbose_name_plural = _('Legal Persons')
+
+    def __str__(self):
+        return '%s: %s' % (_('Legal Person'), self.name)
+
+    def __unicode__(self):
+        return '%s: %s' % (_('Legal Person'), self.name)
+
+
 class LegalRole(models.Model):
     person = models.ForeignKey(LegalPerson, verbose_name=_('Legal Person'), blank=True, null=True,
                                on_delete=models.CASCADE)
@@ -369,6 +378,31 @@ class Brand(LegalPerson):
 
     def __unicode__(self):
         return self.name
+
+    def logo_tag(self):
+        if self.logo:
+            return mark_safe('<a href="%s%s" target="_blank"><img src="%s%s" title="%s" alt="%s"/></a>' % (
+                settings.MEDIA_URL, self.logo, settings.MEDIA_URL, self.logo, self.name, self.name))
+        else:
+            return mark_safe('<img src="%simg/person-icon.jpg" width="150" height="150" title="%s" alt="%s"/>' % (
+                settings.STATIC_URL, self.name, self.name))
+
+    logo_tag.short_description = _('Image')
+
+
+class Brand1(LegalPersonBase):
+    logo = ResizedImageField(size=[settings.MAX_SMALL_IMAGE_WIDTH, settings.MAX_SMALL_IMAGE_HEIGHT],
+                             verbose_name=_('Logo'), upload_to='media/', blank=True, null=True)
+
+    class Meta:
+        verbose_name = _('Brand')
+        verbose_name_plural = _('Brands')
+
+    def __str__(self):
+        return '%s: %s' % (_('Brand'), self.name)
+
+    def __unicode__(self):
+        return '%s: %s' % (_('Brand'), self.name)
 
     def logo_tag(self):
         if self.logo:

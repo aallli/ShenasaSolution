@@ -8,7 +8,7 @@ from Shenasa.utils import to_jalali_full
 from Shenasa.forms import PersonRoleForm
 from django.utils.translation import ugettext_lazy as _
 from django_summernote.admin import SummernoteModelAdmin
-from Shenasa.models import LegalPerson, NaturalPerson, PersonRole, News, LegalRole, Brand
+from Shenasa.models import LegalPerson, NaturalPerson, PersonRole, News, LegalRole, Brand, Brand1
 from jalali_date.admin import ModelAdminJalaliMixin, StackedInlineJalaliMixin, TabularInlineJalaliMixin
 
 
@@ -26,13 +26,13 @@ class BaseModelAdmin(admin.ModelAdmin):
     list_per_page = settings.LIST_PER_PAGE
 
 
-class PersonRoleInline(admin.TabularInline):
+class LegalPersonPersonRoleInline(admin.TabularInline):
     model = LegalPerson.person_role.through
     verbose_name = _("Person Role")
     verbose_name_plural = _("Person Roles")
 
 
-class LegalRoleInline(admin.TabularInline):
+class LegalPersonLegalRoleInline(admin.TabularInline):
     model = LegalPerson.legal_role.through
     verbose_name = _("Legal Role")
     verbose_name_plural = _("Legal Roles")
@@ -44,10 +44,62 @@ class LegalPersonNewsInline(admin.TabularInline):
     verbose_name_plural = _("Legal Person News")
 
 
+class BrandPersonRoleInline(admin.TabularInline):
+    model = Brand1.person_role.through
+    verbose_name = _("Person Role")
+    verbose_name_plural = _("Person Roles")
+
+
+class BrandRoleInline(admin.TabularInline):
+    model = Brand1.legal_role.through
+    verbose_name = _("Legal Role")
+    verbose_name_plural = _("Legal Roles")
+
+
+class BrandNewsInline(admin.TabularInline):
+    model = Brand1.news.through
+    verbose_name = _("Brand News")
+    verbose_name_plural = _("Brand News")
+
+
 class NaturalPersonNewsInline(admin.TabularInline):
     model = NaturalPerson.news.through
     verbose_name = _("Natural Person News")
     verbose_name_plural = _("Natural Person News")
+
+
+@admin.register(Brand1)
+class Brand1Admin(BaseModelAdmin):
+    fields = [('name', 'active', 'bias_tag'), ('logo', 'logo_tag'), ('person_roles_tabular', 'legal_roles_tabular'), 'news_tabular']
+    list_display = ['bias_tag', 'name', 'person_roles', 'legal_roles', 'active']
+    list_display_links = ['name', 'person_roles', 'legal_roles', 'active']
+    model = Brand1
+    list_filter = ['active', ('person_role__person', custom_titled_filter(_('Person Role'))),
+                   ('legal_role__person', custom_titled_filter(_('Legal Role')))]
+    search_fields = ['name', 'person_role__person__name']
+    readonly_fields = ['person_roles_tabular', 'legal_roles_tabular', 'news_tabular', 'logo_tag', 'bias_tag']
+    save_on_top = True
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(Brand1Admin, self).get_form(request, obj=obj, **kwargs)
+        self.inlines = [
+            BrandPersonRoleInline,
+            BrandRoleInline,
+            BrandNewsInline,
+        ]
+        permissions = request.user.get_all_permissions()
+        if not ('Shenasa.add_legalperson' in permissions or
+                        'Shenasa.change_legalperson' in permissions or
+                        'Shenasa.delete_legalperson' in permissions):
+            self.inlines = []
+        return form
+
+    def save_model(self, request, obj, form, change):
+        try:
+            super(Brand1Admin, self).save_model(request, obj, form, change)
+        except Exception as e:
+            messages.set_level(request, messages.ERROR)
+            messages.error(request, e)
 
 
 @admin.register(PersonRole)
@@ -104,6 +156,7 @@ class NewsAdmin(ModelAdminJalaliMixin, SummernoteModelAdmin, BaseModelAdmin):
     inlines = [
         NaturalPersonNewsInline,
         LegalPersonNewsInline,
+        BrandNewsInline,
     ]
     list_filter = ['date']
     save_on_top = True
@@ -170,8 +223,8 @@ class LegalPersonAdmin(BaseModelAdmin):
     def get_form(self, request, obj=None, **kwargs):
         form = super(LegalPersonAdmin, self).get_form(request, obj=obj, **kwargs)
         self.inlines = [
-            PersonRoleInline,
-            LegalRoleInline,
+            LegalPersonPersonRoleInline,
+            LegalPersonLegalRoleInline,
             LegalPersonNewsInline,
         ]
         permissions = request.user.get_all_permissions()
@@ -219,8 +272,8 @@ class BrandAdmin(BaseModelAdmin):
     def get_form(self, request, obj=None, **kwargs):
         form = super(BrandAdmin, self).get_form(request, obj=obj, **kwargs)
         self.inlines = [
-            PersonRoleInline,
-            LegalRoleInline,
+            LegalPersonPersonRoleInline,
+            LegalPersonLegalRoleInline,
             LegalPersonNewsInline,
         ]
         permissions = request.user.get_all_permissions()
