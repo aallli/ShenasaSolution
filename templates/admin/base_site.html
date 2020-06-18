@@ -61,3 +61,15 @@
     {% endif %}
     <a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a>
 {% endblock %}
+
+{% block welcome-msg %}
+    {% if LANGUAGE_CODE == 'en' %}
+        {% trans 'Welcome,' %}
+        <strong>{% firstof user.get_full_name user.get_username %}</strong>.
+    {% endif %}
+
+    {% if LANGUAGE_CODE == 'fa' %}
+        <strong>{% firstof user.get_full_name user.get_username %}</strong>.
+        {% trans 'Welcome,' %}
+    {% endif %}
+{% endblock %}
