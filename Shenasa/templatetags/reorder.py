@@ -4,7 +4,6 @@ from django.contrib.admin import site
 from django.utils.text import capfirst
 from django.contrib.auth.models import User
 from django.urls import reverse, NoReverseMatch
-from django.utils.translation import ugettext_lazy as _
 
 register = template.Library()
 
@@ -63,7 +62,7 @@ def render_model_list(context):
 
     model_ordering = {
         'Themes': 1,
-        'تمها': 1,
+        'شمایل گرافیکی': 1,
         'Groups': 2,
         'گروه\u200cها': 2,
         'Users': 3,
@@ -72,13 +71,12 @@ def render_model_list(context):
         'ضمایم': 4,
         'Brands': 5,
         'نمانام های رسانه ای': 5,
-        'سمتهای حقوقی': 6,
-        'News': 7,
-        'اخبار': 7,
-        'Natural Persons': 8,
-        'اشخاص حقیقی': 8,
-        'Legal Persons': 9,
-        'اشخاص حقوقی': 9,
+        'Natural Persons': 6,
+        'اشخاص حقیقی': 6,
+        'Legal Persons': 7,
+        'اشخاص حقوقی': 7,
+        'News': 9,
+        'اخبار': 9,
         'Person Roles': 10,
         'سمتهای حقیقی': 10,
         'Legal Roles': 11,

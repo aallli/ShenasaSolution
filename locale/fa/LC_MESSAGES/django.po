@@ -387,3 +387,27 @@ msgstr "رابط کاربری"
 #: .\django_summernote\apps.py:11
 msgid "Django Summernote"
 msgstr "ادیتور پیشرفته متن"
+
+msgid "Personrole"
+msgstr "سمتهای حقیقی منتخب"
+
+msgid "Legalrole"
+msgstr "سمتهای حقوقی منتخب"
+
+msgid "Naturalperson"
+msgstr "سمتهای حقوقی منتخب"
+
+msgid "Legalperson"
+msgstr "سمتهای حقوقی منتخب"
+
+msgid "Theme"
+msgstr "شمایل گرافیکی"
+
+msgid "Themes"
+msgstr "شمایل گرافیکی"
+
+msgid "Attachment"
+msgstr "ضمیمه"
+
+msgid "Attachments"
+msgstr "ضمایم"
