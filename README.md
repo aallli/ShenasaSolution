@@ -98,44 +98,35 @@ Configure Gunicorn:
     source env/bin/activate
     django-admin compilemessages (if translation is needed)
 
-32- Add following to class Meta of AbstractAttachment at env/lib/site-packages/django_summernote/models.py:
-
-    verbose_name = _('Attachment')
-    verbose_name_plural = _('Attachments')
-
-Note: Do not forget to import ugettext_lazy:
-
-    from django.utils.translation import ugettext_lazy as _
-
-33- Collect static files: (Create static and uploads directory if needed)
+32- Collect static files: (Create static and uploads directory if needed)
  
     python manage.py collectstatic
 
 Configure Nginx:
-34- create keys and keep them in /root/certs/shenasa/:
+33- create keys and keep them in /root/certs/shenasa/:
     
     openssl req -new -newkey rsa:4096 -x509 -sha256 -days 365 -nodes -out /root/certs/shenasa/shenasa.crt -keyout /root/certs/shenasa/shenasa.key
 
-35- Restrict the key’s permissions so that only root can access it:
+34- Restrict the key’s permissions so that only root can access it:
     
     chmod 400 /root/certs/shenasa/shenasa.key
 
-36- Install nginx:
+35- Install nginx:
 
     apt update
     apt install nginx
 
-37- Run nginx:
+36- Run nginx:
 
     systemctl daemon-reload
     systemctl start nginx
     systemctl enable nginx
     
-38- Configure nginx:
+37- Configure nginx:
 
     nano /etc/nginx/conf.d/shenasa.conf
 
-39- Add:
+38- Add:
     
     server {
         listen       80;
@@ -195,11 +186,11 @@ Configure Nginx:
         }
     }
 
-40- Test your Nginx configuration for syntax errors by typing: 
+39- Test your Nginx configuration for syntax errors by typing: 
 
     /usr/sbin/nginx -t
 
-41- Restart nginx:
+40- Restart nginx:
 
     /usr/sbin/nginx -s stop
     /usr/sbin/nginx

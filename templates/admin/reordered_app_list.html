@@ -6,14 +6,14 @@
                 <table>
                     <caption>
                         <a href='{{ app.app_url }}' class='section'
-                           title='{% blocktrans with name=app.name %}Models in the {{ name }} application{% endblocktrans %}'>{{ app.name }}</a>
+                           title='{% blocktrans with name=app.name %}Models in the {{ name }} application{% endblocktrans %}'>{% trans app.name %}</a>
                     </caption>
                     {% for model in app.models %}
                         <tr class='model-{{ model.object_name|lower }}'>
                             {% if model.admin_url %}
-                                <th scope='row'><a href='{{ model.admin_url }}'>{{ model.name }}</a></th>
+                                <th scope='row'><a href='{{ model.admin_url }}'>{% trans model.name %}</a></th>
                             {% else %}
-                                <th scope='row'>{{ model.name }}</th>
+                                <th scope='row'>{% trans model.name %}</th>
                             {% endif %}
                             {% if model.add_url %}
                                 <td><a href='{{ model.add_url }}' class='addlink'>{% trans 'Add' %}</a></td>
