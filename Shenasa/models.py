@@ -218,19 +218,6 @@ class PersonRole(models.Model):
         return '%s (%s)' % (self.person, Role(self.role).label)
 
 
-class LegalPersonQuerySet(models.query.QuerySet):
-    def get(self, **kwargs):
-        return LegalPerson.objects.all().exclude(id__in=Brand.objects.all().values('pk'))
-
-
-class CustomManager(models.Manager):
-    def get_queryset(self):
-        if self.model._meta.label == 'Shenasa.Brand':
-            return super().get_queryset()
-        else:
-            return super().get_queryset().exclude(id__in=Brand.objects.all().values('pk'))
-
-
 class LegalPersonBase(Person):
     person_role = models.ManyToManyField(PersonRole, verbose_name=_('Natural Key Person'), related_name='%(class)s_person_role')
     legal_role = models.ManyToManyField('LegalRole', verbose_name=_('Legal Key Person'), related_name='%(class)s_legal_role')
