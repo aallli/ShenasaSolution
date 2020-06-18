@@ -69,8 +69,7 @@ class NaturalPersonNewsInline(admin.TabularInline):
 
 
 @admin.register(Brand)
-class Brand1Admin(BaseModelAdmin):
-    fields = [('name', 'active', 'bias_tag'), ('logo', 'logo_tag'), ('person_roles_tabular', 'legal_roles_tabular'), 'news_tabular']
+class BrandAdmin(BaseModelAdmin):
     list_display = ['bias_tag', 'name', 'person_roles', 'legal_roles', 'active']
     list_display_links = ['name', 'person_roles', 'legal_roles', 'active']
     model = Brand
@@ -81,22 +80,28 @@ class Brand1Admin(BaseModelAdmin):
     save_on_top = True
 
     def get_form(self, request, obj=None, **kwargs):
-        form = super(Brand1Admin, self).get_form(request, obj=obj, **kwargs)
+        form = super(BrandAdmin, self).get_form(request, obj=obj, **kwargs)
         self.inlines = [
             BrandPersonRoleInline,
             BrandRoleInline,
             BrandNewsInline,
         ]
         permissions = request.user.get_all_permissions()
-        if not ('Shenasa.add_legalperson' in permissions or
-                        'Shenasa.change_legalperson' in permissions or
-                        'Shenasa.delete_legalperson' in permissions):
+        if request.user.is_superuser:
+            self.fields = [('name', 'active', 'bias_tag'), ('logo', 'logo_tag'),
+                           ('person_roles_tabular', 'legal_roles_tabular'), 'news_tabular']
+        elif 'Shenasa.add_legalperson' in permissions or 'Shenasa.change_legalperson' in permissions or 'Shenasa.delete_legalperson' in permissions:
+            self.fields = [('name', 'active', 'bias_tag'), ('logo', 'logo_tag')]
+        else:
             self.inlines = []
+            self.fields = [('name', 'active', 'bias_tag'), ('logo', 'logo_tag'),
+                           ('person_roles_tabular', 'legal_roles_tabular'), 'news_tabular']
+
         return form
 
     def save_model(self, request, obj, form, change):
         try:
-            super(Brand1Admin, self).save_model(request, obj, form, change)
+            super(BrandAdmin, self).save_model(request, obj, form, change)
         except Exception as e:
             messages.set_level(request, messages.ERROR)
             messages.error(request, e)
@@ -147,7 +152,7 @@ class LegalRoleAdmin(BaseModelAdmin):
 @admin.register(News)
 class NewsAdmin(ModelAdminJalaliMixin, SummernoteModelAdmin, BaseModelAdmin):
     summernote_fields = ('description',)
-    fields = [('date', 'bias', 'bias_tag', ), 'description', 'link', ]
+    fields = [('date', 'bias', 'bias_tag',), 'description', 'link', ]
     list_display = ['bias_tag', 'title', 'get_created_jalali']
     list_display_links = ['title', 'get_created_jalali']
     search_fields = ['description', 'link']
@@ -195,10 +200,14 @@ class NaturalPersonAdmin(BaseModelAdmin):
             NaturalPersonNewsInline,
         ]
         permissions = request.user.get_all_permissions()
-        if not ('Shenasa.add_naturalperson' in permissions or
-                        'Shenasa.change_naturalperson' in permissions or
-                        'Shenasa.delete_naturalperson' in permissions):
+        if request.user.is_superuser:
+            self.fields = [('name', 'bias_tag'), 'NID', 'mobile', 'active', ('image', 'image_tag'), 'news_tabular']
+        elif 'Shenasa.add_naturalperson' in permissions or 'Shenasa.change_naturalperson' in permissions or 'Shenasa.delete_naturalperson' in permissions:
+            self.fields = [('name', 'bias_tag'), 'NID', 'mobile', 'active', ('image', 'image_tag')]
+        else:
             self.inlines = []
+            self.fields = [('name', 'bias_tag'), 'NID', 'mobile', 'active', ('image', 'image_tag'), 'news_tabular']
+
         return form
 
     def save_model(self, request, obj, form, change):
@@ -228,10 +237,15 @@ class LegalPersonAdmin(BaseModelAdmin):
             LegalPersonNewsInline,
         ]
         permissions = request.user.get_all_permissions()
-        if not ('Shenasa.add_legalperson' in permissions or
-                        'Shenasa.change_legalperson' in permissions or
-                        'Shenasa.delete_legalperson' in permissions):
+        if request.user.is_superuser:
+            self.fields = [('name', 'active', 'bias_tag'), ('person_roles_tabular', 'legal_roles_tabular'),
+                           'news_tabular']
+        elif 'Shenasa.add_legalperson' in permissions or 'Shenasa.change_legalperson' in permissions or 'Shenasa.delete_legalperson' in permissions:
+            self.fields = [('name', 'active', 'bias_tag')]
+        else:
             self.inlines = []
+            self.fields = [('name', 'active', 'bias_tag'), ('person_roles_tabular', 'legal_roles_tabular'),
+                           'news_tabular']
         return form
 
     def save_model(self, request, obj, form, change):
@@ -248,8 +262,8 @@ class LegalPersonAdmin(BaseModelAdmin):
             if formset.prefix == 'LegalPerson_legal_role':
                 for lp in formset.cleaned_data:
                     if 'id' in lp and not lp['id'] and lp['legalrole'].person.pk == formset.instance.pk:
-                       raise Exception(_('Self relation from "%(legalrole)s" to "%(legalrole)s" is not valid.') % {
-                                    'legalrole': formset.instance.name})
+                        raise Exception(_('Self relation from "%(legalrole)s" to "%(legalrole)s" is not valid.') % {
+                            'legalrole': formset.instance.name})
             formset.save_m2m()
             super(LegalPersonAdmin, self).save_formset(request, form, formset, change)
         except Exception as e:

@@ -223,9 +223,8 @@ class LegalPersonBase(Person):
     legal_role = models.ManyToManyField('LegalRole', verbose_name=_('Legal Key Person'), related_name='%(class)s_legal_role')
     news = models.ManyToManyField(News, verbose_name=_('News'), related_name='%(class)s_news')
 
-    class Meta:
+    class Meta(Person.Meta):
         abstract = True
-        ordering = ['name']
 
     def __str__(self):
         return self.name
@@ -320,7 +319,7 @@ class LegalPersonBase(Person):
 
 
 class LegalPerson(LegalPersonBase):
-    class Meta:
+    class Meta(LegalPersonBase.Meta):
         verbose_name = _('Legal Person')
         verbose_name_plural = _('Legal Persons')
 
@@ -355,7 +354,7 @@ class Brand(LegalPersonBase):
     logo = ResizedImageField(size=[settings.MAX_SMALL_IMAGE_WIDTH, settings.MAX_SMALL_IMAGE_HEIGHT],
                              verbose_name=_('Logo'), upload_to='media/', blank=True, null=True)
 
-    class Meta:
+    class Meta(LegalPersonBase.Meta):
         verbose_name = _('Brand')
         verbose_name_plural = _('Brands')
 
