@@ -1,6 +1,8 @@
 import os
+import locale
 from functools import reduce
 from django.db import models
+from django.db.models import Sum
 from django.utils import timezone
 from django.dispatch import receiver
 from ShenasaSolution import settings
@@ -9,6 +11,12 @@ from Shenasa.utils import to_jalali_full
 from django_resized import ResizedImageField
 from django.core.validators import RegexValidator
 from django.utils.translation import ugettext_lazy as _
+
+locale.setlocale(locale.LC_ALL, '')
+
+
+def hide_title(class_name):
+    return '<script type="text/javascript">document.getElementsByClassName("%s")[0].style.display = "none";</script>' % class_name
 
 
 class Role(models.TextChoices):
@@ -51,6 +59,87 @@ class Person(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    total_investment_title = _('Total of Investment (M rls)')
+    total_purchased_stocks_title = _('Total Purchased Stocks')
+    total_fund_title = _('Total of Fund (M rls)')
+    total_sold_stocks_title = _('Total Sold Stocks')
+
+    def total_investment(self):
+        pass
+
+    total_investment.short_description = total_investment_title
+
+    def total_investment_string_formatted(self):
+        total_investment = self.total_investment()
+        if total_investment:
+            return '{:n}'.format(total_investment)
+        else:
+            return 0
+
+    total_investment_string_formatted.short_description = total_investment_title
+
+    def total_investment_tabular(self):
+        pass
+
+    total_investment_tabular.short_description = total_investment_title
+
+    def total_purchased_stocks(self):
+        pass
+
+    total_purchased_stocks.short_description = total_purchased_stocks_title
+
+    def total_purchased_stocks_string_formatted(self):
+        total_purchased_stocks = self.total_purchased_stocks()
+        if total_purchased_stocks:
+            return '{:n}'.format(total_purchased_stocks)
+        else:
+            return 0
+
+    total_purchased_stocks_string_formatted.short_description = total_purchased_stocks_title
+
+    def total_purchased_stocks_tabular(self):
+        pass
+
+    total_purchased_stocks_tabular.short_description = total_purchased_stocks_title
+
+    def total_fund(self):
+        pass
+
+    total_fund.short_description = total_fund_title
+
+    def total_fund_string_formatted(self):
+        total_fund = self.total_fund()
+        if total_fund:
+            return '{:n}'.format(total_fund)
+        else:
+            return 0
+
+    total_fund_string_formatted.short_description = total_fund_title
+
+    def total_sold_stocks(self):
+        pass
+
+    total_sold_stocks.short_description = total_sold_stocks_title
+
+    def total_sold_stocks_string_formatted(self):
+        total_sold_stocks = self.total_sold_stocks()
+        if total_sold_stocks:
+            return '{:n}'.format(total_sold_stocks)
+        else:
+            return 0
+
+    total_sold_stocks_string_formatted.short_description = total_sold_stocks_title
+
+    def total_fund_tabular(self):
+        pass
+
+    total_fund_tabular.short_description = total_fund_title
+
+    def total_sold_stocks_tabular(self):
+        pass
+
+    total_sold_stocks_tabular.short_description = total_sold_stocks_title
 
 
 class News(models.Model):
@@ -126,14 +215,28 @@ class NaturalPerson(Person):
         else:
             return self.name
 
+    def total_investment(self):
+        return PersonRole.objects.filter(person=self).filter(
+            role__in=[Role.INVESTOR, Role.INVESTOR_ANGEL, Role.INVESTOR_FOREIGN, Role.INVESTOR_VC]).aggregate(
+            amount_of_investment=Sum('amount_of_investment'))['amount_of_investment']
+
+    def total_purchased_stocks(self):
+        return PersonRole.objects.filter(person=self).filter(role=Role.STACKHOLDER).aggregate(
+            total_stocks=Sum('number_of_stocks'))['total_stocks']
+
     def news_tabular(self):
-        return mark_safe(
-            '<table><thead><tr><th>#</th><th>%s</th><th>%s</th><th>%s</th></tr></thead><tbody>%s</tbody></table>' %
-            (_('Creation Date'), _('Description'), _('Link'), ''.join(
+        result = ''.join(
                 '<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
                     index % 2 + 1, index + 1, to_jalali_full(n.date), n.description, n.link)
-                for index, n in enumerate(self.news.all())))
-        )
+                for index, n in enumerate(self.news.all()))
+
+        if result:
+            result = '<table><thead><tr><th>#</th><th>%s</th><th>%s</th><th>%s</th></tr></thead><tbody>%s</tbody></table>' % \
+                     (_('Creation Date'), _('Description'), _('Link'), result)
+        else:
+            result = hide_title('form-row field-news_tabular')
+
+        return mark_safe(result)
 
     news_tabular.short_description = _('News')
 
@@ -154,6 +257,40 @@ class NaturalPerson(Person):
                          (bias, label, label))
 
     bias_tag.short_description = _('Bias')
+
+    def total_investment_tabular(self):
+        result = ''
+        for pr in PersonRole.objects.filter(person=self).filter(
+                role__in=[Role.INVESTOR, Role.INVESTOR_ANGEL, Role.INVESTOR_FOREIGN, Role.INVESTOR_VC]):
+            result = ''.join('<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
+                index % 2 + 1, index + 1, lp.name, Role(pr.role).label, lp.generate_comment(pr))
+                             for index, lp in enumerate(pr.legalperson_person_role.all()))
+            result += ''.join('<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
+                index % 2 + 1, index + 1, b.name, Role(pr.role).label, b.generate_comment(pr))
+                              for index, b in enumerate(pr.brand_person_role.all()))
+        if result:
+            result = '<table><thead><tr><th>#</th><th>%s</th><th>%s</th><th>%s</th></tr></thead><tbody>%s</tbody></table>' % \
+                     (_('Name'), _('Role'), _('Comment'), result)
+        return mark_safe(result)
+
+    total_investment_tabular.short_description = Person.total_investment_tabular.short_description
+
+    def total_purchased_stocks_tabular(self):
+        result = ''
+        for pr in PersonRole.objects.filter(person=self).filter(
+                role__in=[Role.STACKHOLDER]):
+            result = ''.join('<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
+                index % 2 + 1, index + 1, lp.name, Role(pr.role).label, lp.generate_comment(pr))
+                             for index, lp in enumerate(pr.legalperson_person_role.all()))
+            result += ''.join('<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
+                index % 2 + 1, index + 1, b.name, Role(pr.role).label, b.generate_comment(pr))
+                              for index, b in enumerate(pr.brand_person_role.all()))
+        if result:
+            result = '<table><thead><tr><th>#</th><th>%s</th><th>%s</th><th>%s</th></tr></thead><tbody>%s</tbody></table>' % \
+                     (_('Name'), _('Role'), _('Comment'), result)
+        return mark_safe(result)
+
+    total_purchased_stocks_tabular.short_description = Person.total_purchased_stocks_tabular.short_description
 
 
 @receiver(models.signals.post_delete, sender=NaturalPerson)
@@ -202,7 +339,7 @@ def auto_delete_natural_person_file_on_change(sender, instance, **kwargs):
 class PersonRole(models.Model):
     person = models.ForeignKey(NaturalPerson, verbose_name=_('Person'), blank=True, null=True, on_delete=models.CASCADE)
     role = models.CharField(verbose_name=_('Role'), max_length=10, choices=Role.choices, default=Role.STACKHOLDER)
-    number_of_shares = models.IntegerField(verbose_name=_('Number of Shares'), default=0)
+    number_of_stocks = models.IntegerField(verbose_name=_('Number of Stocks'), default=0)
     amount_of_investment = models.IntegerField(verbose_name=_('Amount of Investment (M rls)'), default=0)
 
     class Meta:
@@ -217,10 +354,24 @@ class PersonRole(models.Model):
     def __unicode__(self):
         return '%s (%s)' % (self.person, Role(self.role).label)
 
+    def number_of_stocks_string_formatted(self):
+        if self.number_of_stocks:
+            return '{:n}'.format(self.number_of_stocks)
+        else:
+            return 0
+
+    def amount_of_investment_string_formatted(self):
+        if self.amount_of_investment:
+            return '{:n}'.format(self.amount_of_investment)
+        else:
+            return 0
+
 
 class LegalPersonBase(Person):
-    person_role = models.ManyToManyField(PersonRole, verbose_name=_('Natural Key Person'), related_name='%(class)s_person_role')
-    legal_role = models.ManyToManyField('LegalRole', verbose_name=_('Legal Key Person'), related_name='%(class)s_legal_role')
+    person_role = models.ManyToManyField(PersonRole, verbose_name=_('Natural Key Person'),
+                                         related_name='%(class)s_person_role')
+    legal_role = models.ManyToManyField('LegalRole', verbose_name=_('Legal Key Person'),
+                                        related_name='%(class)s_legal_role')
     news = models.ManyToManyField(News, verbose_name=_('News'), related_name='%(class)s_news')
 
     class Meta(Person.Meta):
@@ -232,39 +383,86 @@ class LegalPersonBase(Person):
     def __unicode__(self):
         return self.name
 
+    def total_investment(self):
+        result = 0
+        roles = LegalRole.objects.filter(person=self).filter(
+            role__in=[Role.INVESTOR, Role.INVESTOR_ANGEL, Role.INVESTOR_FOREIGN, Role.INVESTOR_VC])
+        if roles.count():
+            result = roles.aggregate(amount_of_investment=Sum('amount_of_investment'))['amount_of_investment']
+        return result
+
+    def total_purchased_stocks(self):
+        result = 0
+        roles = LegalRole.objects.filter(person=self).filter(role=Role.STACKHOLDER)
+        if roles.count():
+            result = roles.aggregate(total_stocks=Sum('number_of_stocks'))['total_stocks']
+        return result
+
+    def total_fund(self):
+        result = 0
+
+        roles = self.person_role.filter(
+            role__in=[Role.INVESTOR, Role.INVESTOR_ANGEL, Role.INVESTOR_FOREIGN, Role.INVESTOR_VC])
+        if roles.count():
+            result += roles.aggregate(amount_of_investment=Sum('amount_of_investment'))['amount_of_investment']
+
+        roles = self.legal_role.filter(
+            role__in=[Role.INVESTOR, Role.INVESTOR_ANGEL, Role.INVESTOR_FOREIGN, Role.INVESTOR_VC])
+        if roles.count():
+            result += roles.aggregate(amount_of_investment=Sum('amount_of_investment'))['amount_of_investment']
+
+        return result
+
+    def total_sold_stocks(self):
+        result = 0
+
+        roles = self.person_role.filter(role=Role.STACKHOLDER)
+        if roles.count():
+            result += roles.aggregate(total_stocks=Sum('number_of_stocks'))['total_stocks']
+
+        roles = self.legal_role.filter(role=Role.STACKHOLDER)
+        if roles.count():
+            result += roles.aggregate(total_stocks=Sum('number_of_stocks'))['total_stocks']
+
+        return result
+
     def generate_comment(self, pr):
         if pr.role == 'ST':
-            return '%s = %s' % (_('Number of Shares'), pr.number_of_shares)
-        if pr.role in ('IN', 'IF', 'IV', 'IA'):
-            return '%s = %s' % (_('Amount of Investment (M rls)'), pr.amount_of_investment)
+            return '%s = %s' % (_('Number of Stocks'), pr.number_of_stocks_string_formatted())
+        elif pr.role in ('IN', 'IF', 'IV', 'IA'):
+            return '%s = %s' % (_('Amount of Investment (M rls)'), pr.amount_of_investment_string_formatted())
+        else:
+            return ''
 
     def person_roles_tabular(self):
-        return mark_safe(
-            '<table><thead><tr><th>#</th><th>%s</th><th>%s</th><th>%s</th></tr></thead><tbody>%s</tbody></table>' %
-            (_('Name'), _('Role'), _('Comment'), ''.join(
-                '<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(index % 2 + 1, index + 1,
-                                                                                             pr.person.name,
-                                                                                             Role(pr.role).label,
-                                                                                             self.generate_comment(
-                                                                                                 pr))
-                for
-                index, pr in enumerate(self.person_role.all())))
-        )
+        result = ''.join('<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
+            index % 2 + 1, index + 1, pr.person.name, Role(pr.role).label, self.generate_comment(pr))
+                         for index, pr in enumerate(self.person_role.exclude(
+            role__in=[Role.INVESTOR, Role.INVESTOR_ANGEL, Role.INVESTOR_FOREIGN, Role.INVESTOR_VC, Role.STACKHOLDER])))
+
+        if result:
+            result = '<table><thead><tr><th>#</th><th>%s</th><th>%s</th><th>%s</th></tr></thead><tbody>%s</tbody></table>' % \
+                     (_('Name'), _('Role'), _('Comment'), result)
+        else:
+            result = hide_title('fieldBox field-person_roles_tabular')
+
+        return mark_safe(result)
 
     person_roles_tabular.short_description = _('Selected Natural Key Persons')
 
     def legal_roles_tabular(self):
-        return mark_safe(
-            '<table><thead><tr><th>#</th><th>%s</th><th>%s</th><th>%s</th></tr></thead><tbody>%s</tbody></table>' %
-            (_('Name'), _('Role'), _('Comment'), ''.join(
-                '<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(index % 2 + 1, index + 1,
-                                                                                             lr.person.name,
-                                                                                             Role(lr.role).label,
-                                                                                             self.generate_comment(
-                                                                                                 lr))
-                for
-                index, lr in enumerate(self.legal_role.all())))
-        )
+        result = ''.join('<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
+            index % 2 + 1, index + 1, lr.person.name, Role(lr.role).label, self.generate_comment(lr))
+                         for index, lr in enumerate(self.legal_role.exclude(
+            role__in=[Role.INVESTOR, Role.INVESTOR_ANGEL, Role.INVESTOR_FOREIGN, Role.INVESTOR_VC, Role.STACKHOLDER])))
+
+        if result:
+            result = '<table><thead><tr><th>#</th><th>%s</th><th>%s</th><th>%s</th></tr></thead><tbody>%s</tbody></table>' % \
+                     (_('Name'), _('Role'), _('Comment'), result)
+        else:
+            result = hide_title('fieldBox field-legal_roles_tabular')
+
+        return mark_safe(result)
 
     legal_roles_tabular.short_description = _('Selected Legal Key Persons')
 
@@ -281,13 +479,17 @@ class LegalPersonBase(Person):
     legal_roles.short_description = _('Selected Legal Key Persons')
 
     def news_tabular(self):
-        return mark_safe(
-            '<table><thead><tr><th>#</th><th>%s</th><th>%s</th><th>%s</th></tr></thead><tbody>%s</tbody></table>' %
-            (_('Creation Date'), _('Description'), _('Link'), ''.join(
-                '<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
-                    index % 2 + 1, index + 1, to_jalali_full(n.date), n.description, n.link)
-                for index, n in enumerate(self.news.all())))
-        )
+        result = ''.join('<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
+            index % 2 + 1, index + 1, to_jalali_full(n.date), n.description, n.link)
+                         for index, n in enumerate(self.news.all()))
+
+        if result:
+            result = '<table><thead><tr><th>#</th><th>%s</th><th>%s</th><th>%s</th></tr></thead><tbody>%s</tbody></table>' % \
+                     (_('Creation Date'), _('Description'), _('Link'), result)
+        else:
+            result = hide_title('form-row field-news_tabular')
+
+        return mark_safe(result)
 
     news_tabular.short_description = _('News')
 
@@ -317,6 +519,96 @@ class LegalPersonBase(Person):
 
     bias_tag.short_description = _('Bias')
 
+    def total_investment_string_formatted(self):
+        return super().total_investment_string_formatted()
+
+    total_investment_string_formatted.short_description = Person.total_investment_string_formatted.short_description
+
+    def total_purchased_stocks_string_formatted(self):
+        return super().total_purchased_stocks_string_formatted()
+
+    total_purchased_stocks_string_formatted.short_description = Person.total_purchased_stocks_string_formatted.short_description
+
+    def total_fund_string_formatted(self):
+        return super().total_fund_string_formatted()
+
+    total_fund_string_formatted.short_description = Person.total_fund_string_formatted.short_description
+
+    def total_sold_stocks_string_formatted(self):
+        return super().total_sold_stocks_string_formatted()
+
+    total_sold_stocks_string_formatted.short_description = Person.total_sold_stocks_string_formatted.short_description
+
+    def total_investment_tabular(self):
+        result = ''
+        for lr in LegalRole.objects.filter(person=self).filter(
+                role__in=[Role.INVESTOR, Role.INVESTOR_ANGEL, Role.INVESTOR_FOREIGN, Role.INVESTOR_VC]):
+            result = ''.join('<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
+                index % 2 + 1, index + 1, lp.name, Role(lr.role).label, lp.generate_comment(lr))
+                             for index, lp in enumerate(lr.legalperson_legal_role.all()))
+            result += ''.join('<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
+                index % 2 + 1, index + 1, b.name, Role(lr.role).label, b.generate_comment(lr))
+                              for index, b in enumerate(lr.brand_legal_role.all()))
+        if result:
+            result = '<table><thead><tr><th>#</th><th>%s</th><th>%s</th><th>%s</th></tr></thead><tbody>%s</tbody></table>' % \
+                     (_('Name'), _('Role'), _('Comment'), result)
+        return mark_safe(result)
+
+    total_investment_tabular.short_description = Person.total_investment_tabular.short_description
+
+    def total_purchased_stocks_tabular(self):
+        result = ''
+        for lr in LegalRole.objects.filter(person=self).filter(
+                role__in=[Role.STACKHOLDER]):
+            result = ''.join('<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
+                index % 2 + 1, index + 1, lp.name, Role(lr.role).label, lp.generate_comment(lr))
+                             for index, lp in enumerate(lr.legalperson_legal_role.all()))
+            result += ''.join('<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
+                index % 2 + 1, index + 1, b.name, Role(lr.role).label, b.generate_comment(lr))
+                              for index, b in enumerate(lr.brand_legal_role.all()))
+        if result:
+            result = '<table><thead><tr><th>#</th><th>%s</th><th>%s</th><th>%s</th></tr></thead><tbody>%s</tbody></table>' % \
+                     (_('Name'), _('Role'), _('Comment'), result)
+        return mark_safe(result)
+
+    total_purchased_stocks_tabular.short_description = Person.total_purchased_stocks_tabular.short_description
+
+    def total_fund_tabular(self):
+        result = ''.join('<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
+            index % 2 + 1, index + 1, pr.person.name, Role(pr.role).label, self.generate_comment(pr))
+                         for index, pr in enumerate(self.person_role.filter(
+            role__in=[Role.INVESTOR, Role.INVESTOR_ANGEL, Role.INVESTOR_FOREIGN, Role.INVESTOR_VC])))
+
+        result += ''.join('<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
+            index % 2 + 1, index + 1, lr.person.name, Role(lr.role).label, self.generate_comment(lr))
+                          for index, lr in enumerate(self.legal_role.filter(
+            role__in=[Role.INVESTOR, Role.INVESTOR_ANGEL, Role.INVESTOR_FOREIGN, Role.INVESTOR_VC])))
+
+        if result:
+            result = '<table><thead><tr><th>#</th><th>%s</th><th>%s</th><th>%s</th></tr></thead><tbody>%s</tbody></table>' % \
+                     (_('Name'), _('Role'), _('Comment'), result)
+
+        return mark_safe(result)
+
+    total_fund_tabular.short_description = Person.total_fund_tabular.short_description
+
+    def total_sold_stocks_tabular(self):
+        result = ''.join('<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
+            index % 2 + 1, index + 1, pr.person.name, Role(pr.role).label, self.generate_comment(pr))
+                         for index, pr in enumerate(self.person_role.filter(role=Role.STACKHOLDER)))
+
+        result += ''.join('<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
+            index % 2 + 1, index + 1, lr.person.name, Role(lr.role).label, self.generate_comment(lr))
+                          for index, lr in enumerate(self.legal_role.filter(role=Role.STACKHOLDER)))
+
+        if result:
+            result = '<table><thead><tr><th>#</th><th>%s</th><th>%s</th><th>%s</th></tr></thead><tbody>%s</tbody></table>' % \
+                     (_('Name'), _('Role'), _('Comment'), result)
+
+        return mark_safe(result)
+
+    total_sold_stocks_tabular.short_description = Person.total_sold_stocks_tabular.short_description
+
 
 class LegalPerson(LegalPersonBase):
     class Meta(LegalPersonBase.Meta):
@@ -334,7 +626,7 @@ class LegalRole(models.Model):
     person = models.ForeignKey(LegalPerson, verbose_name=_('Legal Person'), blank=True, null=True,
                                on_delete=models.CASCADE)
     role = models.CharField(verbose_name=_('Role'), max_length=10, choices=Role.choices, default=Role.STACKHOLDER)
-    number_of_shares = models.IntegerField(verbose_name=_('Number of Shares'), default=0)
+    number_of_stocks = models.IntegerField(verbose_name=_('Number of Stocks'), default=0)
     amount_of_investment = models.IntegerField(verbose_name=_('Amount of Investment (M rls)'), default=0)
 
     class Meta:
@@ -348,6 +640,18 @@ class LegalRole(models.Model):
 
     def __unicode__(self):
         return '%s (%s)' % (self.person, Role(self.role).label)
+
+    def number_of_stocks_string_formatted(self):
+        if self.number_of_stocks:
+            return '{:n}'.format(self.number_of_stocks)
+        else:
+            return 0
+
+    def amount_of_investment_string_formatted(self):
+        if self.amount_of_investment:
+            return '{:n}'.format(self.amount_of_investment)
+        else:
+            return 0
 
 
 class Brand(LegalPersonBase):

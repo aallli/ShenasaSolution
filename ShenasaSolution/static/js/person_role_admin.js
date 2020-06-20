@@ -9,7 +9,7 @@ function bind_selector() {
         return;
     }
 
-    var shares = document.getElementsByClassName('fieldBox field-number_of_shares')[0];
+    var stocks = document.getElementsByClassName('fieldBox field-number_of_stocks')[0];
     var investment = document.getElementsByClassName('fieldBox field-amount_of_investment')[0];
 
     init(role_field.value);
@@ -18,7 +18,7 @@ function bind_selector() {
     }
 
     function init(value) {
-        shares.style.display = value == 'ST' ? 'block' : 'none';
+        stocks.style.display = value == 'ST' ? 'block' : 'none';
         investment.style.display = ['IN', 'IF', 'IV', 'IA'].includes(value) ? 'block' : 'none';
     }
 }

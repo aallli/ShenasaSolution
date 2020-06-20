@@ -26,6 +26,12 @@ class BaseModelAdmin(admin.ModelAdmin):
     list_per_page = settings.LIST_PER_PAGE
 
 
+class NaturalPersonNewsInline(admin.TabularInline):
+    model = NaturalPerson.news.through
+    verbose_name = _("Natural Person News")
+    verbose_name_plural = _("Natural Person News")
+
+
 class LegalPersonPersonRoleInline(admin.TabularInline):
     model = LegalPerson.person_role.through
     verbose_name = _("Person Role")
@@ -62,54 +68,9 @@ class BrandNewsInline(admin.TabularInline):
     verbose_name_plural = _("Brand News")
 
 
-class NaturalPersonNewsInline(admin.TabularInline):
-    model = NaturalPerson.news.through
-    verbose_name = _("Natural Person News")
-    verbose_name_plural = _("Natural Person News")
-
-
-@admin.register(Brand)
-class BrandAdmin(BaseModelAdmin):
-    list_display = ['bias_tag', 'name', 'person_roles', 'legal_roles', 'active']
-    list_display_links = ['name', 'person_roles', 'legal_roles', 'active']
-    model = Brand
-    list_filter = ['active', ('person_role__person', custom_titled_filter(_('Person Role'))),
-                   ('legal_role__person', custom_titled_filter(_('Legal Role')))]
-    search_fields = ['name', 'person_role__person__name']
-    readonly_fields = ['person_roles_tabular', 'legal_roles_tabular', 'news_tabular', 'logo_tag', 'bias_tag']
-    save_on_top = True
-
-    def get_form(self, request, obj=None, **kwargs):
-        form = super(BrandAdmin, self).get_form(request, obj=obj, **kwargs)
-        self.inlines = [
-            BrandPersonRoleInline,
-            BrandRoleInline,
-            BrandNewsInline,
-        ]
-        permissions = request.user.get_all_permissions()
-        if request.user.is_superuser:
-            self.fields = [('name', 'active', 'bias_tag'), ('logo', 'logo_tag'),
-                           ('person_roles_tabular', 'legal_roles_tabular'), 'news_tabular']
-        elif 'Shenasa.add_legalperson' in permissions or 'Shenasa.change_legalperson' in permissions or 'Shenasa.delete_legalperson' in permissions:
-            self.fields = [('name', 'active', 'bias_tag'), ('logo', 'logo_tag')]
-        else:
-            self.inlines = []
-            self.fields = [('name', 'active', 'bias_tag'), ('logo', 'logo_tag'),
-                           ('person_roles_tabular', 'legal_roles_tabular'), 'news_tabular']
-
-        return form
-
-    def save_model(self, request, obj, form, change):
-        try:
-            super(BrandAdmin, self).save_model(request, obj, form, change)
-        except Exception as e:
-            messages.set_level(request, messages.ERROR)
-            messages.error(request, e)
-
-
 @admin.register(PersonRole)
 class PersonRoleAdmin(BaseModelAdmin):
-    fields = [('person', 'role', 'number_of_shares', 'amount_of_investment'), ]
+    fields = [('person', 'role', 'number_of_stocks', 'amount_of_investment'), ]
     list_display = ['person', 'role']
     list_display_links = ['person', 'role']
     model = PersonRole
@@ -130,7 +91,7 @@ class PersonRoleAdmin(BaseModelAdmin):
 
 @admin.register(LegalRole)
 class LegalRoleAdmin(BaseModelAdmin):
-    fields = [('person', 'role', 'number_of_shares', 'amount_of_investment'), ]
+    fields = [('person', 'role', 'number_of_stocks', 'amount_of_investment'), ]
     list_display = ['person', 'role', ]
     list_display_links = ['person', 'role', ]
     model = LegalRole
@@ -185,13 +146,16 @@ class NewsAdmin(ModelAdminJalaliMixin, SummernoteModelAdmin, BaseModelAdmin):
 
 @admin.register(NaturalPerson)
 class NaturalPersonAdmin(BaseModelAdmin):
-    fields = [('name', 'bias_tag'), 'NID', 'mobile', 'active', ('image', 'image_tag'), 'news_tabular']
-    list_display = ['bias_tag', 'name', 'NID', 'mobile', 'active', ]
-    list_display_links = ['name', 'NID', 'mobile', 'active', ]
+    list_display = ['bias_tag', 'name', 'NID', 'mobile', 'total_investment_string_formatted',
+                    'total_purchased_stocks_string_formatted', 'active', ]
+    list_display_links = ['name', 'NID', 'mobile', 'total_investment_string_formatted',
+                          'total_purchased_stocks_string_formatted', 'active', ]
     model = NaturalPerson
     list_filter = ['active']
     search_fields = ['name', 'NID', 'mobile']
-    readonly_fields = ['image_tag', 'news_tabular', 'bias_tag']
+    readonly_fields = ['image_tag', 'total_investment_tabular', 'total_purchased_stocks_tabular', 'news_tabular',
+                       'total_investment_string_formatted', 'total_purchased_stocks_string_formatted',
+                       'bias_tag']
     save_on_top = True
 
     def get_form(self, request, obj=None, **kwargs):
@@ -201,12 +165,18 @@ class NaturalPersonAdmin(BaseModelAdmin):
         ]
         permissions = request.user.get_all_permissions()
         if request.user.is_superuser:
-            self.fields = [('name', 'bias_tag'), 'NID', 'mobile', 'active', ('image', 'image_tag'), 'news_tabular']
+            self.fields = [('name', 'bias_tag'), 'NID', 'mobile', 'active', ('image', 'image_tag'),
+                           ('total_investment_string_formatted', 'total_investment_tabular'),
+                           ('total_purchased_stocks_string_formatted', 'total_purchased_stocks_tabular'), 'news_tabular']
         elif 'Shenasa.add_naturalperson' in permissions or 'Shenasa.change_naturalperson' in permissions or 'Shenasa.delete_naturalperson' in permissions:
-            self.fields = [('name', 'bias_tag'), 'NID', 'mobile', 'active', ('image', 'image_tag')]
+            self.fields = [('name', 'bias_tag'), 'NID',
+                           ('mobile', 'total_investment_string_formatted', 'total_purchased_stocks_string_formatted'),
+                           'active',('image', 'image_tag')]
         else:
             self.inlines = []
-            self.fields = [('name', 'bias_tag'), 'NID', 'mobile', 'active', ('image', 'image_tag'), 'news_tabular']
+            self.fields = [('name', 'bias_tag'), 'NID', 'mobile', 'active', ('image', 'image_tag'),
+                           ('total_investment_string_formatted', 'total_investment_tabular'),
+                           ('total_purchased_stocks_string_formatted', 'total_purchased_stocks_tabular'), 'news_tabular']
 
         return form
 
@@ -220,13 +190,23 @@ class NaturalPersonAdmin(BaseModelAdmin):
 
 @admin.register(LegalPerson)
 class LegalPersonAdmin(BaseModelAdmin):
-    fields = [('name', 'active', 'bias_tag'), ('person_roles_tabular', 'legal_roles_tabular'), 'news_tabular']
-    list_display = ['bias_tag', 'name', 'person_roles', 'legal_roles', 'active']
-    list_display_links = ['name', 'person_roles', 'legal_roles', 'active']
+    list_display = ['bias_tag', 'name', 'person_roles', 'legal_roles',
+                    'total_investment_string_formatted', 'total_purchased_stocks_string_formatted',
+                    'total_fund_string_formatted', 'total_sold_stocks_string_formatted',
+                    'active']
+    list_display_links = ['name', 'person_roles', 'legal_roles',
+                          'total_investment_string_formatted', 'total_purchased_stocks_string_formatted',
+                          'total_fund_string_formatted', 'total_sold_stocks_string_formatted',
+                          'active']
     model = LegalPerson
     list_filter = ['active', 'person_role__person', 'person_role__role']
     search_fields = ['name', 'person_role__person__name']
-    readonly_fields = ['person_roles', 'person_roles_tabular', 'legal_roles_tabular', 'news_tabular', 'bias_tag']
+    readonly_fields = ['person_roles', 'person_roles_tabular', 'legal_roles_tabular', 'total_investment_tabular',
+                       'total_investment_string_formatted', 'total_purchased_stocks_string_formatted',
+                       'total_purchased_stocks_tabular', 'news_tabular',
+                       'total_fund_string_formatted', 'total_sold_stocks_string_formatted',
+                       'total_fund_tabular', 'total_sold_stocks_tabular',
+                       'bias_tag']
     save_on_top = True
 
     def get_form(self, request, obj=None, **kwargs):
@@ -238,13 +218,26 @@ class LegalPersonAdmin(BaseModelAdmin):
         ]
         permissions = request.user.get_all_permissions()
         if request.user.is_superuser:
-            self.fields = [('name', 'active', 'bias_tag'), ('person_roles_tabular', 'legal_roles_tabular'),
+            self.fields = [('name', 'active', 'bias_tag'),
+                           ('person_roles_tabular', 'legal_roles_tabular'),
+                           ('total_investment_string_formatted', 'total_investment_tabular' ),
+                           ('total_purchased_stocks_string_formatted', 'total_purchased_stocks_tabular'),
+                           ('total_fund_string_formatted', 'total_fund_tabular'),
+                           ('total_sold_stocks_string_formatted', 'total_sold_stocks_tabular'),
                            'news_tabular']
         elif 'Shenasa.add_legalperson' in permissions or 'Shenasa.change_legalperson' in permissions or 'Shenasa.delete_legalperson' in permissions:
-            self.fields = [('name', 'active', 'bias_tag')]
+            self.fields = [('name', 'active', 'bias_tag'),
+                           ('total_investment_string_formatted', 'total_purchased_stocks_string_formatted'),
+                           ('total_fund_string_formatted', 'total_sold_stocks_string_formatted'),
+                           ]
         else:
             self.inlines = []
-            self.fields = [('name', 'active', 'bias_tag'), ('person_roles_tabular', 'legal_roles_tabular'),
+            self.fields = [('name', 'active', 'bias_tag'),
+                           ('person_roles_tabular', 'legal_roles_tabular'),
+                           ('total_investment_string_formatted', 'total_investment_tabular' ),
+                           ('total_purchased_stocks_string_formatted', 'total_purchased_stocks_tabular'),
+                           ('total_fund_string_formatted', 'total_fund_tabular'),
+                           ('total_sold_stocks_string_formatted', 'total_sold_stocks_tabular'),
                            'news_tabular']
         return form
 
@@ -266,6 +259,60 @@ class LegalPersonAdmin(BaseModelAdmin):
                             'legalrole': formset.instance.name})
             formset.save_m2m()
             super(LegalPersonAdmin, self).save_formset(request, form, formset, change)
+        except Exception as e:
+            messages.set_level(request, messages.ERROR)
+            messages.error(request, e)
+
+
+@admin.register(Brand)
+class BrandAdmin(BaseModelAdmin):
+    list_display = ['bias_tag', 'name', 'person_roles', 'legal_roles',
+                    'total_fund_string_formatted', 'total_sold_stocks_string_formatted',
+                    'active']
+    list_display_links = ['name', 'person_roles', 'legal_roles',
+                          'total_fund_string_formatted', 'total_sold_stocks_string_formatted',
+                          'active']
+    model = Brand
+    list_filter = ['active', ('person_role__person', custom_titled_filter(_('Person Role'))),
+                   ('legal_role__person', custom_titled_filter(_('Legal Role')))]
+    search_fields = ['name', 'person_role__person__name']
+    readonly_fields = ['person_roles', 'person_roles_tabular', 'legal_roles_tabular', 'news_tabular',
+                       'total_fund_string_formatted', 'total_sold_stocks_string_formatted',
+                       'total_fund_tabular', 'total_sold_stocks_tabular',
+                       'logo_tag', 'bias_tag']
+    save_on_top = True
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(BrandAdmin, self).get_form(request, obj=obj, **kwargs)
+        self.inlines = [
+            BrandPersonRoleInline,
+            BrandRoleInline,
+            BrandNewsInline,
+        ]
+        permissions = request.user.get_all_permissions()
+        if request.user.is_superuser:
+            self.fields = [('name', 'active', 'bias_tag'), ('logo', 'logo_tag'),
+                           ('person_roles_tabular', 'legal_roles_tabular'),
+                           ('total_fund_string_formatted', 'total_fund_tabular'),
+                           ('total_sold_stocks_string_formatted', 'total_sold_stocks_tabular'),
+                           'news_tabular']
+        elif 'Shenasa.add_brand' in permissions or 'Shenasa.change_brand' in permissions or 'Shenasa.delete_brand' in permissions:
+            self.fields = [('name', 'active', 'bias_tag'), ('logo', 'logo_tag'),
+                           ('total_fund_string_formatted', 'total_sold_stocks_string_formatted'),
+                           ]
+        else:
+            self.inlines = []
+            self.fields = [('name', 'active', 'bias_tag'), ('logo', 'logo_tag'),
+                           ('person_roles_tabular', 'legal_roles_tabular'),
+                           ('total_fund_string_formatted', 'total_fund_tabular'),
+                           ('total_sold_stocks_string_formatted', 'total_sold_stocks_tabular'),
+                           'news_tabular']
+
+        return form
+
+    def save_model(self, request, obj, form, change):
+        try:
+            super(BrandAdmin, self).save_model(request, obj, form, change)
         except Exception as e:
             messages.set_level(request, messages.ERROR)
             messages.error(request, e)

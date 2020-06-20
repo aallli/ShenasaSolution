@@ -12,14 +12,35 @@
     display: none;
 }
 
-.fieldBox.field-person_roles_tabular, .fieldBox.field-legal_roles_tabular {
+.fieldBox.field-person_roles_tabular,
+.fieldBox.field-total_investment_string_formatted,
+.fieldBox.field-total_purchased_stocks_string_formatted,
+.fieldBox.field-total_fund_string_formatted,
+.fieldBox.field-total_sold_stocks_string_formatted,
+.fieldBox.field-legal_roles_tabular,
+.fieldBox.field-total_investment_tabular,
+.fieldBox.field-total_purchased_stocks_tabular
+{
     white-space: nowrap;
 }
 
+.fieldBox.field-total_purchased_stocks_tabular label,
+.fieldBox.field-total_investment_tabular label,
+.fieldBox.field-total_fund_tabular label,
+.fieldBox.field-total_sold_stocks_tabular label,
 .fieldBox.field-logo_tag label,
 .fieldBox.field-image_tag label,
-.fieldBox.field-box.field-bias_tag label {
+.fieldBox.field-box.field-bias_tag label
+{
     display: none;
+}
+
+:lang(fa) .fieldBox.field-total_investment_string_formatted div,
+:lang(fa) .fieldBox.field-total_fund_string_formatted div,
+:lang(fa) .fieldBox.field-total_investment_string_formatted div
+{
+    padding-right: 150px !important;
+    float: left;
 }
 
 .bias {
