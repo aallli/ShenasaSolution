@@ -448,8 +448,6 @@ class BrandLegalRole(RoleBase):
 
 
 class LegalPersonBase(Person):
-    legal_role = models.ManyToManyField('LegalRole', verbose_name=_('Legal Key Person'),
-                                        related_name='%(class)s_legal_role')
     news = models.ManyToManyField(News, verbose_name=_('News'), related_name='%(class)s_news')
 
     class Meta(Person.Meta):
@@ -780,38 +778,6 @@ class LegalPerson(LegalPersonBase):
                      (_('Name'), _('Role'), _('Comment'), result)
 
         return mark_safe(result)
-
-
-class LegalRole(models.Model):
-    person = models.ForeignKey(LegalPerson, verbose_name=_('Legal Person'), blank=True, null=True,
-                               on_delete=models.CASCADE)
-    role = models.CharField(verbose_name=_('Role'), max_length=10, choices=Role.choices, default=Role.STACKHOLDER)
-    number_of_stocks = models.IntegerField(verbose_name=_('Number of Stocks'), default=0)
-    amount_of_investment = models.IntegerField(verbose_name=_('Amount of Investment (M rls)'), default=0)
-
-    class Meta:
-        unique_together = ['person', 'role']
-        verbose_name = _('Legal Role')
-        verbose_name_plural = _('Legal Roles')
-        ordering = ['person', 'role']
-
-    def __str__(self):
-        return '%s (%s)' % (self.person, Role(self.role).label)
-
-    def __unicode__(self):
-        return '%s (%s)' % (self.person, Role(self.role).label)
-
-    def number_of_stocks_string_formatted(self):
-        if self.number_of_stocks:
-            return '{:n}'.format(self.number_of_stocks)
-        else:
-            return 0
-
-    def amount_of_investment_string_formatted(self):
-        if self.amount_of_investment:
-            return '{:n}'.format(self.amount_of_investment)
-        else:
-            return 0
 
 
 class Brand(LegalPersonBase):

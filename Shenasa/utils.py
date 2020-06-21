@@ -9,8 +9,6 @@ def to_jalali_full(date):
 msgid = _("welcome")
 msgid = _("Admin Interface")
 msgid = _("Django Summernote")
-msgid = _("Personrole")
-msgid = _("Legalrole")
 msgid = _("Naturalperson")
 msgid = _("Legalperson")
 msgid = _("Theme")

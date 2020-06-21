@@ -1,15 +1,13 @@
-from django.db import models
+from Shenasa.forms import *
 from django.contrib import admin
 from django.conf import settings
-from django.forms import TextInput
 from django.contrib import messages
 from Shenasa.utils import to_jalali_full
 from django.db.transaction import atomic
 from jalali_date.admin import ModelAdminJalaliMixin
 from django.utils.translation import ugettext_lazy as _
 from django_summernote.admin import SummernoteModelAdmin
-from Shenasa.forms import *
-from Shenasa.models import LegalPerson, NaturalPerson, News, LegalRole, Brand, LegalPersonPersonRole, \
+from Shenasa.models import LegalPerson, NaturalPerson, News, Brand, LegalPersonPersonRole, \
     BrandPersonRole, LegalPersonLegalRole, BrandLegalRole
 
 
@@ -76,26 +74,6 @@ class BrandNewsInline(admin.TabularInline):
     model = Brand.news.through
     verbose_name = _("Brand News")
     verbose_name_plural = _("Brand News")
-
-
-@admin.register(LegalRole)
-class LegalRoleAdmin(BaseModelAdmin):
-    fields = [('person', 'role', 'number_of_stocks', 'amount_of_investment'), ]
-    list_display = ['person', 'role', ]
-    list_display_links = ['person', 'role', ]
-    model = LegalRole
-    search_fields = ['person__name']
-    list_filter = ['person', 'role']
-    formfield_overrides = {
-        models.IntegerField: {'widget': TextInput(attrs={'size': '20'})},
-    }
-
-    def save_model(self, request, obj, form, change):
-        try:
-            super(LegalRoleAdmin, self).save_model(request, obj, form, change)
-        except Exception as e:
-            messages.set_level(request, messages.ERROR)
-            messages.error(request, e)
 
 
 @admin.register(News)
@@ -243,13 +221,14 @@ class LegalPersonAdmin(BaseModelAdmin):
     @atomic()
     def save_formset(self, request, form, formset, change):
         try:
-            instances = formset.save(commit=False)
-            if formset.prefix == 'LegalPerson_legal_role':
-                for lp in formset.cleaned_data:
-                    if 'id' in lp and not lp['id'] and lp['legalrole'].person.pk == formset.instance.pk:
-                        raise Exception(_('Self relation from "%(legalrole)s" to "%(legalrole)s" is not valid.') % {
-                            'legalrole': formset.instance.name})
-            formset.save_m2m()
+            # @todo: handle
+            # instances = formset.save(commit=False)
+            # if formset.prefix == 'LegalPerson_legal_role':
+            #     for lp in formset.cleaned_data:
+            #         if 'id' in lp and not lp['id'] and lp['legalrole'].person.pk == formset.instance.pk:
+            #             raise Exception(_('Self relation from "%(legalrole)s" to "%(legalrole)s" is not valid.') % {
+            #                 'legalrole': formset.instance.name})
+            # formset.save_m2m()
             super(LegalPersonAdmin, self).save_formset(request, form, formset, change)
         except Exception as e:
             messages.set_level(request, messages.ERROR)
@@ -266,7 +245,7 @@ class BrandAdmin(BaseModelAdmin):
                           'active']
     model = Brand
     list_filter = ['active', ('brand_person_role_target_person__person', custom_titled_filter(_('Person Role'))),
-                   ('legal_role__person', custom_titled_filter(_('Legal Role')))]
+                   ('brand_legal_role_target_person__person', custom_titled_filter(_('Legal Role')))]
     search_fields = ['name', 'brand_person_role_target_person__person__name',
                      'brand_person_role_target_person__target_person__name', ]
     readonly_fields = ['person_roles', 'person_roles_tabular', 'legal_roles_tabular', 'news_tabular',
