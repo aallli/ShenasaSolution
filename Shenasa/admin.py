@@ -41,14 +41,6 @@ class LegalPersonPersonRoleInline(admin.TabularInline):
     verbose_name_plural = _("Person Roles")
 
 
-class BrandPersonRoleInline_1(admin.TabularInline):
-    model = BrandPersonRole
-    form = BrandPersonRoleForm
-    fields = ['person', 'role', 'number_of_stocks', 'amount_of_investment']
-    verbose_name = _("Person Role")
-    verbose_name_plural = _("Person Roles")
-
-
 class LegalPersonLegalRoleInline(admin.TabularInline):
     model = LegalPerson.legal_role.through
     verbose_name = _("Legal Role")
@@ -62,7 +54,9 @@ class LegalPersonNewsInline(admin.TabularInline):
 
 
 class BrandPersonRoleInline(admin.TabularInline):
-    model = Brand.person_role.through
+    model = BrandPersonRole
+    form = BrandPersonRoleForm
+    fields = ['person', 'role', 'number_of_stocks', 'amount_of_investment']
     verbose_name = _("Person Role")
     verbose_name_plural = _("Person Roles")
 
@@ -276,7 +270,6 @@ class BrandAdmin(BaseModelAdmin):
     def get_form(self, request, obj=None, **kwargs):
         form = super(BrandAdmin, self).get_form(request, obj=obj, **kwargs)
         self.inlines = [
-            BrandPersonRoleInline_1,
             BrandPersonRoleInline,
             BrandRoleInline,
             BrandNewsInline,
