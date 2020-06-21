@@ -263,7 +263,7 @@ msgstr "مجموع سهام فروخته شده"
 #, fuzzy
 #| msgid "Legal Person"
 msgid "Total Roles"
-msgstr "سمتهای کسب شده"
+msgstr "سمتهای محوله"
 
 #: .\Shenasa\models.py:150 .\Shenasa\models.py:174 .\Shenasa\models.py:279
 #: .\Shenasa\models.py:526

@@ -8,9 +8,9 @@ from django.db.transaction import atomic
 from jalali_date.admin import ModelAdminJalaliMixin
 from django.utils.translation import ugettext_lazy as _
 from django_summernote.admin import SummernoteModelAdmin
-from Shenasa.forms import LegalPersonPersonRoleForm, BrandPersonRoleForm
+from Shenasa.forms import *
 from Shenasa.models import LegalPerson, NaturalPerson, News, LegalRole, Brand, LegalPersonPersonRole, \
-    BrandPersonRole
+    BrandPersonRole, LegalPersonLegalRole, BrandLegalRole
 
 
 def custom_titled_filter(title):
@@ -42,7 +42,10 @@ class LegalPersonPersonRoleInline(admin.TabularInline):
 
 
 class LegalPersonLegalRoleInline(admin.TabularInline):
-    model = LegalPerson.legal_role.through
+    model = LegalPersonLegalRole
+    form = LegalPersonLegalRoleForm
+    fields = ['person', 'role', 'number_of_stocks', 'amount_of_investment']
+    fk_name = 'target_person'
     verbose_name = _("Legal Role")
     verbose_name_plural = _("Legal Roles")
 
@@ -62,7 +65,9 @@ class BrandPersonRoleInline(admin.TabularInline):
 
 
 class BrandRoleInline(admin.TabularInline):
-    model = Brand.legal_role.through
+    model = BrandLegalRole
+    form = BrandLegalRoleForm
+    fields = ['person', 'role', 'number_of_stocks', 'amount_of_investment']
     verbose_name = _("Legal Role")
     verbose_name_plural = _("Legal Roles")
 
@@ -138,7 +143,7 @@ class NaturalPersonAdmin(BaseModelAdmin):
     search_fields = ['name', 'NID', 'mobile']
     readonly_fields = ['image_tag', 'total_investment_tabular', 'total_purchased_stocks_tabular', 'news_tabular',
                        'total_investment_string_formatted', 'total_purchased_stocks_string_formatted',
-                       'bias_tag', 'total_roles_tabular']
+                       'bias_tag', 'roles_tabular']
     save_on_top = True
 
     def get_form(self, request, obj=None, **kwargs):
@@ -149,7 +154,7 @@ class NaturalPersonAdmin(BaseModelAdmin):
         permissions = request.user.get_all_permissions()
         if request.user.is_superuser:
             self.fields = [('name', 'bias_tag'), 'NID', 'mobile', 'active', ('image', 'image_tag'),
-                           'total_roles_tabular', ('total_investment_string_formatted', 'total_investment_tabular'),
+                           'roles_tabular', ('total_investment_string_formatted', 'total_investment_tabular'),
                            ('total_purchased_stocks_string_formatted', 'total_purchased_stocks_tabular'),
                            'news_tabular']
         elif 'Shenasa.add_naturalperson' in permissions or 'Shenasa.change_naturalperson' in permissions or 'Shenasa.delete_naturalperson' in permissions:
@@ -159,7 +164,7 @@ class NaturalPersonAdmin(BaseModelAdmin):
         else:
             self.inlines = []
             self.fields = [('name', 'bias_tag'), 'NID', 'mobile', 'active', ('image', 'image_tag'),
-                           'total_roles_tabular', ('total_investment_string_formatted', 'total_investment_tabular'),
+                           'roles_tabular', ('total_investment_string_formatted', 'total_investment_tabular'),
                            ('total_purchased_stocks_string_formatted', 'total_purchased_stocks_tabular'),
                            'news_tabular']
 
@@ -190,10 +195,10 @@ class LegalPersonAdmin(BaseModelAdmin):
                      'legal_person_person_role_target_person__target_person__name']
     readonly_fields = ['person_roles', 'person_roles_tabular',  'legal_roles_tabular', 'total_investment_tabular',
                        'total_investment_string_formatted', 'total_purchased_stocks_string_formatted',
-                       'total_purchased_stocks_tabular', 'news_tabular', 'total_roles_tabular',
+                       'total_purchased_stocks_tabular', 'news_tabular', 'person_roles_tabular',
                        'total_fund_string_formatted', 'total_sold_stocks_string_formatted',
                        'total_fund_tabular', 'total_sold_stocks_tabular',
-                       'bias_tag']
+                       'bias_tag', 'roles_tabular']
     save_on_top = True
 
     def get_form(self, request, obj=None, **kwargs):
@@ -205,7 +210,7 @@ class LegalPersonAdmin(BaseModelAdmin):
         ]
         permissions = request.user.get_all_permissions()
         if request.user.is_superuser:
-            self.fields = [('name', 'active', 'bias_tag'), 'total_roles_tabular',
+            self.fields = [('name', 'active', 'bias_tag'), 'roles_tabular',
                            ('person_roles_tabular', 'legal_roles_tabular'),
                            ('total_investment_string_formatted', 'total_investment_tabular'),
                            ('total_purchased_stocks_string_formatted', 'total_purchased_stocks_tabular'),
@@ -219,7 +224,7 @@ class LegalPersonAdmin(BaseModelAdmin):
                            ]
         else:
             self.inlines = []
-            self.fields = [('name', 'active', 'bias_tag'), 'total_roles_tabular',
+            self.fields = [('name', 'active', 'bias_tag'), 'roles_tabular',
                            ('person_roles_tabular', 'legal_roles_tabular'),
                            ('total_investment_string_formatted', 'total_investment_tabular'),
                            ('total_purchased_stocks_string_formatted', 'total_purchased_stocks_tabular'),
