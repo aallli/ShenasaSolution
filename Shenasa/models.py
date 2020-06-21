@@ -148,6 +148,23 @@ class Person(models.Model):
 
     total_sold_stocks_tabular.short_description = total_sold_stocks_title
 
+    def news_tabular(self):
+        result = ''.join(
+            '<tr class="row{}"><td>{}</td><td><a href="{}">{}</a></td><td><a href="{}">{}</a></td><td><a href="{}">{}</a></td></tr>'.format(
+                index % 2 + 1, index + 1, get_admin_url(n), to_jalali_full(n.date), get_admin_url(n), n.description,
+                get_admin_url(n), n.link)
+            for index, n in enumerate(self.news.all()))
+
+        if result:
+            result = '<table><thead><tr><th>#</th><th>%s</th><th>%s</th><th>%s</th></tr></thead><tbody>%s</tbody></table>' % \
+                     (_('Creation Date'), _('Description'), _('Link'), result)
+        else:
+            result = hide_title('form-row field-news_tabular')
+
+        return mark_safe(result)
+
+    news_tabular.short_description = _('News')
+
 
 class News(models.Model):
     description = models.TextField(verbose_name=_('Description'), max_length=1000, blank=True, null=True)
@@ -273,23 +290,6 @@ class NaturalPerson(Person):
         return mark_safe(result)
 
     roles_tabular.short_description = Person.roles_tabular.short_description
-
-    def news_tabular(self):
-        result = ''.join(
-            '<tr class="row{}"><td>{}</td><td><a href="{}">{}</a></td><td><a href="{}">{}</a></td><td><a href="{}">{}</a></td></tr>'.format(
-                index % 2 + 1, index + 1, get_admin_url(n), to_jalali_full(n.date), get_admin_url(n), n.description,
-                get_admin_url(n), n.link)
-            for index, n in enumerate(self.news.all()))
-
-        if result:
-            result = '<table><thead><tr><th>#</th><th>%s</th><th>%s</th><th>%s</th></tr></thead><tbody>%s</tbody></table>' % \
-                     (_('Creation Date'), _('Description'), _('Link'), result)
-        else:
-            result = hide_title('form-row field-news_tabular')
-
-        return mark_safe(result)
-
-    news_tabular.short_description = _('News')
 
     def bias_tag(self):
         news_count = self.news.all().count()
@@ -509,21 +509,6 @@ class LegalPersonBase(Person):
 
     legal_roles_tabular.short_description = _('Selected Legal Key Persons')
 
-    def news_tabular(self):
-        result = ''.join('<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
-            index % 2 + 1, index + 1, to_jalali_full(n.date), n.description, n.link)
-                         for index, n in enumerate(self.news.all()))
-
-        if result:
-            result = '<table><thead><tr><th>#</th><th>%s</th><th>%s</th><th>%s</th></tr></thead><tbody>%s</tbody></table>' % \
-                     (_('Creation Date'), _('Description'), _('Link'), result)
-        else:
-            result = hide_title('form-row field-news_tabular')
-
-        return mark_safe(result)
-
-    news_tabular.short_description = _('News')
-
     @property
     def total_news(self):
         pass
@@ -600,17 +585,23 @@ class LegalPerson(LegalPersonBase):
                              self.news.all()).distinct()).distinct()
 
     def roles_tabular(self):
-        result = ''.join('<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
-            index % 2 + 1, index + 1, lplr.target_person.name, Role(lplr.role).label,
-            lplr.target_person.generate_comment(lplr))
-                         for index, lplr in enumerate(LegalPersonLegalRole.objects.filter(person=self).exclude(
-            role__in=[Role.INVESTOR, Role.INVESTOR_ANGEL, Role.INVESTOR_FOREIGN, Role.INVESTOR_VC, Role.STOCKHOLDER])))
+        result = ''.join(
+            '<tr class="row{}"><td>{}</td><td><a href="{}">{}</a></td><td><a href="{}">{}</a></td><td><a href="{}">{}</a></td></tr>'.format(
+                index % 2 + 1, index + 1, get_admin_url(lplr.target_person), lplr.target_person.name,
+                get_admin_url(lplr.target_person), Role(lplr.role).label,
+                get_admin_url(lplr.target_person), lplr.target_person.generate_comment(lplr))
+            for index, lplr in enumerate(LegalPersonLegalRole.objects.filter(person=self).exclude(
+                role__in=[Role.INVESTOR, Role.INVESTOR_ANGEL, Role.INVESTOR_FOREIGN, Role.INVESTOR_VC,
+                          Role.STOCKHOLDER])))
 
-        result += ''.join('<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
-            index % 2 + 1, index + 1, blr.target_person.name, Role(blr.role).label,
-            blr.target_person.generate_comment(blr))
-                          for index, blr in enumerate(BrandLegalRole.objects.filter(person=self).exclude(
-            role__in=[Role.INVESTOR, Role.INVESTOR_ANGEL, Role.INVESTOR_FOREIGN, Role.INVESTOR_VC, Role.STOCKHOLDER])))
+        result += ''.join(
+            '<tr class="row{}"><td>{}</td><td><a href="{}">{}</a></td><td><a href="{}">{}</a></td><td><a href="{}">{}</a></td></tr>'.format(
+                index % 2 + 1, index + 1, get_admin_url(blr.target_person), blr.target_person.name,
+                get_admin_url(blr.target_person), Role(blr.role).label,
+                get_admin_url(blr.target_person), blr.target_person.generate_comment(blr))
+            for index, blr in enumerate(BrandLegalRole.objects.filter(person=self).exclude(
+                role__in=[Role.INVESTOR, Role.INVESTOR_ANGEL, Role.INVESTOR_FOREIGN, Role.INVESTOR_VC,
+                          Role.STOCKHOLDER])))
 
         if result:
             result = '<table><thead><tr><th>#</th><th>%s</th><th>%s</th><th>%s</th></tr></thead><tbody>%s</tbody></table>' % \
@@ -638,9 +629,10 @@ class LegalPerson(LegalPersonBase):
     legal_roles.short_description = LegalPersonBase.legal_roles.short_description
 
     def person_roles_tabular(self):
-        result = ''.join('<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
-            index % 2 + 1, index + 1, lppr.person.name, Role(lppr.role).label,
-            lppr.target_person.generate_comment(lppr))
+        result = ''.join('<tr class="row{}"><td>{}</td><td><a href="{}">{}</a></td><td><a href="{}">{}</a></td><td><a href="{}">{}</a></td></tr>'.format(
+            index % 2 + 1, index + 1, get_admin_url(lppr.person), lppr.person.name,
+            get_admin_url(lppr.person), Role(lppr.role).label,
+            get_admin_url(lppr.person), lppr.target_person.generate_comment(lppr))
                          for index, lppr in enumerate(LegalPersonPersonRole.objects.filter(target_person=self).exclude(
             role__in=[Role.INVESTOR, Role.INVESTOR_ANGEL, Role.INVESTOR_FOREIGN, Role.INVESTOR_VC,
                       Role.STOCKHOLDER])))
@@ -653,9 +645,10 @@ class LegalPerson(LegalPersonBase):
     person_roles_tabular.short_description = LegalPersonBase.person_roles_tabular.short_description
 
     def legal_roles_tabular(self):
-        result = ''.join('<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
-            index % 2 + 1, index + 1, lplr.person.name, Role(lplr.role).label,
-            lplr.target_person.generate_comment(lplr))
+        result = ''.join('<tr class="row{}"><td>{}</td><td><a href="{}">{}</a></td><td><a href="{}">{}</a></td><td><a href="{}">{}</a></td></tr>'.format(
+            index % 2 + 1, index + 1, get_admin_url(lplr.person), lplr.person.name,
+            get_admin_url(lplr.person), Role(lplr.role).label,
+            get_admin_url(lplr.person), lplr.target_person.generate_comment(lplr))
                          for index, lplr in enumerate(LegalPersonLegalRole.objects.filter(target_person=self).exclude(
             role__in=[Role.INVESTOR, Role.INVESTOR_ANGEL, Role.INVESTOR_FOREIGN, Role.INVESTOR_VC,
                       Role.STOCKHOLDER])))
@@ -721,15 +714,17 @@ class LegalPerson(LegalPersonBase):
         return result
 
     def total_investment_tabular(self):
-        result = ''.join('<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
-            index % 2 + 1, index + 1, lplr.target_person.name, Role(lplr.role).label,
-            lplr.target_person.generate_comment(lplr))
+        result = ''.join('<tr class="row{}"><td>{}</td><td><a href="{}">{}</a></td><td><a href="{}">{}</a></td><td><a href="{}">{}</a></td></tr>'.format(
+            index % 2 + 1, index + 1, get_admin_url(lplr.target_person), lplr.target_person.name,
+            get_admin_url(lplr.target_person), Role(lplr.role).label,
+            get_admin_url(lplr.target_person), lplr.target_person.generate_comment(lplr))
                          for index, lplr in enumerate(LegalPersonLegalRole.objects.filter(person=self).filter(
             role__in=[Role.INVESTOR, Role.INVESTOR_ANGEL, Role.INVESTOR_FOREIGN, Role.INVESTOR_VC])))
 
-        result += ''.join('<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
-            index % 2 + 1, index + 1, blr.target_person.name, Role(blr.role).label,
-            blr.target_person.generate_comment(blr))
+        result += ''.join('<tr class="row{}"><td>{}</td><td><a href="{}">{}</a></td><td><a href="{}">{}</a></td><td><a href="{}">{}</a></td></tr>'.format(
+            index % 2 + 1, index + 1, get_admin_url(blr.target_person), blr.target_person.name,
+            get_admin_url(blr.target_person), Role(blr.role).label,
+            get_admin_url(blr.target_person), blr.target_person.generate_comment(blr))
                           for index, blr in enumerate(BrandLegalRole.objects.filter(person=self).filter(
             role__in=[Role.INVESTOR, Role.INVESTOR_ANGEL, Role.INVESTOR_FOREIGN, Role.INVESTOR_VC])))
 
@@ -739,15 +734,17 @@ class LegalPerson(LegalPersonBase):
         return mark_safe(result)
 
     def total_purchased_stocks_tabular(self):
-        result = ''.join('<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
-            index % 2 + 1, index + 1, lplr.target_person.name, Role(lplr.role).label,
-            lplr.target_person.generate_comment(lplr))
+        result = ''.join('<tr class="row{}"><td>{}</td><td><a href="{}">{}</a></td><td><a href="{}">{}</a></td><td><a href="{}">{}</a></td></tr>'.format(
+            index % 2 + 1, index + 1, get_admin_url(lplr.target_person), lplr.target_person.name,
+            get_admin_url(lplr.target_person), Role(lplr.role).label,
+            get_admin_url(lplr.target_person), lplr.target_person.generate_comment(lplr))
                          for index, lplr in
                          enumerate(LegalPersonLegalRole.objects.filter(person=self).filter(role=Role.STOCKHOLDER)))
 
-        result += ''.join('<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
-            index % 2 + 1, index + 1, blr.target_person.name, Role(blr.role).label,
-            blr.target_person.generate_comment(blr))
+        result += ''.join('<tr class="row{}"><td>{}</td><td><a href="{}">{}</a></td><td><a href="{}">{}</a></td><td><a href="{}">{}</a></td></tr>'.format(
+            index % 2 + 1, index + 1, get_admin_url(blr.target_person), blr.target_person.name,
+            get_admin_url(blr.target_person), Role(blr.role).label,
+            get_admin_url(blr.target_person), blr.target_person.generate_comment(blr))
                           for index, blr in
                           enumerate(BrandLegalRole.objects.filter(person=self).filter(role=Role.STOCKHOLDER)))
         if result:
@@ -756,14 +753,18 @@ class LegalPerson(LegalPersonBase):
         return mark_safe(result)
 
     def total_fund_tabular(self):
-        result = ''.join('<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
-            index % 2 + 1, index + 1, lppr.person.name, Role(lppr.role).label, self.generate_comment(lppr))
+        result = ''.join('<tr class="row{}"><td>{}</td><td><a href="{}">{}</a></td><td><a href="{}">{}</a></td><td><a href="{}">{}</a></td></tr>'.format(
+            index % 2 + 1, index + 1, get_admin_url(lppr.person), lppr.person.name,
+            get_admin_url(lppr.person), Role(lppr.role).label,
+            get_admin_url(lppr.person), self.generate_comment(lppr))
                          for index, lppr in enumerate(LegalPersonPersonRole.objects.filter(target_person=self).filter(
             role__in=[Role.INVESTOR, Role.INVESTOR_ANGEL, Role.INVESTOR_FOREIGN, Role.INVESTOR_VC])))
 
-        result += ''.join('<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
-            index % 2 + 1, index + 1, lppr.person.name, Role(lppr.role).label, self.generate_comment(lppr))
-                          for index, lppr in enumerate(LegalPersonLegalRole.objects.filter(target_person=self).filter(
+        result += ''.join('<tr class="row{}"><td>{}</td><td><a href="{}">{}</a></td><td><a href="{}">{}</a></td><td><a href="{}">{}</a></td></tr>'.format(
+            index % 2 + 1, index + 1, get_admin_url(lplr.person), lplr.person.name,
+            get_admin_url(lplr.person), Role(lplr.role).label,
+            get_admin_url(lplr.person), self.generate_comment(lplr))
+                          for index, lplr in enumerate(LegalPersonLegalRole.objects.filter(target_person=self).filter(
             role__in=[Role.INVESTOR, Role.INVESTOR_ANGEL, Role.INVESTOR_FOREIGN, Role.INVESTOR_VC])))
 
         if result:
@@ -773,14 +774,18 @@ class LegalPerson(LegalPersonBase):
         return mark_safe(result)
 
     def total_sold_stocks_tabular(self):
-        result = ''.join('<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
-            index % 2 + 1, index + 1, pr.person.name, Role(pr.role).label, self.generate_comment(pr))
-                         for index, pr in enumerate(
+        result = ''.join('<tr class="row{}"><td>{}</td><td><a href="{}">{}</a></td><td><a href="{}">{}</a></td><td><a href="{}">{}</a></td></tr>'.format(
+            index % 2 + 1, index + 1, get_admin_url(lppr.person), lppr.person.name,
+            get_admin_url(lppr.person), Role(lppr.role).label,
+            get_admin_url(lppr.person), self.generate_comment(lppr))
+                         for index, lppr in enumerate(
             LegalPersonPersonRole.objects.filter(target_person=self).filter(role=Role.STOCKHOLDER)))
 
-        result += ''.join('<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
-            index % 2 + 1, index + 1, pr.person.name, Role(pr.role).label, self.generate_comment(pr))
-                          for index, pr in enumerate(
+        result += ''.join('<tr class="row{}"><td>{}</td><td><a href="{}">{}</a></td><td><a href="{}">{}</a></td><td><a href="{}">{}</a></td></tr>'.format(
+            index % 2 + 1, index + 1, get_admin_url(lplr.person), lplr.person.name,
+            get_admin_url(lplr.person), Role(lplr.role).label,
+            get_admin_url(lplr.person), self.generate_comment(lplr))
+                          for index, lplr in enumerate(
             LegalPersonLegalRole.objects.filter(target_person=self).filter(role=Role.STOCKHOLDER)))
 
         if result:
