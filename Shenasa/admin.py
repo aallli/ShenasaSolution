@@ -138,7 +138,7 @@ class NaturalPersonAdmin(BaseModelAdmin):
     search_fields = ['name', 'NID', 'mobile']
     readonly_fields = ['image_tag', 'total_investment_tabular', 'total_purchased_stocks_tabular', 'news_tabular',
                        'total_investment_string_formatted', 'total_purchased_stocks_string_formatted',
-                       'bias_tag']
+                       'bias_tag', 'total_roles_tabular']
     save_on_top = True
 
     def get_form(self, request, obj=None, **kwargs):
@@ -149,7 +149,7 @@ class NaturalPersonAdmin(BaseModelAdmin):
         permissions = request.user.get_all_permissions()
         if request.user.is_superuser:
             self.fields = [('name', 'bias_tag'), 'NID', 'mobile', 'active', ('image', 'image_tag'),
-                           ('total_investment_string_formatted', 'total_investment_tabular'),
+                           'total_roles_tabular', ('total_investment_string_formatted', 'total_investment_tabular'),
                            ('total_purchased_stocks_string_formatted', 'total_purchased_stocks_tabular'),
                            'news_tabular']
         elif 'Shenasa.add_naturalperson' in permissions or 'Shenasa.change_naturalperson' in permissions or 'Shenasa.delete_naturalperson' in permissions:
@@ -159,7 +159,7 @@ class NaturalPersonAdmin(BaseModelAdmin):
         else:
             self.inlines = []
             self.fields = [('name', 'bias_tag'), 'NID', 'mobile', 'active', ('image', 'image_tag'),
-                           ('total_investment_string_formatted', 'total_investment_tabular'),
+                           'total_roles_tabular', ('total_investment_string_formatted', 'total_investment_tabular'),
                            ('total_purchased_stocks_string_formatted', 'total_purchased_stocks_tabular'),
                            'news_tabular']
 
@@ -188,9 +188,9 @@ class LegalPersonAdmin(BaseModelAdmin):
                    'legal_person_person_role_target_person__role']
     search_fields = ['name', 'legal_person_person_role_target_person__person__name',
                      'legal_person_person_role_target_person__target_person__name']
-    readonly_fields = ['person_roles', 'person_roles_tabular', 'legal_roles_tabular', 'total_investment_tabular',
+    readonly_fields = ['person_roles', 'person_roles_tabular',  'legal_roles_tabular', 'total_investment_tabular',
                        'total_investment_string_formatted', 'total_purchased_stocks_string_formatted',
-                       'total_purchased_stocks_tabular', 'news_tabular',
+                       'total_purchased_stocks_tabular', 'news_tabular', 'total_roles_tabular',
                        'total_fund_string_formatted', 'total_sold_stocks_string_formatted',
                        'total_fund_tabular', 'total_sold_stocks_tabular',
                        'bias_tag']
@@ -205,7 +205,7 @@ class LegalPersonAdmin(BaseModelAdmin):
         ]
         permissions = request.user.get_all_permissions()
         if request.user.is_superuser:
-            self.fields = [('name', 'active', 'bias_tag'),
+            self.fields = [('name', 'active', 'bias_tag'), 'total_roles_tabular',
                            ('person_roles_tabular', 'legal_roles_tabular'),
                            ('total_investment_string_formatted', 'total_investment_tabular'),
                            ('total_purchased_stocks_string_formatted', 'total_purchased_stocks_tabular'),
@@ -219,7 +219,7 @@ class LegalPersonAdmin(BaseModelAdmin):
                            ]
         else:
             self.inlines = []
-            self.fields = [('name', 'active', 'bias_tag'),
+            self.fields = [('name', 'active', 'bias_tag'), 'total_roles_tabular',
                            ('person_roles_tabular', 'legal_roles_tabular'),
                            ('total_investment_string_formatted', 'total_investment_tabular'),
                            ('total_purchased_stocks_string_formatted', 'total_purchased_stocks_tabular'),

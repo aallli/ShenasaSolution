@@ -64,6 +64,32 @@ class Person(models.Model):
     total_purchased_stocks_title = _('Total Purchased Stocks')
     total_fund_title = _('Total of Fund (M rls)')
     total_sold_stocks_title = _('Total Sold Stocks')
+    total_roles_tabular_title = _('Total Roles')
+
+    def total_roles_tabular(self):
+        result = ''.join('<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
+            index % 2 + 1, index + 1, lppr.target_person.name, Role(lppr.role).label,
+            lppr.target_person.generate_comment(lppr))
+                         for index, lppr in enumerate(LegalPersonPersonRole.objects.filter(person=self).exclude(
+            role__in=[Role.INVESTOR, Role.INVESTOR_ANGEL, Role.INVESTOR_FOREIGN, Role.INVESTOR_VC, Role.STACKHOLDER])))
+
+        result += ''.join('<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
+            index % 2 + 1, index + 1, lppr.target_person.name, Role(lppr.role).label,
+            lppr.target_person.generate_comment(lppr))
+                          for index, lppr in enumerate(BrandPersonRole.objects.filter(person=self).exclude(
+            role__in=[Role.INVESTOR, Role.INVESTOR_ANGEL, Role.INVESTOR_FOREIGN, Role.INVESTOR_VC, Role.STACKHOLDER])))
+
+        # for pr in LegalPersonPersonRole.objects.filter(person=self).filter(
+        #         role__in=[Role.INVESTOR, Role.INVESTOR_ANGEL, Role.INVESTOR_FOREIGN, Role.INVESTOR_VC]):
+        #     result += ''.join('<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
+        #         index % 2 + 1, index + 1, b.name, Role(pr.role).label, b.generate_comment(pr))
+        #                       for index, b in enumerate(pr.brand_person_role.all()))
+        if result:
+            result = '<table><thead><tr><th>#</th><th>%s</th><th>%s</th><th>%s</th></tr></thead><tbody>%s</tbody></table>' % \
+                     (_('Name'), _('Role'), _('Comment'), result)
+        return mark_safe(result)
+
+    total_roles_tabular.short_description = total_roles_tabular_title
 
     def total_investment(self):
         pass

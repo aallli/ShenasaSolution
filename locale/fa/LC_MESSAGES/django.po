@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-20 12:12+0430\n"
+"POT-Creation-Date: 2020-06-21 12:07+0430\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,41 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: .\Assets\App and Model Reordering\templates\admin\reordered_app_list.html:9
+#: .\static\admin\reordered_app_list.html:9
+#: .\templates\admin\reordered_app_list.html:9
+#, python-format
+msgid "Models in the %(name)s application"
+msgstr "مدل در برنامه %(name)s"
+
+#: .\Assets\App and Model Reordering\templates\admin\reordered_app_list.html:19
+#: .\static\admin\reordered_app_list.html:19
+#: .\templates\admin\reordered_app_list.html:19
+msgid "Add"
+msgstr "اضافه کردن"
+
+#: .\Assets\App and Model Reordering\templates\admin\reordered_app_list.html:25
+#: .\static\admin\edit_inline\tabular.html:34
+#: .\static\admin\reordered_app_list.html:25
+#: .\templates\admin\edit_inline\tabular.html:34
+#: .\templates\admin\reordered_app_list.html:25
+msgid "View"
+msgstr "مشاهده"
+
+#: .\Assets\App and Model Reordering\templates\admin\reordered_app_list.html:27
+#: .\static\admin\edit_inline\tabular.html:34
+#: .\static\admin\reordered_app_list.html:27
+#: .\templates\admin\edit_inline\tabular.html:34
+#: .\templates\admin\reordered_app_list.html:27
+msgid "Change"
+msgstr "تغییر"
+
+#: .\Assets\App and Model Reordering\templates\admin\reordered_app_list.html:38
+#: .\static\admin\reordered_app_list.html:38
+#: .\templates\admin\reordered_app_list.html:38
+msgid "You don't have permission to view or edit anything."
+msgstr "شما مجوز مشاهده یا تغییر ندارید."
 
 #: .\ShenasaSolution\settings.py:133 .\static\admin\base_site.html:42
 #: .\templates\admin\base_site.html:42
@@ -40,56 +75,56 @@ msgstr "سامانه شناسا"
 msgid "Welcome to Shenasa administration control panel"
 msgstr "به پنل مدیریت شناسا خوش آمدید."
 
-#: .\Shenasa\admin.py:31 .\Shenasa\admin.py:32
+#: .\Shenasa\admin.py:32 .\Shenasa\admin.py:33
 #, fuzzy
 #| msgid "Natural Persons"
 msgid "Natural Person News"
 msgstr "اخبار اشخاص حقیقی"
 
-#: .\Shenasa\admin.py:37 .\Shenasa\admin.py:55 .\Shenasa\admin.py:276
-#: .\Shenasa\models.py:347
+#: .\Shenasa\admin.py:40 .\Shenasa\admin.py:60 .\Shenasa\admin.py:263
+#: .\Shenasa\models.py:406
 #, fuzzy
 #| msgid "Person"
 msgid "Person Role"
 msgstr "سمت حقیقی"
 
-#: .\Shenasa\admin.py:38 .\Shenasa\admin.py:56 .\Shenasa\models.py:348
+#: .\Shenasa\admin.py:41 .\Shenasa\admin.py:61 .\Shenasa\models.py:407
 #, fuzzy
 #| msgid "Persons"
 msgid "Person Roles"
 msgstr "سمتهای حقیقی"
 
-#: .\Shenasa\admin.py:43 .\Shenasa\admin.py:61 .\Shenasa\admin.py:277
-#: .\Shenasa\models.py:634
+#: .\Shenasa\admin.py:46 .\Shenasa\admin.py:66 .\Shenasa\admin.py:264
+#: .\Shenasa\models.py:732
 #, fuzzy
 #| msgid "Legal Person"
 msgid "Legal Role"
 msgstr "سمت حقوقی"
 
-#: .\Shenasa\admin.py:44 .\Shenasa\admin.py:62 .\Shenasa\models.py:635
+#: .\Shenasa\admin.py:47 .\Shenasa\admin.py:67 .\Shenasa\models.py:733
 #, fuzzy
 #| msgid "Legal Person"
 msgid "Legal Roles"
 msgstr "سمتهای حقوقی"
 
-#: .\Shenasa\admin.py:49 .\Shenasa\admin.py:50
+#: .\Shenasa\admin.py:52 .\Shenasa\admin.py:53
 #, fuzzy
 #| msgid "Legal Persons"
 msgid "Legal Person News"
 msgstr "اخبار اشخاص حقوقی"
 
-#: .\Shenasa\admin.py:67 .\Shenasa\admin.py:68
+#: .\Shenasa\admin.py:72 .\Shenasa\admin.py:73
 #, fuzzy
 #| msgid "Brands"
 msgid "Brand News"
 msgstr "اخبار نمانام"
 
-#: .\Shenasa\admin.py:143 .\Shenasa\models.py:148 .\Shenasa\models.py:235
-#: .\Shenasa\models.py:488
+#: .\Shenasa\admin.py:126 .\Shenasa\models.py:152 .\Shenasa\models.py:279
+#: .\Shenasa\models.py:526
 msgid "Creation Date"
 msgstr "تاریخ ایجاد"
 
-#: .\Shenasa\admin.py:258
+#: .\Shenasa\admin.py:245
 #, fuzzy, python-format
 #| msgid "Self legal role from %(legalrole) to %(legalrole) is not valid."
 msgid "Self relation from \"%(legalrole)s\" to \"%(legalrole)s\" is not valid."
@@ -182,9 +217,11 @@ msgstr "نسبتا مخالف"
 msgid "Most Left"
 msgstr "کاملا مخالف"
 
-#: .\Shenasa\models.py:48 .\Shenasa\models.py:273 .\Shenasa\models.py:290
-#: .\Shenasa\models.py:445 .\Shenasa\models.py:461 .\Shenasa\models.py:554
-#: .\Shenasa\models.py:571 .\Shenasa\models.py:589 .\Shenasa\models.py:606
+#: .\Shenasa\models.py:48 .\Shenasa\models.py:242 .\Shenasa\models.py:325
+#: .\Shenasa\models.py:350 .\Shenasa\models.py:505 .\Shenasa\models.py:589
+#: .\Shenasa\models.py:606 .\Shenasa\models.py:646 .\Shenasa\models.py:689
+#: .\Shenasa\models.py:718 .\Shenasa\models.py:796 .\Shenasa\models.py:839
+#: .\Shenasa\models.py:868
 msgid "Name"
 msgstr "نام"
 
@@ -192,7 +229,7 @@ msgstr "نام"
 msgid "Active"
 msgstr "فعال"
 
-#: .\Shenasa\models.py:53 .\Shenasa\models.py:340
+#: .\Shenasa\models.py:53 .\Shenasa\models.py:431 .\Shenasa\models.py:438
 msgid "Person"
 msgstr "شخص"
 
@@ -222,124 +259,127 @@ msgstr "مجموع سرمایه جذب شده (میلیون ریال)"
 msgid "Total Sold Stocks"
 msgstr "مجموع سهام فروخته شده"
 
-#: .\Shenasa\models.py:146 .\Shenasa\models.py:170 .\Shenasa\models.py:235
-#: .\Shenasa\models.py:488
+#: .\Shenasa\models.py:67
+#, fuzzy
+#| msgid "Legal Person"
+msgid "Total Roles"
+msgstr "سمتهای کسب شده"
+
+#: .\Shenasa\models.py:150 .\Shenasa\models.py:174 .\Shenasa\models.py:279
+#: .\Shenasa\models.py:526
 msgid "Description"
 msgstr "شرح"
 
-#: .\Shenasa\models.py:147 .\Shenasa\models.py:235 .\Shenasa\models.py:488
+#: .\Shenasa\models.py:151 .\Shenasa\models.py:279 .\Shenasa\models.py:526
 msgid "Link"
 msgstr "منبع"
 
-#: .\Shenasa\models.py:149 .\Shenasa\models.py:176 .\Shenasa\models.py:259
-#: .\Shenasa\models.py:520
+#: .\Shenasa\models.py:153 .\Shenasa\models.py:180 .\Shenasa\models.py:303
+#: .\Shenasa\models.py:555
 msgid "Bias"
 msgstr "گرایش"
 
-#: .\Shenasa\models.py:152 .\Shenasa\models.py:153 .\Shenasa\models.py:187
-#: .\Shenasa\models.py:241 .\Shenasa\models.py:375 .\Shenasa\models.py:494
+#: .\Shenasa\models.py:156 .\Shenasa\models.py:157 .\Shenasa\models.py:191
+#: .\Shenasa\models.py:285 .\Shenasa\models.py:447 .\Shenasa\models.py:532
 msgid "News"
 msgstr "اخبار"
 
-#: .\Shenasa\models.py:180
+#: .\Shenasa\models.py:184
 msgid "National ID"
 msgstr "کد ملی"
 
-#: .\Shenasa\models.py:183
+#: .\Shenasa\models.py:187
 msgid ""
 "Phone number must be entered in the format: '+999999999'. Up to 15 digits "
 "allowed."
 msgstr "شماره تلفن معتبر شامل مقدار عددی حداکثر 15 رقم باید باشد."
 
-#: .\Shenasa\models.py:184
+#: .\Shenasa\models.py:188
 msgid "Mobile"
 msgstr "تلفن همراه"
 
-#: .\Shenasa\models.py:186
+#: .\Shenasa\models.py:190
 #, fuzzy
 #| msgid "Person"
 msgid "Person Image"
 msgstr "تصویر شخص"
 
-#: .\Shenasa\models.py:199 .\Shenasa\models.py:679
+#: .\Shenasa\models.py:203 .\Shenasa\models.py:777
 msgid "Image"
 msgstr "تصویر"
 
-#: .\Shenasa\models.py:202
+#: .\Shenasa\models.py:206
 msgid "Natural Person"
 msgstr "شخص حقیقی"
 
-#: .\Shenasa\models.py:203
+#: .\Shenasa\models.py:207
 msgid "Natural Persons"
 msgstr "اشخاص حقیقی"
 
-#: .\Shenasa\models.py:273 .\Shenasa\models.py:290 .\Shenasa\models.py:341
-#: .\Shenasa\models.py:445 .\Shenasa\models.py:461 .\Shenasa\models.py:554
-#: .\Shenasa\models.py:571 .\Shenasa\models.py:589 .\Shenasa\models.py:606
-#: .\Shenasa\models.py:628
+#: .\Shenasa\models.py:242 .\Shenasa\models.py:325 .\Shenasa\models.py:350
+#: .\Shenasa\models.py:400 .\Shenasa\models.py:505 .\Shenasa\models.py:589
+#: .\Shenasa\models.py:606 .\Shenasa\models.py:646 .\Shenasa\models.py:689
+#: .\Shenasa\models.py:718 .\Shenasa\models.py:726 .\Shenasa\models.py:796
+#: .\Shenasa\models.py:839 .\Shenasa\models.py:868
 msgid "Role"
 msgstr "سمت"
 
-#: .\Shenasa\models.py:273 .\Shenasa\models.py:290 .\Shenasa\models.py:445
-#: .\Shenasa\models.py:461 .\Shenasa\models.py:554 .\Shenasa\models.py:571
-#: .\Shenasa\models.py:589 .\Shenasa\models.py:606
+#: .\Shenasa\models.py:242 .\Shenasa\models.py:325 .\Shenasa\models.py:350
+#: .\Shenasa\models.py:505 .\Shenasa\models.py:589 .\Shenasa\models.py:606
+#: .\Shenasa\models.py:646 .\Shenasa\models.py:689 .\Shenasa\models.py:718
+#: .\Shenasa\models.py:796 .\Shenasa\models.py:839 .\Shenasa\models.py:868
 msgid "Comment"
 msgstr "توضیحات"
 
-#: .\Shenasa\models.py:342 .\Shenasa\models.py:431 .\Shenasa\models.py:629
+#: .\Shenasa\models.py:401 .\Shenasa\models.py:481 .\Shenasa\models.py:727
 #, fuzzy
 #| msgid "Number of Shares"
 msgid "Number of Stocks"
 msgstr "تعداد سهم"
 
-#: .\Shenasa\models.py:343 .\Shenasa\models.py:433 .\Shenasa\models.py:630
+#: .\Shenasa\models.py:402 .\Shenasa\models.py:483 .\Shenasa\models.py:728
 #, fuzzy
 #| msgid "Amount of Investment"
 msgid "Amount of Investment (M rls)"
 msgstr "میزان سرمایه گذاری (میلیون ریال)"
 
-#: .\Shenasa\models.py:371
-#, fuzzy
-#| msgid "Natural Person"
-msgid "Natural Key Person"
-msgstr "سمتهای حقیقی"
+#: .\Shenasa\models.py:433 .\Shenasa\models.py:620 .\Shenasa\models.py:624
+#: .\Shenasa\models.py:627 .\Shenasa\models.py:724
+msgid "Legal Person"
+msgstr "شخص حقوقی"
 
-#: .\Shenasa\models.py:373
+#: .\Shenasa\models.py:440 .\Shenasa\models.py:760 .\Shenasa\models.py:764
+#: .\Shenasa\models.py:767
+msgid "Brand"
+msgstr "نمانام رسانه ای"
+
+#: .\Shenasa\models.py:445
 #, fuzzy
 #| msgid "Legal Person"
 msgid "Legal Key Person"
 msgstr "سمتهای حقوقی"
 
-#: .\Shenasa\models.py:451 .\Shenasa\models.py:473
+#: .\Shenasa\models.py:490 .\Shenasa\models.py:495
 #, fuzzy
 #| msgid "Legal Persons"
 msgid "Selected Natural Key Persons"
-msgstr "سمتهای حقیقی منتخب"
+msgstr "افراد کلیدی حقیقی"
 
-#: .\Shenasa\models.py:467 .\Shenasa\models.py:479
+#: .\Shenasa\models.py:511 .\Shenasa\models.py:517
 #, fuzzy
 #| msgid "Legal Persons"
 msgid "Selected Legal Key Persons"
-msgstr "سمتهای حقوقی منتخب"
+msgstr "افراد کلیدی حقوقی"
 
-#: .\Shenasa\models.py:615 .\Shenasa\models.py:619 .\Shenasa\models.py:622
-#: .\Shenasa\models.py:626
-msgid "Legal Person"
-msgstr "شخص حقوقی"
-
-#: .\Shenasa\models.py:616
+#: .\Shenasa\models.py:621
 msgid "Legal Persons"
 msgstr "اشخاص حقوقی"
 
-#: .\Shenasa\models.py:659
+#: .\Shenasa\models.py:757
 msgid "Logo"
 msgstr "لوگو"
 
-#: .\Shenasa\models.py:662 .\Shenasa\models.py:666 .\Shenasa\models.py:669
-msgid "Brand"
-msgstr "نمانام رسانه ای"
-
-#: .\Shenasa\models.py:663
+#: .\Shenasa\models.py:761
 msgid "Brands"
 msgstr "نمانام های رسانه ای"
 
@@ -435,37 +475,7 @@ msgstr "خوش آمدید،"
 msgid "Delete?"
 msgstr "حذف؟"
 
-#: .\static\admin\edit_inline\tabular.html:34
-#: .\static\admin\reordered_app_list.html:27
-#: .\templates\admin\edit_inline\tabular.html:34
-#: .\templates\admin\reordered_app_list.html:27
-msgid "Change"
-msgstr "تغییر"
-
-#: .\static\admin\edit_inline\tabular.html:34
-#: .\static\admin\reordered_app_list.html:25
-#: .\templates\admin\edit_inline\tabular.html:34
-#: .\templates\admin\reordered_app_list.html:25
-msgid "View"
-msgstr "مشاهده"
-
 #: .\static\admin\edit_inline\tabular.html:36
 #: .\templates\admin\edit_inline\tabular.html:36
 msgid "View on site"
 msgstr "مشاهده در سایت"
-
-#: .\static\admin\reordered_app_list.html:9
-#: .\templates\admin\reordered_app_list.html:9
-#, python-format
-msgid "Models in the %(name)s application"
-msgstr "مدل در برنامه %(name)s"
-
-#: .\static\admin\reordered_app_list.html:19
-#: .\templates\admin\reordered_app_list.html:19
-msgid "Add"
-msgstr "اضافه کردن"
-
-#: .\static\admin\reordered_app_list.html:38
-#: .\templates\admin\reordered_app_list.html:38
-msgid "You don't have permission to view or edit anything."
-msgstr "شما مجوز مشاهده یا تغییر ندارید."
