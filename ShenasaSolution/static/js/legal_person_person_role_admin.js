@@ -2,17 +2,18 @@
  * Created by Ali.NET on 6/8/2020.
  */
 
+var counter = 0;
 function bind_selector() {
-    var role_field = document.getElementById('id_role');
-    var role_fields = document.querySelectorAll('[id^=id_legalpersonpersonrole_set-][id$=-role]');
+    var role_fields = document.querySelectorAll('[id^=id_legal_person_person_role_target_person-][id$=-role]');
     if (!role_fields || role_fields.length == 0) {
+        if (counter > max_try) return
         setTimeout(bind_selector, 1000);
         return;
     }
 
     role_fields.forEach(function (item, index) {
-        var stocks = document.getElementById('id_legalpersonpersonrole_set-{0}-number_of_stocks'.format(index));
-        var investment = document.getElementById('id_legalpersonpersonrole_set-{0}-amount_of_investment'.format(index));
+        var stocks = document.getElementById('id_legal_person_person_role_target_person-{0}-number_of_stocks'.format(index));
+        var investment = document.getElementById('id_legal_person_person_role_target_person-{0}-amount_of_investment'.format(index));
         if (!stocks) return;
         init(item.value);
         item.onchange = function () {

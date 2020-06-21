@@ -184,8 +184,10 @@ class LegalPersonAdmin(BaseModelAdmin):
                           'total_fund_string_formatted', 'total_sold_stocks_string_formatted',
                           'active']
     model = LegalPerson
-    list_filter = ['active', 'person_role__person', 'person_role__role']
-    search_fields = ['name', 'person_role__person__name']
+    list_filter = ['active', 'legal_person_person_role_target_person__person',
+                   'legal_person_person_role_target_person__role']
+    search_fields = ['name', 'legal_person_person_role_target_person__person__name',
+                     'legal_person_person_role_target_person__target_person__name']
     readonly_fields = ['person_roles', 'person_roles_tabular', 'legal_roles_tabular', 'total_investment_tabular',
                        'total_investment_string_formatted', 'total_purchased_stocks_string_formatted',
                        'total_purchased_stocks_tabular', 'news_tabular',
@@ -258,9 +260,10 @@ class BrandAdmin(BaseModelAdmin):
                           'total_fund_string_formatted', 'total_sold_stocks_string_formatted',
                           'active']
     model = Brand
-    list_filter = ['active', ('person_role__person', custom_titled_filter(_('Person Role'))),
+    list_filter = ['active', ('brand_person_role_target_person__person', custom_titled_filter(_('Person Role'))),
                    ('legal_role__person', custom_titled_filter(_('Legal Role')))]
-    search_fields = ['name', 'person_role__person__name']
+    search_fields = ['name', 'brand_person_role_target_person__person__name',
+                     'brand_person_role_target_person__target_person__name', ]
     readonly_fields = ['person_roles', 'person_roles_tabular', 'legal_roles_tabular', 'news_tabular',
                        'total_fund_string_formatted', 'total_sold_stocks_string_formatted',
                        'total_fund_tabular', 'total_sold_stocks_tabular',

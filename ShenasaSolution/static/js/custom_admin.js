@@ -1,4 +1,5 @@
 var max_news_title_length = 150;
+var max_try = 20;
 
 if (!String.prototype.format) {
     String.prototype.format = function () {
