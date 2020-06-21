@@ -167,8 +167,8 @@ class LegalPersonAdmin(BaseModelAdmin):
                           'total_fund_string_formatted', 'total_sold_stocks_string_formatted',
                           'active']
     model = LegalPerson
-    list_filter = ['active', 'legal_person_person_role_target_person__person',
-                   'legal_person_person_role_target_person__role']
+    list_filter = ['active', ('legal_person_person_role_target_person__person', custom_titled_filter(_('Person Role'))),
+                   ('legal_person_legal_role_target_person__person', custom_titled_filter(_('Legal Role')))]
     search_fields = ['name', 'legal_person_person_role_target_person__person__name',
                      'legal_person_person_role_target_person__target_person__name']
     readonly_fields = ['person_roles', 'person_roles_tabular',  'legal_roles_tabular', 'total_investment_tabular',
