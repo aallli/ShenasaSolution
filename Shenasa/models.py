@@ -226,9 +226,9 @@ class NaturalPerson(Person):
 
     def news_tabular(self):
         result = ''.join(
-                '<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
-                    index % 2 + 1, index + 1, to_jalali_full(n.date), n.description, n.link)
-                for index, n in enumerate(self.news.all()))
+            '<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
+                index % 2 + 1, index + 1, to_jalali_full(n.date), n.description, n.link)
+            for index, n in enumerate(self.news.all()))
 
         if result:
             result = '<table><thead><tr><th>#</th><th>%s</th><th>%s</th><th>%s</th></tr></thead><tbody>%s</tbody></table>' % \
@@ -336,6 +336,53 @@ def auto_delete_natural_person_file_on_change(sender, instance, **kwargs):
         return False
 
 
+class RoleBase(models.Model):
+    person = models.SlugField()
+    target_person = models.SlugField()
+    role = models.CharField(verbose_name=_('Role'), max_length=10, choices=Role.choices, default=Role.STACKHOLDER)
+    number_of_stocks = models.IntegerField(verbose_name=_('Number of Stocks'), default=0)
+    amount_of_investment = models.IntegerField(verbose_name=_('Amount of Investment (M rls)'), default=0)
+
+    class Meta:
+        unique_together = ['person', 'target_person', 'role']
+        verbose_name = _('Person Role')
+        verbose_name_plural = _('Person Roles')
+        ordering = ['person', 'role', 'target_person']
+        abstract = True
+
+    def __str__(self):
+        return '%s (%s)' % (self.person, Role(self.role).label)
+
+    def __unicode__(self):
+        return '%s (%s)' % (self.person, Role(self.role).label)
+
+    def number_of_stocks_string_formatted(self):
+        if self.number_of_stocks:
+            return '{:n}'.format(self.number_of_stocks)
+        else:
+            return 0
+
+    def amount_of_investment_string_formatted(self):
+        if self.amount_of_investment:
+            return '{:n}'.format(self.amount_of_investment)
+        else:
+            return 0
+
+
+class LegalPersonPersonRole(RoleBase):
+    person = models.ForeignKey(NaturalPerson, verbose_name=_('Person'), blank=False, null=False,
+                               on_delete=models.CASCADE)
+    target_person = models.ForeignKey('LegalPerson', verbose_name=_('Legal Person'), blank=False, null=False,
+                                      on_delete=models.CASCADE)
+
+
+class BrandPersonRole(RoleBase):
+    person = models.ForeignKey(NaturalPerson, verbose_name=_('Person'), blank=False, null=False,
+                               on_delete=models.CASCADE)
+    target_person = models.ForeignKey('Brand', verbose_name=_('Brand'), blank=False, null=False,
+                                      on_delete=models.CASCADE)
+
+
 class PersonRole(models.Model):
     person = models.ForeignKey(NaturalPerson, verbose_name=_('Person'), blank=True, null=True, on_delete=models.CASCADE)
     role = models.CharField(verbose_name=_('Role'), max_length=10, choices=Role.choices, default=Role.STACKHOLDER)
@@ -369,7 +416,7 @@ class PersonRole(models.Model):
 
 class LegalPersonBase(Person):
     person_role = models.ManyToManyField(PersonRole, verbose_name=_('Natural Key Person'),
-                                         related_name='%(class)s_person_role')
+                                         related_name='%(class)s_person_role_last')
     legal_role = models.ManyToManyField('LegalRole', verbose_name=_('Legal Key Person'),
                                         related_name='%(class)s_legal_role')
     news = models.ManyToManyField(News, verbose_name=_('News'), related_name='%(class)s_news')
@@ -434,19 +481,13 @@ class LegalPersonBase(Person):
         else:
             return ''
 
+    def person_roles(self):
+        pass
+
+    person_roles.short_description = _('Selected Natural Key Persons')
+
     def person_roles_tabular(self):
-        result = ''.join('<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
-            index % 2 + 1, index + 1, pr.person.name, Role(pr.role).label, self.generate_comment(pr))
-                         for index, pr in enumerate(self.person_role.exclude(
-            role__in=[Role.INVESTOR, Role.INVESTOR_ANGEL, Role.INVESTOR_FOREIGN, Role.INVESTOR_VC, Role.STACKHOLDER])))
-
-        if result:
-            result = '<table><thead><tr><th>#</th><th>%s</th><th>%s</th><th>%s</th></tr></thead><tbody>%s</tbody></table>' % \
-                     (_('Name'), _('Role'), _('Comment'), result)
-        else:
-            result = hide_title('fieldBox field-person_roles_tabular')
-
-        return mark_safe(result)
+        pass
 
     person_roles_tabular.short_description = _('Selected Natural Key Persons')
 
@@ -465,12 +506,6 @@ class LegalPersonBase(Person):
         return mark_safe(result)
 
     legal_roles_tabular.short_description = _('Selected Legal Key Persons')
-
-    def person_roles(self):
-        return ' - '.join(
-            '{}: {}'.format(Role(pr.role).label, pr.person.name) for index, pr in enumerate(self.person_role.all()))
-
-    person_roles.short_description = _('Selected Natural Key Persons')
 
     def legal_roles(self):
         return ' - '.join(
@@ -621,6 +656,31 @@ class LegalPerson(LegalPersonBase):
     def __unicode__(self):
         return '%s: %s' % (_('Legal Person'), self.name)
 
+    def person_roles(self):
+        return ' - '.join(
+            '{}: {}'.format(Role(pr.role).label, pr.person.name) for index, pr in enumerate(
+                LegalPersonPersonRole.objects.filter(target_person=self).exclude(
+                    role__in=[Role.INVESTOR, Role.INVESTOR_ANGEL, Role.INVESTOR_FOREIGN, Role.INVESTOR_VC,
+                              Role.STACKHOLDER])))
+
+    person_roles.short_description = LegalPersonBase.person_roles.short_description
+
+    def person_roles_tabular(self):
+        result = ''.join('<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
+            index % 2 + 1, index + 1, pr.person.name, Role(pr.role).label, self.generate_comment(pr))
+                         for index, pr in enumerate(LegalPersonPersonRole.objects.filter(target_person=self).exclude(
+            role__in=[Role.INVESTOR, Role.INVESTOR_ANGEL, Role.INVESTOR_FOREIGN, Role.INVESTOR_VC, Role.STACKHOLDER])))
+
+        if result:
+            result = '<table><thead><tr><th>#</th><th>%s</th><th>%s</th><th>%s</th></tr></thead><tbody>%s</tbody></table>' % \
+                     (_('Name'), _('Role'), _('Comment'), result)
+        else:
+            result = hide_title('fieldBox field-person_roles_tabular')
+
+        return mark_safe(result)
+
+    person_roles_tabular.short_description = LegalPersonBase.person_roles_tabular.short_description
+
 
 class LegalRole(models.Model):
     person = models.ForeignKey(LegalPerson, verbose_name=_('Legal Person'), blank=True, null=True,
@@ -677,6 +737,31 @@ class Brand(LegalPersonBase):
                 settings.STATIC_URL, self.name, self.name))
 
     logo_tag.short_description = _('Image')
+
+    def person_roles(self):
+        return ' - '.join(
+            '{}: {}'.format(Role(pr.role).label, pr.person.name) for index, pr in enumerate(
+                BrandPersonRole.objects.filter(target_person=self).exclude(
+                    role__in=[Role.INVESTOR, Role.INVESTOR_ANGEL, Role.INVESTOR_FOREIGN, Role.INVESTOR_VC,
+                              Role.STACKHOLDER])))
+
+    person_roles.short_description = LegalPersonBase.person_roles.short_description
+
+    def person_roles_tabular(self):
+        result = ''.join('<tr class="row{}"><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>'.format(
+            index % 2 + 1, index + 1, pr.person.name, Role(pr.role).label, self.generate_comment(pr))
+                         for index, pr in enumerate(BrandPersonRole.objects.filter(target_person=self).exclude(
+            role__in=[Role.INVESTOR, Role.INVESTOR_ANGEL, Role.INVESTOR_FOREIGN, Role.INVESTOR_VC, Role.STACKHOLDER])))
+
+        if result:
+            result = '<table><thead><tr><th>#</th><th>%s</th><th>%s</th><th>%s</th></tr></thead><tbody>%s</tbody></table>' % \
+                     (_('Name'), _('Role'), _('Comment'), result)
+        else:
+            result = hide_title('fieldBox field-person_roles_tabular')
+
+        return mark_safe(result)
+
+    person_roles_tabular.short_description = LegalPersonBase.person_roles_tabular.short_description
 
 
 @receiver(models.signals.post_delete, sender=Brand)

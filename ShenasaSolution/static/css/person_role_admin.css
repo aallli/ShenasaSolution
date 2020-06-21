@@ -1,3 +1,5 @@
-.fieldBox.field-number_of_shares, .fieldBox.field-amount_of_investment {
-    display: none;
+td.field-number_of_stocks input,
+td.field-amount_of_investment input
+{
+    width: 150px;
 }

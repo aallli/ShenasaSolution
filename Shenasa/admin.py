@@ -4,12 +4,13 @@ from django.conf import settings
 from django.forms import TextInput
 from django.contrib import messages
 from Shenasa.utils import to_jalali_full
-from Shenasa.forms import PersonRoleForm
 from django.db.transaction import atomic
 from jalali_date.admin import ModelAdminJalaliMixin
 from django.utils.translation import ugettext_lazy as _
 from django_summernote.admin import SummernoteModelAdmin
-from Shenasa.models import LegalPerson, NaturalPerson, PersonRole, News, LegalRole, Brand
+from Shenasa.forms import LegalPersonPersonRoleForm, BrandPersonRoleForm
+from Shenasa.models import LegalPerson, NaturalPerson, News, LegalRole, Brand, LegalPersonPersonRole, \
+    BrandPersonRole
 
 
 def custom_titled_filter(title):
@@ -33,7 +34,17 @@ class NaturalPersonNewsInline(admin.TabularInline):
 
 
 class LegalPersonPersonRoleInline(admin.TabularInline):
-    model = LegalPerson.person_role.through
+    model = LegalPersonPersonRole
+    form = LegalPersonPersonRoleForm
+    fields = ['person', 'role', 'number_of_stocks', 'amount_of_investment']
+    verbose_name = _("Person Role")
+    verbose_name_plural = _("Person Roles")
+
+
+class BrandPersonRoleInline_1(admin.TabularInline):
+    model = BrandPersonRole
+    form = BrandPersonRoleForm
+    fields = ['person', 'role', 'number_of_stocks', 'amount_of_investment']
     verbose_name = _("Person Role")
     verbose_name_plural = _("Person Roles")
 
@@ -68,27 +79,6 @@ class BrandNewsInline(admin.TabularInline):
     verbose_name_plural = _("Brand News")
 
 
-@admin.register(PersonRole)
-class PersonRoleAdmin(BaseModelAdmin):
-    fields = [('person', 'role', 'number_of_stocks', 'amount_of_investment'), ]
-    list_display = ['person', 'role']
-    list_display_links = ['person', 'role']
-    model = PersonRole
-    search_fields = ['person__name']
-    list_filter = ['person', 'role']
-    form = PersonRoleForm
-    formfield_overrides = {
-        models.IntegerField: {'widget': TextInput(attrs={'size': '20'})},
-    }
-
-    def save_model(self, request, obj, form, change):
-        try:
-            super(PersonRoleAdmin, self).save_model(request, obj, form, change)
-        except Exception as e:
-            messages.set_level(request, messages.ERROR)
-            messages.error(request, e)
-
-
 @admin.register(LegalRole)
 class LegalRoleAdmin(BaseModelAdmin):
     fields = [('person', 'role', 'number_of_stocks', 'amount_of_investment'), ]
@@ -97,7 +87,6 @@ class LegalRoleAdmin(BaseModelAdmin):
     model = LegalRole
     search_fields = ['person__name']
     list_filter = ['person', 'role']
-    form = PersonRoleForm
     formfield_overrides = {
         models.IntegerField: {'widget': TextInput(attrs={'size': '20'})},
     }
@@ -167,16 +156,18 @@ class NaturalPersonAdmin(BaseModelAdmin):
         if request.user.is_superuser:
             self.fields = [('name', 'bias_tag'), 'NID', 'mobile', 'active', ('image', 'image_tag'),
                            ('total_investment_string_formatted', 'total_investment_tabular'),
-                           ('total_purchased_stocks_string_formatted', 'total_purchased_stocks_tabular'), 'news_tabular']
+                           ('total_purchased_stocks_string_formatted', 'total_purchased_stocks_tabular'),
+                           'news_tabular']
         elif 'Shenasa.add_naturalperson' in permissions or 'Shenasa.change_naturalperson' in permissions or 'Shenasa.delete_naturalperson' in permissions:
             self.fields = [('name', 'bias_tag'), 'NID',
                            ('mobile', 'total_investment_string_formatted', 'total_purchased_stocks_string_formatted'),
-                           'active',('image', 'image_tag')]
+                           'active', ('image', 'image_tag')]
         else:
             self.inlines = []
             self.fields = [('name', 'bias_tag'), 'NID', 'mobile', 'active', ('image', 'image_tag'),
                            ('total_investment_string_formatted', 'total_investment_tabular'),
-                           ('total_purchased_stocks_string_formatted', 'total_purchased_stocks_tabular'), 'news_tabular']
+                           ('total_purchased_stocks_string_formatted', 'total_purchased_stocks_tabular'),
+                           'news_tabular']
 
         return form
 
@@ -220,7 +211,7 @@ class LegalPersonAdmin(BaseModelAdmin):
         if request.user.is_superuser:
             self.fields = [('name', 'active', 'bias_tag'),
                            ('person_roles_tabular', 'legal_roles_tabular'),
-                           ('total_investment_string_formatted', 'total_investment_tabular' ),
+                           ('total_investment_string_formatted', 'total_investment_tabular'),
                            ('total_purchased_stocks_string_formatted', 'total_purchased_stocks_tabular'),
                            ('total_fund_string_formatted', 'total_fund_tabular'),
                            ('total_sold_stocks_string_formatted', 'total_sold_stocks_tabular'),
@@ -234,7 +225,7 @@ class LegalPersonAdmin(BaseModelAdmin):
             self.inlines = []
             self.fields = [('name', 'active', 'bias_tag'),
                            ('person_roles_tabular', 'legal_roles_tabular'),
-                           ('total_investment_string_formatted', 'total_investment_tabular' ),
+                           ('total_investment_string_formatted', 'total_investment_tabular'),
                            ('total_purchased_stocks_string_formatted', 'total_purchased_stocks_tabular'),
                            ('total_fund_string_formatted', 'total_fund_tabular'),
                            ('total_sold_stocks_string_formatted', 'total_sold_stocks_tabular'),
@@ -285,6 +276,7 @@ class BrandAdmin(BaseModelAdmin):
     def get_form(self, request, obj=None, **kwargs):
         form = super(BrandAdmin, self).get_form(request, obj=obj, **kwargs)
         self.inlines = [
+            BrandPersonRoleInline_1,
             BrandPersonRoleInline,
             BrandRoleInline,
             BrandNewsInline,

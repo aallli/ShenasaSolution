@@ -1,5 +1,17 @@
 var max_news_title_length = 150;
 
+if (!String.prototype.format) {
+    String.prototype.format = function () {
+        var args = arguments;
+        return this.replace(/{(\d+)}/g, function (match, number) {
+            return typeof args[number] != 'undefined'
+                ? args[number]
+                : match
+                ;
+        });
+    };
+}
+
 function setDirection() {
     if (frames.length && frames[0].document && frames[0].document.getElementsByClassName('note-editable').length > 0) {
         frames[0].document.getElementsByClassName('note-editable')[0].style.direction = 'rtl';
