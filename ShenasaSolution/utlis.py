@@ -25,3 +25,11 @@ def switch_lang_code(path, language):
 
     # Return the full new path
     return '/'.join(parts)
+
+
+def get_admin_url(self):
+    """the url to the Django admin interface for the model instance"""
+    from django.urls import reverse
+
+    info = (self._meta.app_label, self._meta.model_name)
+    return reverse('admin:%s_%s_change' % info, args=(self.pk,))
