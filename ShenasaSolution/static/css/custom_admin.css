@@ -19,8 +19,7 @@
 .fieldBox.field-total_sold_stocks_string_formatted,
 .fieldBox.field-legal_roles_tabular,
 .fieldBox.field-total_investment_tabular,
-.fieldBox.field-total_purchased_stocks_tabular
-{
+.fieldBox.field-total_purchased_stocks_tabular {
     white-space: nowrap;
 }
 
@@ -30,15 +29,13 @@
 .fieldBox.field-total_sold_stocks_tabular label,
 .fieldBox.field-logo_tag label,
 .fieldBox.field-image_tag label,
-.fieldBox.field-box.field-bias_tag label
-{
+.fieldBox.field-box.field-bias_tag label {
     display: none;
 }
 
 :lang(fa) .fieldBox.field-total_investment_string_formatted div,
 :lang(fa) .fieldBox.field-total_fund_string_formatted div,
-:lang(fa) .fieldBox.field-total_investment_string_formatted div
-{
+:lang(fa) .fieldBox.field-total_investment_string_formatted div {
     padding-right: 150px !important;
     float: left;
 }
@@ -82,4 +79,17 @@
 :lang(fa) .admin-interface .paginator .this-page, .admin-interface .paginator a.end {
     margin-right: 0;
     margin-left: 25px;
+}
+
+.fieldBox.field-box.field-link_tag label {
+    display: none;
+}
+
+td.field-link_tag div a, .fieldBox.field-box.field-link_tag div a {
+    color: blue !important;
+}
+
+.link_tag {
+    text-align: center;
+    direction: ltr;
 }

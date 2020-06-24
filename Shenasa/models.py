@@ -199,6 +199,11 @@ class News(models.Model):
 
     bias_tag.short_description = _('Bias')
 
+    def link_tag(self):
+        return mark_safe('<div class="link_tag">%s</div>' % ' - '.join('<a href="%s" target="_blank">%s</a>' % (n, n)  for n in self.link.split(' ')))
+
+    link_tag.short_description = _('Link')
+
 
 class NaturalPerson(Person):
     NID = models.CharField(verbose_name=_('National ID'), max_length=10, unique=True, null=True, blank=True)

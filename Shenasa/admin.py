@@ -79,11 +79,11 @@ class BrandNewsInline(admin.TabularInline):
 @admin.register(News)
 class NewsAdmin(ModelAdminJalaliMixin, SummernoteModelAdmin, BaseModelAdmin):
     summernote_fields = ('description',)
-    fields = [('date', 'bias', 'bias_tag',), 'description', 'link', ]
-    list_display = ['bias_tag', 'title', 'get_created_jalali']
+    fields = [('date', 'bias', 'bias_tag',), 'description', ('link', 'link_tag'), ]
+    list_display = ['bias_tag', 'title', 'link_tag', 'get_created_jalali']
     list_display_links = ['title', 'get_created_jalali']
     search_fields = ['description', 'link']
-    readonly_fields = ['bias_tag']
+    readonly_fields = ['link_tag', 'bias_tag']
     model = News
     inlines = [
         NaturalPersonNewsInline,
