@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 from django.utils.translation import ugettext_lazy as _
 
-VERSION = '0.53.0'
+VERSION = '0.53.1'
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -185,7 +185,7 @@ SUMMERNOTE_CONFIG = {
         ['para', ['ul', 'ol', 'paragraph']],
         ['height', ['height']],
         ['insert', ['table', 'link', 'hr']],
-        ['misc', ['fullscreen', 'undo', 'redo']],
+        ['misc', ['fullscreen', 'codeview', 'undo', 'redo']],
     ],
 }
 
