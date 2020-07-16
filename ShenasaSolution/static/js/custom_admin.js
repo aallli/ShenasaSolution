@@ -1,6 +1,10 @@
 var max_news_title_length = 150;
 var max_try = 20;
 
+if (!$) {
+    $ = django.jQuery;
+}
+
 if (!String.prototype.format) {
     String.prototype.format = function () {
         var args = arguments;
@@ -12,18 +16,6 @@ if (!String.prototype.format) {
         });
     };
 }
-
-function setDirection() {
-    if (frames.length && frames[0].document && frames[0].document.getElementsByClassName('note-editable').length > 0) {
-        frames[0].document.getElementsByClassName('note-editable')[0].style.direction = 'rtl';
-        return;
-    }
-    setTimeout(function () {
-        setDirection();
-    }, 500);
-}
-
-setDirection();
 
 function truncateHTML(text, length) {
     var truncated = text.substring(0, length);

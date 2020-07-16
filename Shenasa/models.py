@@ -7,9 +7,9 @@ from django.utils import timezone
 from django.dispatch import receiver
 from ShenasaSolution import settings
 from django.utils.html import mark_safe
-from Shenasa.utils import to_jalali_full
 from django_resized import ResizedImageField
 from ShenasaSolution.utlis import get_admin_url
+from ShenasaSolution.utlis import to_jalali_full
 from django.core.validators import RegexValidator
 from django.utils.translation import ugettext_lazy as _
 

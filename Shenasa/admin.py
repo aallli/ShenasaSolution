@@ -1,12 +1,15 @@
-from Shenasa.forms import *
+from Shenasa import forms
 from django.contrib import admin
 from django.conf import settings
 from django.contrib import messages
-from Shenasa.utils import to_jalali_full
 from django.db.transaction import atomic
+from django.contrib.auth.models import User
+from django.contrib.auth.admin import UserAdmin
+from ShenasaSolution.utlis import to_jalali_full
 from jalali_date.admin import ModelAdminJalaliMixin
 from django.utils.translation import ugettext_lazy as _
 from django_summernote.admin import SummernoteModelAdmin
+from ShenasaSolution.utlis import register_operator, unregister_operator
 from Shenasa.models import LegalPerson, NaturalPerson, News, Brand, LegalPersonPersonRole, \
     BrandPersonRole, LegalPersonLegalRole, BrandLegalRole
 
@@ -33,7 +36,7 @@ class NaturalPersonNewsInline(admin.TabularInline):
 
 class LegalPersonPersonRoleInline(admin.TabularInline):
     model = LegalPersonPersonRole
-    form = LegalPersonPersonRoleForm
+    form = forms.LegalPersonPersonRoleForm
     fields = ['person', 'role', 'number_of_stocks', 'amount_of_investment']
     verbose_name = _("Person Role")
     verbose_name_plural = _("Person Roles")
@@ -41,7 +44,7 @@ class LegalPersonPersonRoleInline(admin.TabularInline):
 
 class LegalPersonLegalRoleInline(admin.TabularInline):
     model = LegalPersonLegalRole
-    form = LegalPersonLegalRoleForm
+    form = forms.LegalPersonLegalRoleForm
     fields = ['person', 'role', 'number_of_stocks', 'amount_of_investment']
     fk_name = 'target_person'
     verbose_name = _("Legal Role")
@@ -56,7 +59,7 @@ class LegalPersonNewsInline(admin.TabularInline):
 
 class BrandPersonRoleInline(admin.TabularInline):
     model = BrandPersonRole
-    form = BrandPersonRoleForm
+    form = forms.BrandPersonRoleForm
     fields = ['person', 'role', 'number_of_stocks', 'amount_of_investment']
     verbose_name = _("Person Role")
     verbose_name_plural = _("Person Roles")
@@ -64,7 +67,7 @@ class BrandPersonRoleInline(admin.TabularInline):
 
 class BrandRoleInline(admin.TabularInline):
     model = BrandLegalRole
-    form = BrandLegalRoleForm
+    form = forms.BrandLegalRoleForm
     fields = ['person', 'role', 'number_of_stocks', 'amount_of_investment']
     verbose_name = _("Legal Role")
     verbose_name_plural = _("Legal Roles")
@@ -171,7 +174,7 @@ class LegalPersonAdmin(BaseModelAdmin):
                    ('legal_person_legal_role_target_person__person', custom_titled_filter(_('Legal Role')))]
     search_fields = ['name', 'legal_person_person_role_target_person__person__name',
                      'legal_person_person_role_target_person__target_person__name']
-    readonly_fields = ['person_roles', 'person_roles_tabular',  'legal_roles_tabular', 'total_investment_tabular',
+    readonly_fields = ['person_roles', 'person_roles_tabular', 'legal_roles_tabular', 'total_investment_tabular',
                        'total_investment_string_formatted', 'total_purchased_stocks_string_formatted',
                        'total_purchased_stocks_tabular', 'news_tabular', 'person_roles_tabular',
                        'total_fund_string_formatted', 'total_sold_stocks_string_formatted',
@@ -288,3 +291,26 @@ class BrandAdmin(BaseModelAdmin):
         except Exception as e:
             messages.set_level(request, messages.ERROR)
             messages.error(request, e)
+
+
+class MyUserAdmin(ModelAdminJalaliMixin, UserAdmin, BaseModelAdmin):
+    save_on_top = True
+
+    def save_form(self, request, form, change):
+        try:
+            user = form.instance
+            if 'groups' in form.changed_data:
+                if form.cleaned_data['groups'].filter(
+                        name=settings.CHAT_SUPPORT_GROUP).count() == 1 and \
+                                user.groups.filter(name=settings.CHAT_SUPPORT_GROUP).count() == 0:
+                    register_operator(request, user)
+
+                elif user.groups.filter(name=settings.CHAT_SUPPORT_GROUP).count() == 1:
+                    unregister_operator(request, user)
+            return super(UserAdmin, self).save_form(request, form, change)
+        except Exception as e:
+            self.message_user(request, e, level=messages.ERROR)
+
+
+admin.site.unregister(User)
+admin.site.register(User, MyUserAdmin)

@@ -1,15 +1,14 @@
 {% extends "admin/base_site.html" %}
 
-{% load static %}
-{% load i18n static admin_interface_tags %}
+{% load i18n static admin_interface_tags simple_tag i18n_switcher %}
 
 <!-- custom filter module -->
-{% load i18n_switcher %}
 {% get_current_language as LANGUAGE_CODE %}
 {% block extrahead %}
     <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/custom_admin.css' %}"/>
+    <script type="text/javascript" src="{% static 'js/base_admin.js' %}"></script>
 {% endblock %}
 
 {% block branding %}
@@ -35,6 +34,165 @@
             {% endif %}
         </span>
     </h1>
+    {% online_support request as online_support %}
+    {% is_online_support_operator request as is_online_support_operator %}
+    {% chat_server_url as chat_server_url %}
+    {% chat_server_token as chat_server_token %}
+    <style>
+        #chat-application {
+            background: transparent;
+            overflow: hidden;
+            display: block;
+            margin: 0px;
+            padding: 0px;
+            bottom: 24px;
+            transition: none 0s ease 0s;
+            z-index: 2147483647;
+            position: fixed;
+            width: 115px;
+            height: 75px;
+            max-height: 600px;
+            max-width: 366px;
+            right: 11px;
+            box-sizing: border-box;
+        }
+
+        #chat-application.operator {
+            width: 165px;
+        }
+
+        iframe.support {
+            background: transparent;
+            overflow: hidden;
+            position: relative;
+            width: 100%;
+            height: 100%;
+            margin: 0px;
+            border: none;
+            min-width: inherit;
+            max-width: inherit;
+            min-height: inherit;
+            max-height: inherit;
+            transition: none 0s ease 0s;
+            z-index: 10000001;
+        }
+
+        {#            fa styles#}
+        :lang(fa) * {
+            direction: rtl;
+        }
+
+        :lang(fa) #chat-application {
+            left: 11px;
+            right: auto;
+        }
+
+    </style>
+    {% if online_support and online_support.status %}
+        {% if is_online_support_operator %}
+            <div id="chat-application" class="operator">
+                <iframe id="chat-iframe" class="support"
+                        src="
+                                {{ chat_server_url }}{{ LANGUAGE_CODE }}/chat/start/operator/{{ user.pk }}/?token={{ chat_server_token }}">
+                </iframe>
+            </div>
+        {% else %}
+            <div id="chat-application">
+                <iframe id="chat-iframe" class="support"></iframe>
+            </div>
+            <script type="text/javascript">
+                var ip;
+                var ttl = 30;
+                var counter = ttl;
+                function init_iframe() {
+                    if (!ip) {
+                        setTimeout(function () {
+                            if (counter-- == 0) {
+                                counter = ttl;
+                                return;
+                            }
+                            init_iframe();
+                        }, 1000);
+                        return;
+                    }
+
+                    var querystring = 'user={0}&ip={1}&user_agent={2}&referer={3}&token={4}'.format(
+                            '{{ user.username }}', ip, navigator.userAgent, document.location.origin, '{{ chat_server_token }}');
+                    document.getElementById('chat-iframe').setAttribute('src',
+                            "{0}{1}/chat/?{2}".format('{{ chat_server_url }}', '{{ LANGUAGE_CODE }}', querystring));
+                }
+
+                init_iframe();
+
+                /**
+                 * Get the user IP throught the webkitRTCPeerConnection
+                 * @param onNewIP {Function} listener function to expose the IP locally
+                 * @return undefined
+                 */
+                function getUserIP(onNewIP) {
+
+                    //  onNewIp - your listener function for new IPs
+                    //compatibility for firefox and chrome
+                    var myPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
+                    var pc = new myPeerConnection({
+                                iceServers: []
+                            }),
+                            noop = function () {
+                            },
+                            localIPs = {},
+                            ipRegex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/g,
+                            key;
+                    ipFound = false;
+
+                    function iterateIP(ip) {
+                        if (!localIPs[ip] && ip != '0.0.0.0') onNewIP(ip);
+                        ipFound = true;
+                    }
+
+                    //create a bogus data channel
+                    pc.createDataChannel("");
+
+                    // create offer and set local description
+                    pc.createOffer().then(function (sdp) {
+                        sdp.sdp.split('\n').forEach(function (line) {
+                            if (ipFound) exit;
+                            if (line.indexOf('IP4') < 0) return;
+                            line.match(ipRegex).forEach(iterateIP);
+                        });
+
+                        pc.setLocalDescription(sdp, noop, noop);
+                    }).catch(function (reason) {
+                        // An error occurred, so handle the failure to connect
+                    });
+
+                    //listen for candidate events
+                    pc.onicecandidate = function (ice) {
+                        if (!ice || !ice.candidate || !ice.candidate.candidate || !ice.candidate.candidate.match(ipRegex)) return;
+                        ice.candidate.candidate.match(ipRegex).forEach(iterateIP);
+                    };
+                }
+
+                // Get client's ip at page load
+                getUserIP(function (_ip) {
+                    ip = _ip;
+                });
+                // A helper function for string manipulation
+
+                if (!String.prototype.format) {
+                    String.prototype.format = function () {
+                        var args = arguments;
+                        return this.replace(/{(\d+)}/g, function (match, number) {
+                            return typeof args[number] != 'undefined'
+                                    ? args[number]
+                                    : match
+                                    ;
+                        });
+                    };
+                }
+
+            </script>
+        {% endif %}
+    {% endif %}
 {% endblock %}
 
 {% block userlinks %}

@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.shortcuts import redirect
 from django.urls import path, include
 from django.conf.urls.static import static
+from .views import start_support, stop_support
 from django.conf.urls.i18n import i18n_patterns
 from django.utils.translation import ugettext_lazy as _
 
@@ -29,6 +30,8 @@ urlpatterns = [
 ]
 
 urlpatterns += i18n_patterns(
+    path('admin/start_support/', start_support, name='start_support'),
+    path('admin/stop_support/', stop_support, name='stop_support'),
     path('admin/', admin.site.urls),
     path('summernote/', include('django_summernote.urls')),
 )

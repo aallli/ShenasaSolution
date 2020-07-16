@@ -20,8 +20,13 @@
 }
 
 #branding {
+    width: 100%;
     float: left;
     position: relative;
+}
+
+:lang(fa) #branding {
+    float: right;
 }
 
 .blocking-logo {
@@ -40,3 +45,26 @@
     font-size: 12px;
 }
 
+.stoplink, .inlinestoplink {
+    padding-right: 16px;
+    background: url('/static/admin/img/icon-no.svg') 0 1px no-repeat;
+}
+
+:lang(fa) .stoplink, .inlinestoplink {
+    padding-left: 16px;
+    padding-right: auto;
+}
+
+.admin-interface.login #header #branding h1 img.logo + span {
+    margin-bottom: 5px;
+    right: 0;
+}
+
+:lang(fa) .admin-interface.login #header #branding h1 img.logo + span {
+    left: -40px;
+    right: auto;
+}
+
+:lang(fa) .stoplink, .inlinestoplink {
+    padding-left: 16px !important;
+}

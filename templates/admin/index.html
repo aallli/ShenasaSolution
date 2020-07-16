@@ -1,0 +1,35 @@
+{% extends "admin/index.html" %}
+
+{% load i18n static admin_interface_tags simple_tag %}
+
+{% block extrastyle %}
+    {{ block.super }}
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/custom_admin.css' %}"/>
+{% endblock %}
+
+{% block content %}
+    {% is_online_support_operator request as is_online_support_operator %}
+    {% on_call request as on_call %}
+    <div id="content-main">
+        {% if is_online_support_operator %}
+            <div class="module">
+                <table>
+                    <caption>
+                        <a href="javascript: void(0);" class="section"
+                           title="{% trans 'Support' %}">{% trans 'Support' %}</a>
+                    </caption>
+                    <tr>
+                        <th scope="row"><a href="javascript: void(0);">{% trans 'Online Support' %}</a></th>
+                        {% if on_call %}
+                            <td scope="row"><a href="stop_support" class="stoplink">{% trans 'Stop' %}</a></td>
+                        {% else %}
+                            <td scope="row"><a href="start_support" class="viewlink">{% trans 'Start' %}</a></td>
+                        {% endif %}
+                    </tr>
+                </table>
+            </div>
+        {% endif %}{{ block.super }}
+    </div>
+{% endblock %}
