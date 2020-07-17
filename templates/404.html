@@ -1,10 +1,11 @@
 {% extends "admin/base_site.html" %}
-{% load static %}
-{% load i18n %}
 
-{% load i18n_switcher %}
+{% load static i18n i18n_switcher simple_tag %}
+
 {% get_current_language as LANGUAGE_CODE %}
 {% block content %}
+    {% admin_tel as admin_tel %}
+    {% admin_email as admin_email %}
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/error_page.css' %}"/>
@@ -23,7 +24,7 @@
                     {% if LANGUAGE_CODE == 'fa' %}
                         <span style="direction: ltr; display: inline-block;;">
                     {% endif %}
-                    {{ ADMIN_TEL }}
+                    {{ admin_tel }}
                     {% if LANGUAGE_CODE == 'fa' %}
                         </span>
                     {% endif %}
@@ -32,7 +33,7 @@
 
             <p class="sub-text">
                 <a style="cursor: auto" href="javascript: void(0)">{% trans "Email" %}: </a>
-                <a href="mailto:{{ ADMIN_EMAIL }}"> {{ ADMIN_EMAIL }}</a>
+                <a href="mailto:{{ admin_email }}"> {{ admin_email }}</a>
             </p>
             <a href="javascript: goBack();">{% trans 'Go back' %}</a>
         </div>

@@ -1,10 +1,7 @@
 {% extends "admin/base_site.html" %}
 
-{% load static %}
-{% load i18n %}
+{% load static i18n i18n_switcher %}
 
-<!-- custom filter module -->
-{% load i18n_switcher %}
 {% get_current_language as LANGUAGE_CODE %}
 {% block extrahead %}
     <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}"/>

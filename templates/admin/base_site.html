@@ -14,6 +14,7 @@
 {% block branding %}
     {% get_admin_interface_theme as theme %}
     <h1 id="site-name">
+    {% version as version %}
         {% if theme.logo_visible %}
             {% if theme.logo %}
                 <img class="logo" style="display:none;" src="{{ theme.logo.url }}"
@@ -30,7 +31,7 @@
                 <div>{% if theme.title %}{% trans theme.title %}{% else %}
                     {{ site_header|default:_('Django administration') }}{% endif %}
                 </div>
-                <div class="blocking-version">{% trans 'Version' %}: {{ VERSION }}</div>
+                <div class="blocking-version">{% trans 'Version' %}: {{ version }}</div>
             {% endif %}
         </span>
     </h1>
