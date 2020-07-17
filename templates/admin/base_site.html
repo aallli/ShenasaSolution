@@ -35,7 +35,6 @@
         </span>
     </h1>
     {% online_support request as online_support %}
-    {% is_online_support_operator request as is_online_support_operator %}
     {% chat_server_url as chat_server_url %}
     {% chat_server_token as chat_server_token %}
     <style>
@@ -89,6 +88,7 @@
 
     </style>
     {% if online_support and online_support.status %}
+        {% is_online_support_operator request as is_online_support_operator %}
         {% if is_online_support_operator %}
             <div id="chat-application" class="operator">
                 <iframe id="chat-iframe" class="support"

@@ -69,6 +69,10 @@ Configure Gunicorn:
     ADMIN_TEL='[admin tel]'
     ADMIN_EMAIL='[admin email]'
     LIST_PER_PAGE=[list per page in admin pages]
+    CHAT_SERVER_URL = ='[Chat server url]'
+    CHAT_SERVER_TOKEN = '[System token]'
+    CHAT_SUPPORT_GROUP = '[Chat support group name]'
+    CHAT_SUPPORT_REFRESH_INTERVAL = [Chat support refresh interval]
     
 24- systemctl start gunicorn-shenasa
 25- systemctl enable gunicorn-shenasa

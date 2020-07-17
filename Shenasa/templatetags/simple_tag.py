@@ -41,12 +41,20 @@ def is_online_support_operator(request):
     if request.user.groups.filter(name=settings.CHAT_SUPPORT_GROUP).count() == 0:
         if 'operator' in session: del session['operator']
         return False
-    if 'operator' not in session: get_operator(request, True)
+    if 'operator' not in session:
+        try:
+            get_operator(request, True)
+        except:
+            session['operator'] = None
     return session['operator'] is not None
 
 
 @register.simple_tag()
 def on_call(request):
     session = request.session
-    if 'operator' not in session: get_operator(request)
+    if 'operator' not in session:
+        try:
+            get_operator(request)
+        except:
+            session['operator'] = None
     return 'operator' in session and session['operator'] and session['operator']['status'] != 'off'
