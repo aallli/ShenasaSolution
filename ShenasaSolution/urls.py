@@ -13,8 +13,10 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from Shenasa import views
 from django.conf import settings
 from django.contrib import admin
+from rest_framework import routers
 from django.shortcuts import redirect
 from django.urls import path, include
 from django.conf.urls.static import static
@@ -25,8 +27,12 @@ from django.utils.translation import ugettext_lazy as _
 admin.site.site_header = _('Shenasa Administration Site')
 admin.site.site_title = _('Welcome to Shenasa administration control panel')
 
+router = routers.DefaultRouter()
+router.register('news', views.NewsViewSets, basename='news')
+
 urlpatterns = [
     path('', lambda request: redirect('/fa/admin/', permanent=False)),
+    path('api/', include(router.urls)),
 ]
 
 urlpatterns += i18n_patterns(

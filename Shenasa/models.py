@@ -167,9 +167,9 @@ class Person(models.Model):
 
 
 class News(models.Model):
-    description = models.TextField(verbose_name=_('Description'), max_length=1000, blank=True, null=True)
-    link = models.TextField(verbose_name=_('Link'), max_length=200, blank=True, null=True)
-    date = models.DateTimeField(verbose_name=_('Creation Date'), null=True, blank=True)
+    description = models.TextField(verbose_name=_('Description'), max_length=1000, blank=False, unique=True)
+    link = models.TextField(verbose_name=_('Link'), max_length=200, blank=False)
+    date = models.DateTimeField(verbose_name=_('Creation Date'), blank=True, null=True)
     bias = models.CharField(verbose_name=_('Bias'), max_length=10, choices=Bias.choices, default=Bias.NEUTRAL)
 
     class Meta:

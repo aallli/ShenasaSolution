@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 from django.utils.translation import ugettext_lazy as _
 
-VERSION = '0.54.6'
+VERSION = '0.55.0'
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -46,6 +46,9 @@ INSTALLED_APPS = [
 	'jalali_date',
     'django_resized',
     'django_summernote',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'corsheaders',
 
     # my apps
     'Shenasa.apps.ShenasaConfig',
@@ -55,6 +58,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -218,8 +222,27 @@ ADMIN_EMAIL = os.environ.get('ADMIN_EMAIL', default='shenasa@irib.ir')
 LIST_PER_PAGE = int(os.environ.get('LIST_PER_PAGE', default=50))
 
 # Chat server configurations
-CHAT_SERVER_URL = os.environ.get("CHAT_SERVER_URL", default='http://localhost:8888/')
-CHAT_SERVER_TOKEN = os.environ.get("CHAT_SERVER_TOKEN", default='4759de409b271e43778259e8d91eb11cb7526a39')
+CHAT_SERVER_URL = os.environ.get("CHAT_SERVER_URL", default='http://192.168.115.199:8000/')
+CHAT_SERVER_TOKEN = os.environ.get("CHAT_SERVER_TOKEN", default='aafd11c07e1f3da59b40299b4258f6523c93d811')
 CHAT_SUPPORT_GROUP = os.environ.get("CHAT_SUPPORT_GROUP", default='Online Support')
 CHAT_SUPPORT_REFRESH_INTERVAL = os.environ.get("CHAT_SUPPORT_REFRESH_INTERVAL", default=60)
 ONLINE_SUPPORT = None
+
+# CORS
+CORS_ORIGIN_ALLOW_ALL = False
+
+CORS_ORIGIN_WHITELIST = os.environ.get("CORS_ORIGIN_WHITELIST", default='http://localhost:8000').split(" ")
+
+CORS_ALLOW_METHODS = (
+    'GET',
+    'PATCH',
+    'POST',
+    'DELETE',
+)
+
+CORS_ALLOW_HEADERS = (
+    'authorization',
+    'User-Agent',
+    'Referer',
+    'Content-Type',
+)
