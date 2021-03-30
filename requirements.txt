@@ -1,4 +1,4 @@
-Django==3.0.6
+Django==3.0.12
 psycopg2==2.8.5
 Pillow==7.1.2
 django-resized==0.3.11
